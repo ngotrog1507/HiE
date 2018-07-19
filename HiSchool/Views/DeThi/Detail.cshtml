@@ -1,0 +1,224 @@
+﻿
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var ids = Request.QueryString["ids"];
+}
+@model Core.Model.Ex_Exam
+@section JsHeader{
+    <link rel="stylesheet" href="~/Content/min/s/1522468462/b%3dexam/css%26f%3dbigschool.css%2cbigschool.responsive.css%2cexam.bigschool.css%2cfuc.bigschool.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/min/s/1522468462/b%3dheader/css%26f%3dmain.css" type="text/css">
+    <style>
+        .md-nav {
+            background: #349c3d;
+        }
+
+            .md-nav .pull-left ul li a, .md-nav .pull-right ul li a {
+                background-color: #349c3d;
+            }
+
+        .sign li a.dang-ky {
+            background-color: #349c3d;
+            border: 1px solid #349c3d;
+        }
+
+        .sign li a.dang-nhap {
+            background-color: #fff;
+            color: #349c3d;
+            border: 1px solid #349c3d;
+        }
+
+        .sign li a.dang-ky:hover {
+            background-color: #287f31;
+        }
+    </style>
+}
+<!--begin: section-->
+<section class="clearfix section mt-10">
+    <div class="container">
+        <div>
+            <ol class="breadcrumb fuc-breadcumb">
+                <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="@Url.Action("Index","Dethi")">Thi</a></li>
+                <li class="breadcrumb-item">@Model.Name</li>
+            </ol>
+        </div>
+    </div>
+</section>
+<!--end: section-->
+<section class="clearfix">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="exam-info-box-right mt-20">
+                    <div class="media">
+                        <div class="media-body">
+                            <p class="media-heading">@Model.Name</p>
+                            <div class="line-bt-1"></div>
+
+                            <p class="des">Tác giả: <a href="#" target="_blank">@ViewBag.UserTeacher.FullName</a></p>
+
+                            <ul class="exam-info-count">
+                                <li><i class="fa fa-info-circle"></i>Mã đề thi: @Model.Code (13:10 31/10/2017)</li>
+                                <li><i class="fa fa-pencil-square-o"></i> @Model.TotalStudent lượt</li>
+                                <li><i class="fa fa-clock-o"></i> @Model.Time phút</li>
+                                <li><i class="fa fa-question-circle-o"></i> @Model.TotalNumber câu</li>
+                                @if (Model.Price == 0)
+                                {
+                                    <li class="h-light-2">
+                                        <i class="fa fa-money h-light-2"></i>
+                                        Miễn phí
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="h-light-1">
+                                        <i class="fa fa-money h-light-1"></i>
+                                        @String.Format("{0:0,0}", Model.Price) VNĐ
+                                    </li>}
+                            </ul>
+                            <span class="hidden bcoinExam">@Model.Price</span>
+                            <div class="mt-10" style="margin-bottom: 10px; display: inline-block;">
+                                <div class="fb-like pull-left" style="margin-top:10px;" data-href="https://exam.bigschool.vn/exam.html?cmd=detail&id=94717" data-layout="button_count" data-action="like" data-show-faces="false" data-share="yes"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="line-bt"></div>
+                    <div class="mt-10">
+                        <div class="exam-free-clock">
+                            <div class="clockwise"></div>
+                        </div>
+                        <p class="p-exam-des p-exam-des-1">Đề thi tự do</p>
+
+                        <p class="p-exam-des-2"><p>Giới thiệu đề</p></p>
+                        <p class="vao-thi text-center">
+                            <a href="javascript:showLoginModal()">
+                                <b>
+                                    VÀO THI
+                                </b>
+                            </a>
+
+                        </p>
+                    </div>
+                </div>
+                <div class="exam-info-box-right mt-30">
+                    <p class="tit">Lịch sử làm bài của bạn: </p>
+                    <div class="box-table-result mt-10 table-responsive">
+                        <table class="table table-striped text-center">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Lần thi</th>
+                                    <th class="text-center">Vào thi</th>
+                                    <th class="text-center">Thời gian làm bài</th>
+                                    <th class="text-center">Điểm</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Chưa có bài thi nào</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="exam-info-box-left mt-20">
+                    <p class="tit">Đề thi tương tự: </p>
+                    @if (ViewBag.LstExam != null)
+                    {
+                        foreach (var item in (List<Core.Model.Ex_Exam>)ViewBag.LstExam)
+                        {
+                            <div class="exam-box-same mt-20">
+                                <a href="@Url.Action("Detail","DeThi",new{ids=item.IdGuid})">@item.Name</a>
+                                <ul class="exam-info-count exam-info-count-1">
+                                    <li><i class="fa fa-pencil-square-o"></i> @item.TotalStudent lượt</li>
+                                    <li><i class="fa fa-clock-o"></i> @item.Time phút</li>
+                                    <li><i class="fa fa-question-circle-o"></i> @item.TotalNumber câu</li>
+                                    @if (item.Price == 0)
+                                    {
+                                        <li class="h-light-2">
+                                            <i class="fa fa-money h-light-2"></i>
+                                            Miễn phí
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="h-light-1">
+                                            <i class="fa fa-money h-light-1"></i>
+                                            @String.Format("{0:0,0}", item.Price) VNĐ
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="clearfix section mt-20 "></section>
+
+@section JsFooter{
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            $(".menu").removeClass("active");
+            $(".li-thi").addClass("active");
+            //smooth scrolling
+            $(function () {
+                $("#btnZoHoc").hide();
+                //$('a[href*=#]:not([href=#])').click(function() {
+                $('.smooth-scroll').click(function() {
+                    if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') &&
+                        location.hostname == this.hostname) {
+                        var target = $(this.hash);
+                        target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+                        if (target.length) {
+                            $('html,body').animate({
+                                    scrollTop: (target.offset().top - 50)
+                                },
+                                1000);
+                            return false;
+                        }
+                    }
+                });
+            });
+        });
+
+        function showLoginModal() {
+            var ids='@ids';
+            @*$.ajax({
+                type: "POST",
+                url: '@Url.Action("CheckThanhToan", "DeThi")',
+                data: "{'ids':'" + ids + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.status === "ok") {
+                        window.location.href = "@Url.Action("VaoThi","DeThi")" + "?ids=" + ids;
+                    } else {*@
+                        var userId = ('@WebSecurity.CurrentUserId');
+                        if (userId <= 0) {
+                            $('#needLogin').modal('toggle');
+                            return;
+                        }
+                        var price = $(".bcoinExam").text().trim();
+                        var coinCurrent = $(".bcoin").text();
+                        $("#coinCurrent").text(coinCurrent);
+                        $("#coinClass").text(price);
+                        if (parseInt(price) > parseInt(coinCurrent)) {
+
+                        }
+                        $('#myModal').modal('toggle');
+                //    }
+                //},
+                //error: function () {
+
+                //}
+           // });
+        }
+    </script>
+}

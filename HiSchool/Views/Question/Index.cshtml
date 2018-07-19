@@ -1,0 +1,151 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section JsHeader{
+    <link rel="stylesheet" href="https://cdn-s07.bigschool.vn/min/s/1522468462/b=css&f=base_cover.css,form.css,cover.css,exam.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn-s07.bigschool.vn/min/s/1522468462/b=ask/css&f=hoidap.css" type="text/css">
+    <style>
+        .tp-title h4 {
+            background: #3070dc;
+        }
+
+        .brown-btn {
+            background: #3070dc;
+            color: #ffffff;
+        }
+
+        .search-Thi.brown {
+            border: 1px solid #3070dc;
+        }
+
+        .ask-title span.rep-btn {
+            background: #3070dc;
+        }
+
+            .ask-title span.rep-btn a {
+                color: #ffffff;
+            }
+
+        body {
+            background-image: none;
+        }
+
+        .ask-title .subject-icon.subject-1 {
+            background-image: url(Content/img/subjects/Subject-detail-12.png);
+        }
+
+        #ask-sidebar .panel-title a.bg-sub-1:before {
+            background-image: url(Content/img/subjects/Subject-detail-12.png);
+        }
+    </style>
+}
+<div id="ask-home" class="content-wrapper bank-bg" style="margin-top: 2px;">
+
+    <div class="container">
+        <div class="tp-title">
+            <a href="#">
+                <div class="icon-container"><i class="fa fa-filter"></i></div>
+                <h4>Danh mục tra cứu</h4>
+                <a class="tp-btn brown-btn" href="@Url.Action("Create","Question")"><i class="fa fa-plus-circle"></i>&nbsp; Thêm câu hỏi</a>
+            </a>
+            <ul class="sub-filter">
+                <!-- <li><a href="#">Câu khó</a></li>
+                <li><a href="#">Câu hỏi hay</a></li> -->
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+        <div class="row">
+            <div id="ask-sidebar" class="col-md-3">
+                <div id="accordion" class="panel-group">
+                    @if (ViewBag.Subject != null)
+                    {
+                        for (int i = 0; i < ViewBag.Subject.Count; i++)
+                        {
+                            <div class="panel panel-default sub-1">
+                                <div class="panel-heading" role="tab" id="sub-heading-1">
+                                    <h4 class="panel-title">
+                                        <a href="https://ask.bigschool.vn/ask.html?o=0&s=1&type=" class="bg-sub-1">@ViewBag.Subject[i].Name</a>
+                                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#sub-collapse-1" aria-expanded="true" aria-controls="sub-collapse-1" class="collapsed">
+                                        </a>
+                                    </h4>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div id="top-ask" class="col-md-9">
+                <div class="search-container">
+                    @using (Html.BeginForm("Index", "Question" ))
+                    {
+                        <input type="hidden" name="type" value="">
+                        <div class="col-md-12">
+                            <div class="search-Thi brown">
+                                <input placeholder="Nhập nội dung câu hỏi" value="" name="txtSearch">
+                                <button type="submit" class="tp-btn brown-btn"><i class="fa fa-search"></i>Tìm kiếm</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div id="result-ask">
+                    <ul>
+                        @if (ViewBag.ListQuestion != null)
+                        {
+                            foreach (var item in (List<Core.Model.Cms_Question>)ViewBag.ListQuestion)
+                            {
+                                <li>
+                                    <div class="col-md-11 ask-detail ask-detail-30372">
+                                        <a href="@Url.Action("Details","Question",new { ids=item.IdGuid})">
+                                            <h5 class="content-ask">
+                                                @Html.Raw(item.Summary)
+                                            </h5>
+                                        </a>
+                                        <span class="text-center hidden viewmore"><i>Xem thêm</i></span>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <div class="ask-info center-block">
+                                            <strong>@item.TotalView</strong>
+                                        </div>
+                                        <p class="text-center">Lượt xem</p>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="ask-title">
+                                        <div class="subject-icon subject-1">
+                                        </div>
+                                        <span>Môn @item.SubjectName</span>
+                                        <span class="rep-btn"> <a href="@Url.Action("Details","Question",new { ids=item.IdGuid})">Xem chi tiết</a></span>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+                <div class="wrapper text-center center-block" style="margin-top:10px">
+                    <div class="col-sm-3">
+                        <a href="#" class="tp-btn border-btn brown pull-left hidden">Trang trước</a>
+                    </div>
+                    <div class="col-sm-6">
+                    </div>
+                    <div class="col-sm-3">
+                        <a href="/ask.html?type=&txtSearch=&o=0&c=-1&s=-1&t=-1&p=2" class="tp-btn border-btn brown pull-right ">Trang sau</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+@section JsFooter{
+    <script>
+        $(function () {
+            $(".menu").removeClass("active");
+            $(".li-diendan").addClass("active");
+        })
+    </script>
+}

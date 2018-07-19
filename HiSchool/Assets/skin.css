@@ -1,0 +1,87 @@
+.btn-trong {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.input-lg-trong {
+    height: 37px;
+    font-size: 14px;
+    line-height: 1.333333;
+    border-radius: 2px;
+}
+
+.color-trong {
+    /*background-color: #075f92 !important;*/
+    /*background-color: #00476f !important;*/
+    background-color: #1e6e9c !important;
+}
+
+.btn-trong {
+    color: white !important;
+}
+
+#example1 thead > tr > th {
+    color: #ffffff;
+}
+
+button.btn.btn-trong:hover {
+    background-color: #317fad !important;
+}
+
+button.btnSeting.color-trong.btn.btn-md.btn-primary.btn-flat:hover {
+    background-color: #2386bf !important;
+    border-color: #2386bf !important;
+}
+
+.pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover {
+    z-index: 3;
+    color: #fff;
+    cursor: default;
+    background-color: #3c8dbc;
+    border-color: #3c8dbc;
+}
+
+.pagination > li > a:hover {
+    background-color: #2386bf;
+    color: #fff;
+}
+
+.selectOption-trong {
+    cursor: pointer;
+}
+
+.btnSeting {
+    margin: 4px;
+    border-radius: 4px !important;
+}
+/*checkbox setting*/
+.setting-menu {
+    background-color: #075f92;
+}
+
+    .setting-menu > li > a {
+        color: white;
+    }
+
+.modal {
+    left: 33px;
+}
+
+.modal-dialog {
+    width: 80%;
+}
+
+
+.scoll-box-body {
+    max-height: 418px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+input[type=search] {
+    width: -webkit-fill-available !important;
+}
+
+.label-red {
+    color: red;
+}

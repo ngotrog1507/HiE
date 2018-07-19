@@ -1,0 +1,1 @@
+$("#doi-tac").owlCarousel({autoPlay:3000,items:8,itemsMobile:[479,4],itemsTablet:[992,6],});

@@ -1,0 +1,327 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var isHost = ViewBag.Host != null && (bool)ViewBag.Host;
+}
+<div class="_modal">
+    <div class="cssload-container">
+        <div class="cssload-speeding-wheel"></div>
+        <div id="veil"></div>
+    </div>
+</div>
+<section class="content">
+    <div class="row">
+        <!-- /.col -->
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Inbox</h3>
+                    <div class="box-tools pull-right">
+                        <div class="has-feedback">
+                            <input type="text" class="form-control input-sm" placeholder="Search Mail">
+                            <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                        </div>
+                    </div>
+                    <!-- /.box-tools -->
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body no-padding">
+                    <div class="mailbox-controls">
+                        <!-- Check all button -->
+                        <button type="button" class="btn btn-default btn-sm checkbox-toggle">
+                            <i class="fa fa-square-o"></i>
+                        </button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
+                            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-book"></i></button>
+                        </div>
+                        <!-- /.btn-group -->
+                        <button type="button" class="btn btn-default btn-sm" onclick="refresh(currentPage)"><i class="fa fa-refresh"></i></button>
+                        <div class="pull-right">
+                            <span id="paging">1-50/200</span>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default btn-sm btnPre" onclick="refresh(currentPage == 1 ? 1 : (currentPage - 1))"><i class="fa fa-chevron-left"></i></button>
+                                <button type="button" class="btn btn-default btn-sm btnNext" onclick="refresh(currentPage+1)"><i class="fa fa-chevron-right"></i></button>
+                            </div>
+                            <!-- /.btn-group -->
+                        </div>
+                        <!-- /.pull-right -->
+                    </div>
+                    <div class="table-responsive mailbox-messages">
+                        <table class="table table-hover table-striped">
+                            <tbody id="rptData">
+                                @*<tr>
+                                        <td><input type="checkbox"></td>
+                                        <td class="mailbox-star">
+                                            <a href="#"><i class="fa fa-certificate text-yellow"></i></a>
+                                        </td>
+                                        <td class="mailbox-name"><a href="/" class="noClick">Alexander Pierce</a></td>
+                                        <td class="mailbox-name"><a href="/" class="noClick">Alexander Pierce</a></td>
+                                        <td class="mailbox-subject">
+                                            <b>AdminLTE 2.0 Issue</b> - Trying to find a solution to this problem...
+                                        </td>
+                                        <td class="mailbox-attachment"></td>
+                                        <td class="mailbox-date">5 mins ago</td>
+                                    </tr>*@
+                            </tbody>
+                        </table>
+                        <!-- /.table -->
+                    </div>
+                    <!-- /.mail-box-messages -->
+                </div>
+                <div class="modal fade" id="modal-default">
+                    <div class="modal-dialog" style="width: 63%">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <h4 class="modal-title">Thông tin Phản hồi</h4>
+                                <input type="hidden" id="txtId" />
+                            </div>
+                            <div class="modal-body">
+                                <form class="form-horizontal2">
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label class="col-sm-4 control-label">Tên </label>
+
+                                            <div class="col-sm-8">
+                                                <span id="name">ádasdasdasdasd</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-5">
+                                            <label class="col-sm-4 control-label">Email</label>
+                                            <div class="col-sm-8">
+                                                <span id="email">ádasdasdasdasd</span>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group col-sm-1"></div>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="form-group col-sm-6">
+                                            <label class="col-sm-4 control-label">Phone</label>
+
+                                            <div class="col-sm-8">
+                                                <span id="phone">ádasdasdasdasd</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-5">
+                                            <label class="col-sm-4 control-label">Ngày gửi</label>
+                                            <div class="col-sm-8">
+                                                <div class="clearfix">
+                                                    <span id="date">ádasdasdasdasd</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="form-group col-sm-11">
+                                            <label class="col-sm-2 control-label">Nội dung</label>
+
+                                            <div class="col-sm-10">
+                                                <textarea id="summary" style="height:200px;width:100%"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /. box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+@section jsFooter{
+    <script src="~/Assets/plugins/iCheck/icheck.min.js"></script>
+    <!-- Page Script -->
+    <script>
+  $(function () {
+    //Enable iCheck plugin for checkboxes
+    //iCheck for checkbox and radio inputs
+    $('.mailbox-messages input[type="checkbox"]').iCheck({
+      checkboxClass: 'icheckbox_flat-blue',
+      radioClass: 'iradio_flat-blue'
+    });
+
+    //Enable check and uncheck all functionality
+    $(".checkbox-toggle").click(function () {
+      var clicks = $(this).data('clicks');
+      if (clicks) {
+        //Uncheck all checkboxes
+        $(".mailbox-messages input[type='checkbox']").iCheck("uncheck");
+        $(".fa", this).removeClass("fa-check-square-o").addClass('fa-square-o');
+      } else {
+        //Check all checkboxes
+        $(".mailbox-messages input[type='checkbox']").iCheck("check");
+        $(".fa", this).removeClass("fa-square-o").addClass('fa-check-square-o');
+      }
+      $(this).data("clicks", !clicks);
+    });
+
+    //Handle starring for glyphicon and font awesome
+    $(".mailbox-star").click(function (e) {
+      e.preventDefault();
+      //detect type
+      var $this = $(this).find("a > i");
+      var glyph = $this.hasClass("glyphicon");
+      var fa = $this.hasClass("fa");
+
+      //Switch states
+      if (glyph) {
+        $this.toggleClass("glyphicon-star");
+        $this.toggleClass("glyphicon-star-empty");
+      }
+
+      if (fa) {
+        $this.toggleClass("fa-star");
+        $this.toggleClass("fa-star-o");
+      }
+    });
+  });
+    </script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="/Assets/dist/js/demo.js"></script>
+    <script>
+        refresh(currentPage);
+
+        function refresh(page) {
+            $("._modal").show();
+            var sData = "{'page':'" +
+                page +
+                "','key':'" +
+                $("#Key").val() +
+                "','sort':'','usedState':'" +
+                $('#UsedState').find(":selected").val() +
+                "','pageSize':'" +
+                $("#sizePage").find(":selected").val() +
+                "'}";
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetData", "CmsSupport")',
+                data: sData,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(response) {
+                    $("._modal").hide();
+                    if (response.status == "success") {
+                        console.log(response);
+                        var listData = response.Data;
+                        var totalRecord = response.TotalPage;
+                        var pageSize = response.PageSize;
+                        var totalPage = (totalRecord % pageSize != 0)
+                            ? Math.floor(totalRecord / pageSize) + 1
+                            : Math.floor(totalRecord / pageSize);
+                        var currentPage = response.CurrentPage;
+                        var str = "";
+                        var paging = (pageSize * currentPage) + listData.length;
+                        if (paging < 0) {
+                            paging = 0;
+                            $(".btPre").hide();
+                        } if (paging >= totalRecord) {
+                            $(".btnNext").hide();
+                            paging = totalRecord;
+                        }
+                        $("#paging").text(paging + "/" + totalRecord);
+                        var roleDelete = ('@ViewBag.Delete' === 'True');
+                        var roleEdit = ('@ViewBag.Edit' === 'True');
+                        listData.forEach(function(item, index) {
+                            str += "<tr>";
+                            str += "  <td style=\"width:5%\"><input type=\"checkbox\"></td>";
+                            if (!item.IsRead) {
+                                str += "  <td style=\"width:5%\" class=\"mailbox-star\">";
+                                str += "     <a href=\"#\"><i class=\"fa fa-certificate text-yellow\"></i></a>";
+                                str += " </td>";
+                            } else {
+                                str += "  <td style=\"width:5%\" class=\"mailbox-star\">";
+                                str += " </td>";
+                            }
+
+                            str += " <td style=\"width:13%\" class=\"mailbox-name\"><a href=\"/\" class=\"noClick\" onclick=\"viewSupport("+item.Id+")\">" + item.Email + "</a></td>";
+                            str += " <td style=\"width:13%\" class=\"mailbox-name\"><a href=\"/\" class=\"noClick\" onclick=\"viewSupport(" + item.Id + ")\"><b>" + item.Name + "</b></a></td>";
+                            str += " <td  class=\"mailbox-subject\">";
+                            if (item.ContentSent != null) {
+                                if (item.ContentSent.length > 100)
+                                    str += item.ContentSent.substring(0, 100) + "...";
+                                else
+                                    str += item.ContentSent;
+                            }
+
+
+                            str += " </td>";
+                            str += " <td class=\"mailbox-attachment\"></td>";
+                            var date = new Date(parseInt(item.CreatedDate.replace(/(^.*\()|([+-].*$)/g, '')));
+                            var dateString = (date.getMonth() + 1) +
+                                '/' +
+                                date.getDate() +
+                                '/' +
+                                date.getFullYear();
+                            str += "     <td style=\"width:13%\" class=\"mailbox-date\">" + dateString + "</td>";
+                            str += " </tr>";
+                            }
+                        )
+                        $("#rptData").html(str);
+                        $('a.noClick').on('click',
+                            function(e) {
+                                e.preventDefault();
+                                //do other stuff when a click happens
+                            });
+                    } else {
+                        ToastMessage("error", "Lỗi tải dữ liệu !");
+                    }
+
+                    //window.location.href = url;
+                },
+                error: function() {
+                    ToastMessage("error", "Xảy ra lỗi !");
+                }
+            });
+        }
+    </script>
+    <script>
+        function viewSupport(id) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetById", "CmsSupport")',
+                data: "{'id':'" + id + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.status == "success") {
+                        console.log(msg.Data)
+                        $("#modal-default").modal();
+                        $("#name").text(msg.Data.Name);
+                        $("#email").text(msg.Data.Email);
+                        $("#phone").text(msg.Data.Phone);
+                        $("#summary").val(msg.Data.ContentSent);
+                        var date = new Date(parseInt(msg.Data.CreatedDate.replace(/(^.*\()|([+-].*$)/g, '')));
+                        var dateString = (date.getMonth() + 1) +
+                            '/' +
+                            date.getDate() +
+                            '/' +
+                            date.getFullYear();
+                        $("#date").text(dateString);
+                        refresh(currentPage);
+                    }
+                    else
+                        ToastMessage("error", "Xảy ra lỗi !");
+                }
+            });
+        }
+    </script>
+}

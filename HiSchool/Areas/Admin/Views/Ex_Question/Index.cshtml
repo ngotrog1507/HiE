@@ -1,0 +1,908 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var isHost = ViewBag.Host != null && (bool)ViewBag.Host;
+}
+<style>
+    .select2-container--default .select2-selection--single {
+        border-radius: 1px;
+    }
+</style>
+<section class="content-header">
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Thêm mới câu hỏi</a></li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <!-- row -->
+    <div class="row">
+        <div class="col-md-12">
+            <!-- The time line -->
+            <ul class="timeline" id="timeline_question">
+                <!-- timeline time label -->
+                <li class="time-label">
+                    <span class="bg-red">
+                        1. Câu hỏi
+                    </span>
+                    <input type="hidden" id="txtId" name="name" value="" />
+                    <input type="hidden" id="txtSubId" name="name" value="" />
+                </li>
+                <!-- /.timeline-label -->
+                <!-- timeline item -->
+                <li>
+                    <i class="fa fa-user bg-blue"></i>
+                    <div class="timeline-item">
+                        <span class="time"><i class="fa fa-clock-o"></i> Bước 1</span>
+                        <h3 class="timeline-header"><a href="#">Thông tin câu hỏi</a></h3>
+                        <div class="timeline-body">
+                            <form class="form-horizontal">
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label">Khối <span style="color: red">(*)</span></label>
+
+                                        <div class="col-sm-8">
+                                            <div class="clearfix">
+                                                <select id="grade" name="grade" aria-controls="example1" class="js-select2 form-control input-sm" onchange="changeGrade()">
+                                                    <option value="">------------ Chọn khối ------------</option>
+                                                    @if (ViewBag.Grade != null)
+                                                    {
+                                                        for (int i = 0; i < ViewBag.Grade.Count; i++)
+                                                        {
+                                                            <option value="@ViewBag.Grade[i].TypeCode.Trim()">@ViewBag.Grade[i].Name</option>
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-5">
+                                        <label class="col-sm-4 control-label">
+                                            Môn học <span style="color: red">(*)</span>
+                                            <i class="fa fa-spinner fa-spin loadingSpinSubject" style="display:none;font-size:24px;margin-left: 50%;"></i>
+                                        </label>
+                                        <div class="col-sm-8">
+                                            <div class="clearfix">
+                                                <select name="subjectId" id="subjectId" aria-controls="example1" class="js-select2 form-control input-sm" onchange="changeSubject()">
+                                                    <option value="">------------ Chọn môn học ------------</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-1"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label">
+                                            Đề thi <span style="color: red">(*)</span>
+                                            <i class="fa fa-spinner fa-spin loadingSpinExam" style="display:none;font-size:24px;margin-left: 50%;"></i>
+                                        </label>
+
+                                        <div class="col-sm-8">
+                                            <div class="clearfix">
+                                                <select name="examId" id="examId" aria-controls="example1" class="js-select2 form-control input-sm" onchange="changeExam()">
+                                                    <option value="">------------ Chọn đề thi ------------</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-5">
+                                        <label class="col-sm-4 control-label">
+                                            Chương <span style="color: red">(*)</span>
+                                            <i class="fa fa-spinner fa-spin loadingSpinSection" style="display:none;font-size:24px;margin-left: 50%;"></i>
+                                        </label>
+                                        <div class="col-sm-8">
+                                            <div class="clearfix">
+                                                <select name="sectionId" id="sectionId" aria-controls="example1" class="js-select2 form-control input-sm">
+                                                    <option value="">------------ Chọn chương ------------</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group col-sm-1"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label">Độ khó <span style="color: red">(*)</span></label>
+                                        <div class="col-sm-8">
+                                            <div class="clearfix">
+                                                <select name="levelDif" id="levelDif" aria-controls="example1" class="js-select2 form-control input-sm">
+                                                    <option value="">------------ Chọn độ khó ------------</option>
+                                                    @if (ViewBag.DoKho != null)
+                                                    {
+                                                        for (int i = 0; i < ViewBag.DoKho.Count; i++)
+                                                        {
+                                                            <option value="@ViewBag.DoKho[i].TypeCode.Trim()">@ViewBag.DoKho[i].Name</option>
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-5">
+                                        <label class="col-sm-4 control-label">Dạng câu hỏi</label>
+                                        <div class="col-sm-8">
+                                            <div class="clearfix">
+                                                <select name="loaiCauHoi" id="loaiCauHoi" aria-controls="example1" class="js-select2 form-control input-sm" onchange="selectLoaiCauHoi()">
+                                                    <option value="1">Một câu hỏi con</option>
+                                                    <option value="2">Nhiều Câu hỏi con</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label">Thứ tự</label>
+                                        <div class="col-sm-8">
+                                            <div class="clearfix">
+                                                <input type="number" id="Orders" name="Orders" class="form-control " value="1" onkeypress=" return isNumberKey(event) ">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-11">
+                                        <label class="col-sm-2 control-label">Nội dung câu hỏi</label>
+                                        <div class="col-sm-10" id="editorSummary">
+                                            <div class="clearfix">
+                                                <textarea class="textarea" name="QuestionContent" id="QuestionContent"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </li>
+                <!-- timeline time label -->
+                <li class="time-label">
+                    <span class="bg-green">
+                        2. Câu hỏi con
+                    </span>&nbsp&nbsp
+                    <a class="btn btn-primary btn-xs add-sub-question hidden" onclick="themCauHoi(this)" data-stt="1"><i class="fa fa-fw fa-plus-square-o"></i> Thêm câu hỏi con</a>
+                </li>
+                <!-- timeline item -->
+                <li>
+                    <i class="fa fa-comments bg-yellow"></i>
+                    <div class="timeline-item">
+                        <span class="time"><i class="fa fa-clock-o"></i> Bước 2</span>
+                        <h3 class="timeline-header"><a href="#">Câu hỏi con 1</a></h3>
+                        <div class="timeline-body">
+                            <form class="form-horizontal2">
+                                <div class="row">
+                                    <div class="form-group col-sm-12">
+                                        <label class="col-sm-2 control-label" id="tenCauhoi_1">Tên câu hỏi con </label>
+
+                                        <div class="col-sm-10">
+                                            <input type="text" data-id="1" name="txtSubQuestion" class="form-control txtSubQuestion_1" placeholder="">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label">Đáp án <span style="color: red">(*)</span></label>
+                                        <div class="col-sm-8">
+                                            <div class="input-group" style=" margin-bottom: 10px;">
+                                                <span class="input-group-addon">
+                                                    <input type="radio" name="dapAn1" checked value="1" onchange="chonDapAnDung('a1',1)">
+                                                </span>
+                                                <input type="text" class="form-control" id="nhapDapAn_a1" data-id="a1" onkeyup="nhapDapAn(this)">
+                                            </div>
+                                            <div class="input-group" style=" margin-bottom: 10px;">
+                                                <span class="input-group-addon">
+                                                    <input type="radio" name="dapAn1" value="2" onchange="chonDapAnDung('b1',1)">
+                                                </span>
+                                                <input type="text" class="form-control" id="nhapDapAn_b1" data-id="b1" onkeyup="nhapDapAn(this)">
+                                            </div>
+                                            <div class="input-group" style=" margin-bottom: 10px;">
+                                                <span class="input-group-addon">
+                                                    <input type="radio" name="dapAn1" value="3" onchange="chonDapAnDung('c1',1)">
+                                                </span>
+                                                <input type="text" class="form-control" id="nhapDapAn_c1" data-id="c1" onkeyup="nhapDapAn(this)">
+                                            </div>
+                                            <div class="input-group" style=" margin-bottom: 10px;">
+                                                <span class="input-group-addon">
+                                                    <input type="radio" name="dapAn1" value="4" onchange="chonDapAnDung('d1',1)">
+                                                </span>
+                                                <input type="text" class="form-control" id="nhapDapAn_d1" data-id="d1" onkeyup="nhapDapAn(this)">
+                                            </div>
+                                            <!-- /input-group -->
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-1" style="margin-left: -15px;">
+                                        <button type="button" class="btn btn-block btn-primary btn-sm" style="margin-bottom: 14px;" data-type="a1" data-stt="1" onclick="onMath(this)">Math</button>
+                                        <button type="button" class="btn btn-block btn-primary btn-sm" style="margin-bottom: 14px;" data-type="b1" data-stt="1" onclick="onMath(this)">Math</button>
+                                        <button type="button" class="btn btn-block btn-primary btn-sm" style="margin-bottom: 14px;" data-type="c1" data-stt="1" onclick="onMath(this)">Math</button>
+                                        <button type="button" class="btn btn-block btn-primary btn-sm" style="margin-bottom: 14px;" data-type="d1" data-stt="1" onclick="onMath(this)">Math</button>
+                                    </div>
+                                    <div class="form-group col-sm-5">
+                                        <div class="box box-success">
+
+                                            <div class="box-body">
+                                                <div class="form-group">
+                                                    <span>A. </span>
+                                                    <span class="a1 badge bg-green" style="display: inline-block;" id="dapAn_a1">Đáp án 1</span>
+                                                </div>
+
+                                                <!-- radio -->
+                                                <div class="form-group">
+                                                    <span>B. </span>
+                                                    <span class="b1" style="display: inline-block;" id="dapAn_b1">Đáp án 2</span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <span>C. </span>
+                                                    <span class="c1" style="display: inline-block;" id="dapAn_c1">Đáp án 3</span>
+                                                </div><div class="form-group">
+                                                    <span>D. </span>
+                                                    <span class="d1" style="display: inline-block;" id="dapAn_d1">Đáp án 4</span>
+                                                </div>
+
+                                            </div>
+                                            <!-- /.box-body -->
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- END timeline item -->
+            </ul>
+            <div class="row" style="/* margin-top: 10px; */">
+                <div class="col-md-12">
+                    <button type="button" class="btn margin btn-success" id="btnLuu" onclick="SaveChange(this)" style="margin-left: 45%;margin-top: -15px;">
+                        <i class="fa fa-save" aria-hidden="true"></i> &nbsp; Lưu câu hỏi
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- /.col -->
+    </div>
+    <div class="modal fade" id="modal-math">
+        <div class="modal-dialog" style="width: 60%">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box box-success">
+                                <div class="box-header with-border" style="padding-bottom: 0px;">
+                                    <div class="col-sm-6">
+                                        <input type="hidden" id="txtSubQuestion" />
+                                        <h3 class="box-title" style="margin-left: -18px;">Nhập nội dung câu hỏi</h3>
+                                    </div>
+                                    <!--trongnv-->
+                                </div>
+                                <!-- Horizontal Form -->
+                                <form class="form-horizontal3">
+                                    <div class="row">
+                                        <div class="form-group row" style="padding: 0 21px;">
+                                            <div class="col-sm-12" id="editorSubSummary">
+                                                <textarea class="textarea" id="SubQuestionContent"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                        <!-- /.content -->
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-success" id="btnAdd" onclick=" acceptQuestion(this) "><i class="fa fa-check" aria-hidden="true"></i>&nbsp; Xác nhận &nbsp;</button>
+                </div>
+            </div>
+        </div>
+        <!-- /.box -->
+        <!-- general form elements disabled -->
+        <!-- /.box -->
+    </div>
+    <!-- /.row -->
+</section>
+@section jsFooter{
+    <!-- /.content -->
+    <script>
+        $('.form-horizontal').validate({
+            errorElement: 'div',
+            errorClass: 'help-block',
+            focusInvalid: false,
+            ignore: "",
+            rules: {
+                grade: {
+                    required: true
+                },
+                subjectId: {
+                    required: true
+                },
+                examId: {
+                    required: true
+                },
+                sectionId: {
+                    required: true
+                },
+                levelDif: {
+                    required: true
+                },
+                loaiCauHoi: {
+                    required: true
+                }
+            },
+
+            messages: {
+                grade: {
+                    required: "Trường này không được bỏ trống ."
+                },
+                subjectId: {
+                    required: "Trường này không được bỏ trống ."
+                },
+                examId: {
+                    required: "Trường này không được bỏ trống ."
+                },
+                sectionId: {
+                    required: "Trường này không được bỏ trống ."
+                },
+                levelDif: {
+                    required: "Trường này không được bỏ trống ."
+                },
+                loaiCauHoi: {
+                    required: "Trường này không được bỏ trống ."
+                }
+            },
+
+            highlight: function (e) {
+                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+            },
+
+            success: function (e) {
+                $(e).closest('.form-group').removeClass('has-error'); //.addClass('has-info');
+                $(e).remove();
+            },
+
+            errorPlacement: function (error, element) {
+                if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                    var controls = element.closest('div[class*="col-"]');
+                    if (controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                    else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                } else if (element.is('.select2')) {
+                    error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+                } else if (element.is('.chosen-select')) {
+                    error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                } else error.insertAfter(element.parent());
+            }
+
+        });
+    </script>
+    <script>
+        $(function () {
+            CKEDITOR.replace('QuestionContent');
+            CKEDITOR.replace('SubQuestionContent');
+        });
+        function nhapDapAn(obj) {
+            var id = $(obj).attr("data-id");
+            $("#dapAn_" + id).text($(obj).val());
+        }
+        function chonDapAnDung(id, type) {
+            $("span.a" + type).removeClass("bg-green").removeClass("badge");
+            $("span.b" + type).removeClass("bg-green").removeClass("badge");
+            $("span.c" + type).removeClass("bg-green").removeClass("badge");
+            $("span.d" + type).removeClass("bg-green").removeClass("badge");
+
+            $("span." + id).addClass("bg-green").addClass("badge");
+        }
+        function themCauHoi(obj) {
+            var stt = $(obj).attr("data-stt");
+            //if ($("#loaiCauHoi :selected").val() == "1") {
+            //    return;
+            //}
+            stt = parseInt(stt) + 1;
+            $(obj).attr("data-stt", stt);
+            var html = "<li class='sub_" + stt + "'>";
+            html += "<i class='fa fa-comments bg-yellow'></i>";
+            html += "<div class='timeline-item'>";
+            html += "<div class='box-tools pull-right'>";
+            html += "    <button type='button' class='btn btn-box-tool' data-widget='remove' onclick='deleteSubQuestion(" + stt + ")'><i class='fa fa-times fa-lg'></i></button>";
+            html += "</div>";
+            html += "<h3 class='timeline-header'><a href='#'>Câu hỏi con " + stt + "</a></h3>";
+            html += " <div class='timeline-body'";
+            html += " <form class='form-horizontal2'>";
+            html += "    <div class='row'>";
+            html += "       <div class='form-group col-sm-12'>";
+            html += "           <label class='col-sm-2 control-label' id='tenCauhoi_1'>Tên câu hỏi con </label>";
+            html += "            <div class='col-sm-10'><input type='text' data-id='" + stt + "' name='txtSubQuestion' class='form-control txtSubQuestion_" + stt + "' placeholder=''></div>";
+            html += "       </div>";
+            html += "   </div>";
+            html += "   <div class='row'>";
+            html += "       <div class='form-group col-sm-6'>";
+            html += "           <label class='col-sm-4 control-label'>Đáp án <span style='color: red'>(*)</span></label>";
+            html += "           <div class='col-sm-8'>";
+            html += "                   <div class='input-group' style=' margin-bottom: 10px;'><span class='input-group-addon'>";
+            html += "                                   <input type=\"radio\" value=\"1\" name=\"dapAn" + stt + "\" checked  onchange=\"chonDapAnDung('a" + stt + "', " + stt + ")\"></span>";
+            html += "                                   <input type='text' class='form-control' id='nhapDapAn_a" + stt + "' data-id='a" + stt + "' onkeyup='nhapDapAn(this)'>";
+            html += "                   </div>";
+            html += "                   <div class='input-group' style=' margin-bottom: 10px;'><span class='input-group-addon'>";
+            html += "                                   <input type=\"radio\" value=\"2\" name=\"dapAn" + stt + "\"   onchange=\"chonDapAnDung('b" + stt + "'," + stt + ")\"></span>";
+            html += "                                   <input type='text' class='form-control' id='nhapDapAn_b" + stt + "' data-id='b" + stt + "' onkeyup='nhapDapAn(this)'>";
+            html += "                   </div>";
+            html += "                   <div class='input-group' style=' margin-bottom: 10px;'><span class='input-group-addon'>";
+            html += "                                   <input type=\"radio\" value=\"3\" name=\"dapAn" + stt + "\"  onchange=\"chonDapAnDung('c" + stt + "'," + stt + ")\"></span>";
+            html += "                                   <input type='text' class='form-control' id='nhapDapAn_c" + stt + "' data-id='c" + stt + "' onkeyup='nhapDapAn(this)'>";
+            html += "                   </div>";
+            html += "                   <div class='input-group' style=' margin-bottom: 10px;'><span class='input-group-addon'>";
+            html += "                                   <input type=\"radio\" value=\"4\" name=\"dapAn" + stt + "\"   onchange=\"chonDapAnDung('d" + stt + "'," + stt + ")\"></span>";
+            html += "                                   <input type='text' class='form-control' id='nhapDapAn_d" + stt + "' data-id='d" + stt + "' onkeyup='nhapDapAn(this)'>";
+            html += "                   </div>";
+            html += "           </div>";
+            html += "       </div>";
+
+
+            html += "   <div class='form-group col-sm-1' style='margin-left: -15px;'>";
+            html += "       <button type='button' class='btn btn-block btn-primary btn-sm' style='margin-bottom: 14px;' data-type='a" + stt + "' data-stt='" + stt + "'  onclick='onMath(this)'>Math</button>";
+            html += "       <button type='button' class='btn btn-block btn-primary btn-sm' style='margin-bottom: 14px;' data-type='b" + stt + "' data-stt='" + stt + "' onclick='onMath(this)'>Math</button>";
+            html += "       <button type='button' class='btn btn-block btn-primary btn-sm' style='margin-bottom: 14px;' data-type='c" + stt + "' data-stt='" + stt + "' onclick='onMath(this)'>Math</button>";
+            html += "       <button type='button' class='btn btn-block btn-primary btn-sm' style='margin-bottom: 14px;' data-type='d" + stt + "' data-stt='" + stt + "' onclick='onMath(this)'>Math</button>";
+            html += "   </div>";
+
+            html += "   <div class='form-group col-sm-5'>";
+            html += "       <div class='box box-success'>";
+            html += "           <div class='box-body'>";
+            html += "               <div class='form-group'>";
+            html += "                    <span>A. </span>";
+            html += "                    <span class='a" + stt + " badge bg-green' style='display: inline-block;' id='dapAn_a" + stt + "'>Đáp án 1</span>";
+            html += "                </div>";
+            html += "               <div class='form-group'>";
+            html += "                    <span>B. </span>";
+            html += "                    <span class='b" + stt + "'  style='display: inline-block;' id='dapAn_b" + stt + "'>Đáp án 2</span>";
+            html += "                </div>";
+            html += "               <div class='form-group'>";
+            html += "                    <span>C. </span>";
+            html += "                    <span class='c" + stt + "'  style='display: inline-block;' id='dapAn_c" + stt + "'>Đáp án 3</span>";
+            html += "                </div>";
+            html += "               <div class='form-group'>";
+            html += "                    <span>D. </span>";
+            html += "                    <span class='d" + stt + "'  style='display: inline-block;' id='dapAn_d" + stt + "'>Đáp án 4</span>";
+            html += "                </div>";
+            html += "          </div>";
+            html += "       </div>";
+            html += "    </div>";
+            html += "</div>";
+            html += "</div>";
+            html += "</form>";
+            html += "</div>";
+            html += "</div>";
+            html += "</li>";
+            $("#timeline_question").append(html);
+        }
+    </script>
+    <script>
+        function deleteSubQuestion(id) {
+            $(".sub_" + id).remove();
+        }
+        function selectLoaiCauHoi() {
+            if ($("#loaiCauHoi").val() == "1") {
+                $(".add-sub-question").addClass("hidden")
+            } else {
+                $(".add-sub-question").removeClass("hidden")
+            }
+        }
+        function onMath(obj) {
+            $("#modal-math").modal('show');
+            var type = $(obj).attr("data-type");
+            $("#txtSubQuestion").val(type);
+            var html = $("#dapAn_" + type).html();
+            CKEDITOR.instances.SubQuestionContent.setData(html);
+        }
+        function acceptQuestion(obj) {
+            var type = $("#txtSubQuestion").val();
+            $("#dapAn_" + type).html(CKEDITOR.instances.SubQuestionContent.getData());
+            $("#modal-math").modal('hide');
+        }
+    </script>
+
+    <script>
+
+        function changeGrade() {
+            $(".loadingSpinSubject").show();
+            var grade = $('#grade').find(":selected").val();
+            if (grade === "") { $(".loadingSpinSubject").hide(); $("#subjectId").html(""); return };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetInfoData", "Ex_Question")',
+                data: "{'type':1,'grade':'" + grade + "','subjectId':'','examId':''}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    $(".loadingSpinSubject").hide();
+                    var listData = response.Data;
+                    $("#subjectId").html("");
+                    listData.forEach(function (item, index) {
+                        $("#subjectId").append("<option value='"+item.Id+"'>"+item.Name+"</option>");
+                    })
+                    if (listData.length > 0) {
+                        changeSubject();
+                    } else {
+                        changeExam();
+                    }
+                    //if ($("#txtId").val() != ""); {
+                    //    $("#subjectId").val($("#hiddenSubject").val()).change();
+                    //}
+                },
+                err: function () {
+
+                }
+            })
+
+        }
+        function changeSubject() {
+            $(".loadingSpinExam").show();
+            var grade = $('#grade').find(":selected").val();
+            var subjectId = $('#subjectId').find(":selected").val();
+            if (grade === "" || subjectId === "" || typeof (subjectId) === "undefined") { $(".loadingSpinExam").hide(); $("#examId").html(""); return };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetInfoData", "Ex_Question")',
+                data: "{'type':'2','grade':'" + grade + "','subjectId':'" + subjectId+"','examId':''}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    $(".loadingSpinExam").hide();
+                    var listData = response.Data;
+                    $("#examId").html("");
+                    listData.forEach(function (item, index) {
+                        $("#examId").append("<option value='"+item.Code.trim()+"'>"+item.Name+"</option>");
+                    })
+                        changeExam();
+                    //if ($("#txtId").val() != ""); {
+                    //    $("#subjectId").val($("#hiddenSubject").val()).change();
+                    //}
+                },
+                err: function () {
+
+                }
+            })
+
+        }
+        function changeExam() {
+            $(".loadingSpinSection").show();
+            var examId = $('#examId').find(":selected").val();
+            if (examId === "") { $(".loadingSpinSection").hide(); $("#sectionId").html(""); return };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetInfoData", "Ex_Question")',
+                data: "{'type':'3','examId':'" + examId + "','grade':'','subjectId':''}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    $(".loadingSpinSection").hide();
+                    var listData = response.Data;
+                    $("#sectionId").html("");
+                    listData.forEach(function (item, index) {
+                        $("#sectionId").append("<option value='"+item.Id+"'>"+item.Section+"</option>");
+                    })
+                    //if ($("#txtId").val() != ""); {
+                    //    $("#subjectId").val($("#hiddenSubject").val()).change();
+                    //}
+                },
+                err: function () {
+
+                }
+            })
+
+        }
+        function SaveChange(obj) {
+            if ($('.form-horizontal').valid()) {
+
+                myLoop = new myLoading("btnLuu", "");
+                myLoop.start();
+
+                var data = new Object();
+                data.Id = $("#txtId").val();
+                data.Grade = $("#grade").find(":selected").val();
+                data.SubjectId = $("#subjectId").find(":selected").val();
+                data.ExamId = $("#examId").find(":selected").val();
+                data.SectionId = $("#sectionId").find(":selected").val();
+                data.LevelDifficult = $("#levelDif").find(":selected").val();
+                data.Type = $("#loaiCauHoi").find(":selected").val();
+                data.Orders = $("#Orders").val();
+                data.QuestionContent = CKEDITOR.instances.QuestionContent.getData();
+
+                var objQuestion = new Object();
+                var json = JSON.stringify(data);
+                console.log(data);
+                 $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Edit", "Ex_Question")',
+                    data: json,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                     success: function (msg) {
+                         myLoop.stop();
+                        if (msg.status == "success") {
+                            var idQuestion = msg.Data;
+                            $("#txtId").val(idQuestion);
+                            saveSubQuestion(idQuestion);
+                        } else
+                            ToastMessage("error", "Xảy ra lỗi !");
+                    },
+                    err: function () {
+                        ToastMessage("error", "Xảy ra lỗi !");
+                    }
+                });
+            }
+
+        }
+        function saveSubQuestion(idQuestion) {
+            myLoop = new myLoading("btnLuu", "");
+            myLoop.start();
+
+            var inputs = $("input[name='txtSubQuestion']");
+            var listOfObjects = [];
+            for (i = 0; i < inputs.length; ++i) {
+
+                var id = $(inputs[i]).attr("data-id");
+
+                var listOfAnswer = [];
+
+                var correct = $("input[name='dapAn" + id + "'][type='radio']:checked").val(); //Lấy ra Đáp án đúng là correct
+                /* Kiểm tra thông tin Câu hỏi A*/
+                var objAnswerA = new Object();
+                objAnswerA.Answer = $("#dapAn_a" + id).html();
+                objAnswerA.CorrectAnswer = (correct == "1") ? true : false;  //Kiểm tra xem đáp án này có đúng k
+                listOfAnswer.push(objAnswerA);
+
+                /* Kiểm tra thông tin Câu hỏi B*/
+                var objAnswerB = new Object();
+                objAnswerB.Answer = $("#dapAn_b" + id).html();
+                objAnswerB.CorrectAnswer = (correct == "2") ? true : false; //Kiểm tra xem đáp án này có đúng k
+                listOfAnswer.push(objAnswerB);
+
+                /* Kiểm tra thông tin Câu hỏi C*/
+                var objAnswerC = new Object();
+                objAnswerC.Answer = $("#dapAn_c" + id).html();
+                objAnswerC.CorrectAnswer = (correct == "3") ? true : false; //Kiểm tra xem đáp án này có đúng k
+                listOfAnswer.push(objAnswerC);
+
+                /* Kiểm tra thông tin Câu hỏi D*/
+                var objAnswerD = new Object();
+                objAnswerD.Answer = $("#dapAn_d" + id).html();
+                objAnswerD.CorrectAnswer = (correct == "4") ? true : false;  //Kiểm tra xem đáp án này có đúng k
+                listOfAnswer.push(objAnswerD);
+
+                /**
+                * Khởi tạo object lưu QuestionId và SubQuestionName và ListOfAnswer(Danh sách đáp án với dạng {Câu trả lời: Đúng/Sai})
+                */
+                var obj = new Object();
+                obj.QuestionId = idQuestion
+                obj.SubQuestionName = $(inputs[i]).val();
+                obj.ListOfAnswer = listOfAnswer;
+
+
+                listOfObjects.push(obj);
+                console.log(obj);
+            };
+
+            var json = JSON.stringify(listOfObjects);
+            console.log(json);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("EditAnswer", "Ex_Question")',
+                data: "{'sysModel':'"+json+"'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    myLoop.stop();
+                    if (msg.status == "success") {
+                        ToastMessage("success", "Lưu thành công !");
+                        var idQuestion = msg.Data;
+                        //$("#txtSubId").val(idQuestion);
+                        //saveSubQuestion(idQuestion);
+                    } else
+                        ToastMessage("error", "Xảy ra lỗi !");
+                },
+                err: function () {
+                    ToastMessage("error", "Xảy ra lỗi !");
+                }
+            })
+        }
+    </script>
+    @*Chinh sua cau hoi*@
+    <script>
+        $(function () {
+            var getUrlParameter = function getUrlParameter(sParam) {
+                var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                    sURLVariables = sPageURL.split('&'),
+                    sParameterName,
+                    i;
+
+                for (i = 0; i < sURLVariables.length; i++) {
+                    sParameterName = sURLVariables[i].split('=');
+
+                    if (sParameterName[0] === sParam) {
+                        return sParameterName[1] === undefined ? true : sParameterName[1];
+                    }
+                }
+            };
+            var cauHoi = getUrlParameter('cauHoi');
+            if (cauHoi != "") {
+                $("#txtId").val(cauHoi.trim());
+                $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetQuestion", "Ex_Question")',
+                    data: "{'cauHoi':'" + cauHoi+"'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.status == "success") {
+                        console.log(msg)
+                        loadData(msg.Question, msg.SubQuestion);
+                        loadAnswer(msg.SubQuestion);
+                    } else if (msg.status =="waring"){
+                        ToastMessage("warning", "Không tìm thấy mã câu hỏi này!");
+                    } else
+                        ToastMessage("error", "Xảy ra lỗi !");
+                },
+                err: function () {
+                    ToastMessage("error", "Xảy ra lỗi !");
+                }
+            })
+            }
+        })
+
+        function loadData(Question, SubQuestion) {
+            $("#grade").val(Question.Grade.trim()).change();
+            setTimeout(function () {
+                $("#subjectId").val(Question.SubjectId).change();
+                setTimeout(function () {
+                    $("#examId").val(Question.ExamId.trim()).change();
+                    setTimeout(function () {
+                        $("#sectionId").val(Question.SectionId).change();
+                    }, 1000);
+                }, 1000);
+            }, 1000);
+            if (Question.SubQuestion > 1) {
+                $("#loaiCauHoi").val(2).change();
+            } else {
+                $("#loaiCauHoi").val(1).change();
+            }
+           
+            $("#levelDif").val(Question.LevelDifficult.trim()).change();
+            $("#Orders").val(Question.Orders);
+            //debugger;
+            setTimeout(function () {
+                $("#sectionId").val(Question.SectionId).change();
+                CKEDITOR.instances.QuestionContent.setData(Question.QuestionContent);
+            }, 1000);
+
+        }
+        function loadAnswer(SubQuestion) {
+            if (SubQuestion.length < 1) {
+                return;
+            }
+            else {
+                 /*Set tong socau 'stt=Length' cho nut Them Cau Hoi*/
+                $('.add-sub-question').attr("data-stt", SubQuestion.length);
+                if (SubQuestion[0].ListOfAnswer.length > 0) {
+                    /*Bind du lieu ra Cau hoi so 1*/
+                    $(".txtSubQuestion_1").val(SubQuestion[0].SubQuestionName);
+                    $("#dapAn_a1").html(SubQuestion[0].ListOfAnswer[0].Answer);
+                    $("#dapAn_b1").html(SubQuestion[0].ListOfAnswer[1].Answer);
+                    $("#dapAn_c1").html(SubQuestion[0].ListOfAnswer[2].Answer);
+                    $("#dapAn_d1").html(SubQuestion[0].ListOfAnswer[3].Answer);
+                }
+                
+                var CorrectAnswer = 1;
+                var lstDa = ["a1", "b1", "c1", "d1"];
+                for (var i = 0; i<SubQuestion[0].ListOfAnswer.length; i++) {
+                    if (SubQuestion[0].ListOfAnswer[i].CorrectAnswer) {
+                        CorrectAnswer = i + 1;
+                    }
+                }
+                $("input[name='dapAn1'][value='" + CorrectAnswer + "']").prop("checked", true);
+                chonDapAnDung(lstDa[CorrectAnswer - 1], 1);
+
+                 /*Bind du lieu ra Cau hoi so 2-n*/
+
+                for (var i = 1; i < SubQuestion.length; i++) {
+                    var stt = i + 1;
+                    var html = "<li class='sub_" + stt + "'>";
+                html += "<i class='fa fa-comments bg-yellow'></i>";
+                html += "<div class='timeline-item'>";
+                html += "<div class='box-tools pull-right'>";
+                html += "    <button type='button' class='btn btn-box-tool' data-widget='remove' onclick='deleteSubQuestion(" + stt + ")'><i class='fa fa-times fa-lg'></i></button>";
+                html += "</div>";
+                html += "<h3 class='timeline-header'><a href='#'>Câu hỏi con " + stt + "</a></h3>";
+                html += " <div class='timeline-body'";
+                html += " <form class='form-horizontal2'>";
+                html += "    <div class='row'>";
+                html += "       <div class='form-group col-sm-12'>";
+                html += "           <label class='col-sm-2 control-label' id='tenCauhoi_1'>Tên câu hỏi con </label>";
+                    html += "            <div class='col-sm-10'><input type='text' data-id='" + stt + "' name='txtSubQuestion' class='form-control txtSubQuestion_" + stt + "' placeholder='' value='" + SubQuestion[stt-1].SubQuestionName+"'></div>";
+                html += "       </div>";
+                html += "   </div>";
+                html += "   <div class='row'>";
+                html += "       <div class='form-group col-sm-6'>";
+                html += "           <label class='col-sm-4 control-label'>Đáp án <span style='color: red'>(*)</span></label>";
+                html += "           <div class='col-sm-8'>";
+                html += "                   <div class='input-group' style=' margin-bottom: 10px;'><span class='input-group-addon'>";
+                    html += "                                   <input type=\"radio\" value=\"1\" name=\"dapAn" + stt + "\" checked  onchange=\"chonDapAnDung('a" + stt + "'," + stt +")\"></span>";
+                html += "                                   <input type='text' class='form-control' id='nhapDapAn_a" + stt + "' data-id='a" + stt + "' onkeyup='nhapDapAn(this)'>";
+                html += "                   </div>";
+                html += "                   <div class='input-group' style=' margin-bottom: 10px;'><span class='input-group-addon'>";
+                    html += "                                   <input type=\"radio\" value=\"2\" name=\"dapAn" + stt + "\"   onchange=\"chonDapAnDung('b" + stt + "'," + stt +")\"></span>";
+                html += "                                   <input type='text' class='form-control' id='nhapDapAn_b" + stt + "' data-id='b" + stt + "' onkeyup='nhapDapAn(this)'>";
+                html += "                   </div>";
+                html += "                   <div class='input-group' style=' margin-bottom: 10px;'><span class='input-group-addon'>";
+                    html += "                                   <input type=\"radio\" value=\"3\" name=\"dapAn" + stt + "\"   onchange=\"chonDapAnDung('c" + stt + "'," + stt +")\"></span>";
+                html += "                                   <input type='text' class='form-control' id='nhapDapAn_c" + stt + "' data-id='c" + stt + "' onkeyup='nhapDapAn(this)'>";
+                html += "                   </div>";
+                html += "                   <div class='input-group' style=' margin-bottom: 10px;'><span class='input-group-addon'>";
+                    html += "                                   <input type=\"radio\" value=\"4\" name=\"dapAn" + stt + "\"  onchange=\"chonDapAnDung('d" + stt + "'," + stt +")\"></span>";
+                html += "                                   <input type='text' class='form-control' id='nhapDapAn_d" + stt + "' data-id='d" + stt + "' onkeyup='nhapDapAn(this)'>";
+                html += "                   </div>";
+                html += "           </div>";
+                html += "       </div>";
+
+
+                html += "   <div class='form-group col-sm-1' style='margin-left: -15px;'>";
+                html += "       <button type='button' class='btn btn-block btn-primary btn-sm' style='margin-bottom: 14px;' data-type='a" + stt + "' data-stt='" + stt + "'  onclick='onMath(this)'>Math</button>";
+                html += "       <button type='button' class='btn btn-block btn-primary btn-sm' style='margin-bottom: 14px;' data-type='b" + stt + "' data-stt='" + stt + "' onclick='onMath(this)'>Math</button>";
+                html += "       <button type='button' class='btn btn-block btn-primary btn-sm' style='margin-bottom: 14px;' data-type='c" + stt + "' data-stt='" + stt + "' onclick='onMath(this)'>Math</button>";
+                html += "       <button type='button' class='btn btn-block btn-primary btn-sm' style='margin-bottom: 14px;' data-type='d" + stt + "' data-stt='" + stt + "' onclick='onMath(this)'>Math</button>";
+                html += "   </div>";
+
+                html += "   <div class='form-group col-sm-5'>";
+                html += "       <div class='box box-success'>";
+                html += "           <div class='box-body'>";
+                html += "               <div class='form-group'>";
+                html += "                    <span>A. </span>";
+                    html += "                    <span class='a" + stt + " badge bg-green' style='display: inline-block;' id='dapAn_a" + stt + "'>" + SubQuestion[stt - 1].ListOfAnswer[0].Answer+"</span>";
+                html += "                </div>";
+                html += "               <div class='form-group'>";
+                html += "                    <span>B. </span>";
+                    html += "                    <span class='b" + stt + "'  style='display: inline-block;' id='dapAn_b" + stt + "'>" + SubQuestion[stt - 1].ListOfAnswer[1].Answer +"</span>";
+                html += "                </div>";
+                html += "               <div class='form-group'>";
+                html += "                    <span>C. </span>";
+                    html += "                    <span class='c" + stt + "'  style='display: inline-block;' id='dapAn_c" + stt + "'>" + SubQuestion[stt - 1].ListOfAnswer[2].Answer +"</span>";
+                html += "                </div>";
+                html += "               <div class='form-group'>";
+                html += "                    <span>D. </span>";
+                    html += "                    <span class='d" + stt + "'  style='display: inline-block;' id='dapAn_d" + stt + "'>" + SubQuestion[stt - 1].ListOfAnswer[3].Answer +"</span>";
+                html += "                </div>";
+                html += "          </div>";
+                html += "       </div>";
+                html += "    </div>";
+                html += "</div>";
+                html += "</div>";
+                html += "</form>";
+                html += "</div>";
+                html += "</div>";
+                html += "</li>";
+                    $("#timeline_question").append(html);
+                    var lstAn = ["a" + stt, "b" + stt, "c" + stt, "d" + stt];
+                    for (var j = 0; j < SubQuestion[stt-1].ListOfAnswer.length; j++) {
+                        if (SubQuestion[stt - 1].ListOfAnswer[j].CorrectAnswer) {
+                            CorrectAnswer = j + 1;
+                        }
+                    }
+                    $("input[name='dapAn"+(stt)+"'][value='" + CorrectAnswer + "']").prop("checked", true);
+                    chonDapAnDung(lstAn[CorrectAnswer - 1], stt);
+
+                }
+            }
+        }
+    </script>
+}

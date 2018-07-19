@@ -1,0 +1,254 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var isHost = ViewBag.Host != null && (bool)ViewBag.Host;
+}
+
+<link href="~/Content/ImageZoom.css" rel="stylesheet" />
+<!-- Content Header (Page header) -->
+<section class="content-header">
+
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i>Quản lý đề thi</a></li>
+    </ol>
+</section>
+
+
+<section class="content">
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Horizontal Form -->
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Tìm kiếm </h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <div class="form-horizontal">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="row">
+                                <div class="form-group col-sm-10">
+                                    <label class="col-sm-3 control-label">Danh mục</label>
+
+                                    <div class="col-sm-9">
+                                        <input type="text" id="txtCategoryName" class="form-control " placeholder="Nhấn Enter để tìm kiếm">
+                                        <input type="hidden" id="txtCatId">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-2">
+                                    <button type="button" onclick="themChuong()" title="Thêm mới" id="btnChuong" class="btn btn-success">
+                                        <i class="fa fa-save" aria-hidden="true"></i>&nbsp;Thêm mới
+                                    </button>
+                                    <button type="button" onclick="themChuong()" title="Lưu thay đổi" id="btnLuuChuong" class="btn btn-primary" style="display:none">
+                                        <i class="fa fa-save" aria-hidden="true"></i>&nbsp;Lưu thay đổi
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box box-success">
+                    <div class="box-header with-border" style="padding-bottom: 0px;">
+                        <div class="col-sm-6">
+                            <h3 class="box-title" style="margin-left: -18px;"> Danh mục cha</h3>
+                        </div>
+                        <!--trongnv-->
+                    </div>
+                    <!-- /.box-header -->
+                    <!-- form start -->
+                    <form class="form-horizontal">
+                        <div class="box-body">
+                            <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table id="example1" class="table table-bordered table-striped">
+                                            <thead class="color-trong">
+                                                <tr>
+                                                    <th style="width: 5%; text-align: center">STT</th>
+                                                    <th style="text-align: center">Danh mục</th>
+                                                    <th style="width: 18%; text-align: center">Số lượng</th>
+                                                    <th style="width: 15%; text-align: center">CN</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="dataCategory"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- /.box -->
+            <!-- general form elements disabled -->
+            <!-- /.box -->
+        </div>
+        <div class="col-md-6">
+            <!-- Horizontal Form -->
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Danh mục -Khối </h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <div class="form-horizontal">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="row">
+                                <div class="form-group col-sm-10">
+                                    <label class="col-sm-3 control-label">Tên</label>
+
+                                    <div class="col-sm-9">
+                                        <input type="text" id="txtName" class="form-control " placeholder="Nhấn Enter để tìm kiếm">
+                                        <input type="hidden" id="txtSubjectId" value="1">
+                                        <input type="hidden" id="txtSId">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-2">
+                                    <button type="button" onclick="themChuong()" title="Thêm mới" id="btnChuong" class="btn btn-success">
+                                        <i class="fa fa-save" aria-hidden="true"></i>&nbsp;Thêm mới
+                                    </button>
+                                    <button type="button" onclick="themChuong()" title="Lưu thay đổi" id="btnLuuChuong" class="btn btn-primary" style="display:none">
+                                        <i class="fa fa-save" aria-hidden="true"></i>&nbsp;Lưu thay đổi
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box box-success">
+                    <div class="box-header with-border" style="padding-bottom: 0px;">
+                        <div class="col-sm-6">
+                            <h3 class="box-title" style="margin-left: -18px;"> Danh mục con</h3>
+                        </div>
+                        <!--trongnv-->
+                    </div>
+                    <!-- /.box-header -->
+                    <!-- form start -->
+                    <form class="form-horizontal">
+                        <div class="box-body">
+                            <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table id="example1" class="table table-bordered table-striped">
+                                            <thead class="color-trong">
+                                                <tr>
+                                                    <th style="width: 5%; text-align: center">STT</th>
+                                                    <th style="width: 15%; text-align: center">Mã code</th>
+                                                    <th style="text-align: center">Tên</th>
+                                                    <th style="width: 15%; text-align: center">CN</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="dataCategoryValue"></tbody>
+                                            <tr></tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- /.box -->
+            <!-- general form elements disabled -->
+            <!-- /.box -->
+        </div>
+    </div>
+</section>
+
+@section jsFooter{
+    <script>
+         refresh(currentPage);
+
+        function refresh(page) {
+            $("._modal").show();
+            var sData = "{'key':'" + $("#txtCategoryName").val() + "','type':'1'}";
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetDataCategory", "Ex_Category")',
+                data: sData,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(response) {
+                    $("._modal").hide();
+                    if (response.status == "success") {
+                        var listData = response.Data;
+                        var str = "";
+                        var roleDelete = ('@ViewBag.Delete' === 'True');
+                        var roleEdit = ('@ViewBag.Edit' === 'True');
+                        listData.forEach(function (item, index) {
+                            str += "<tr style='text-align: center'>";
+                            str += "<td style='text-align: center;'>" + (index+1)+"</td>"
+                                str += "<td style='text-align: left; padding-left: 20px;' id='name_"+item.Id+"'>";
+                            str += "<a href = '' onclick = 'getCategoryValue(this)' data-code='"+item.Code.trim()+"' class='noClick' >"+item.Name+"</a>";
+                                str += "    </td>";
+                            str += "<td style='text-align: center;'><span class='badge label-success'>" + item.Total + "</span></td>";
+                            str += "<td>";
+                            str += "    <a href = '' onclick = 'suaChuong(2)' class='noClick' > <i class='fa fa-edit fa-lg' aria-hidden='true' title='Sửa chương'></i> &nbsp;&nbsp;&nbsp;</a>";
+                            str += "    <a href='' onclick='deleteChuong(2)' class='noClick'><i class='fa fa-window-close-o fa-lg' aria-hidden='true' title='Xóa Chương'></i>&nbsp;</a>";
+                            str += "</td>";
+                             str += " </tr>";
+                        })
+                        $("#dataCategory").html(str);
+                        $('a.noClick').on('click', function(e) {
+                            e.preventDefault();
+                            //do other stuff when a click happens
+                        });
+                    }
+
+                    //window.location.href = url;
+                },
+                error: function() {
+                    ToastMessage("error", "Xảy ra lỗi !");
+                }
+            });
+        }
+    </script>
+    <script>
+        function getCategoryValue(obj) {
+            var code = ($(obj).attr("data-code"));
+            var sData = "{'code':'" + code + "'}";
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetDanhMucCon", "Ex_Category")',
+                data: sData,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.status == "success") {
+                        var listData = response.Data;
+                        var str = "";
+                        var roleDelete = ('@ViewBag.Delete' === 'True');
+                        var roleEdit = ('@ViewBag.Edit' === 'True');
+                        listData.forEach(function (item, index) {
+                            str += "<tr style='text-align: center'>";
+                            str += "<td style='text-align: center;'>" + (index + 1) + "</td>"
+                            str += "<td style='text-align: center;'>" + item.TypeCode + "</td>"
+                            str += "<td  style='text-align: left; padding-left: 20px;'>"
+                            str += "<a href = '' onclick = 'getCategoryValue(this)'  class='noClick' >" + item.Name + "</a>";
+                            str += "    </td>";
+                            str += "<td>";
+                            str += "    <a href = '' onclick = 'suaChuong(2)' class='noClick' > <i class='fa fa-edit fa-lg' aria-hidden='true' title='Sửa chương'></i> &nbsp;&nbsp;&nbsp;</a>";
+                            str += "    <a href='' onclick='deleteChuong(2)' class='noClick'><i class='fa fa-window-close-o fa-lg' aria-hidden='true' title='Xóa Chương'></i>&nbsp;</a>";
+                            str += "</td>";
+                            str += " </tr>";
+                        })
+                        $("#dataCategoryValue").html(str);
+                        $('a.noClick').on('click', function (e) {
+                            e.preventDefault();
+                            //do other stuff when a click happens
+                        });
+                    }
+                },
+                error: function () {
+                    ToastMessage("error", "Xảy ra lỗi !");
+                }
+            })
+        }
+    </script>
+}

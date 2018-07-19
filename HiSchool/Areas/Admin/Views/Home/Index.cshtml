@@ -1,0 +1,199 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@*<div class="_modal">
+    <div class="cssload-container">
+        <div class="cssload-speeding-wheel"></div>
+        <div id="veil"></div>
+    </div>
+</div>*@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> title</a></li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Tìm kiếm </h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form class="form-horizontal">
+                    <div class="box-body">
+
+                        <div class="row">
+                            <div class="form-group col-sm-1"></div>
+                            <div class="form-group col-sm-5">
+                                <label class="col-sm-3 control-label">Tên nhóm</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control "  placeholder="Tên nhóm">
+                                </div>
+                            </div>
+
+                            <div class="form-group col-sm-5">
+                                <label class="col-sm-3 control-label">Trạng thái</label>
+                                <div class="col-sm-9">
+                                    <select class="js-select2 col-sm-12" name="state">
+                                        <option value="AL">Alabama</option>
+                                        <option value="AL">Alabama2</option>
+                                        <option value="WY">Wyoming</option>
+                                    </select>
+                                    @*<ui-select >
+                                        <ui-select-match allow-clear="true" placeholder=".....Chọn.....">$select.selected.name</ui-select-match>
+                                        <ui-select-choices repeat="record in stateList | filter: $select.search">
+                                            <div ng-bind-html="record.name | highlight: $select.search"></div>
+                                        </ui-select-choices>
+                                    </ui-select>'*@
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-1"></div>
+                        </div>
+                        <div class="form-group col-sm-12" style="text-align: center;">
+                            <button type="submit" title="'txt-search' | translate" class="btn color-trong btn-trong">
+                                <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Tìm kiếm
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="box box-success">
+                <div class="box-header with-border" style="padding-bottom: 0px;">
+                    <div class="col-sm-6">
+                        <h3 class="box-title" style="margin-left: -18px;"> Danh sách</h3>
+                    </div>
+                    <!--trongnv-->
+                    <div class="col-sm-6">
+                        <button type="submit" style="margin: -8px -14px 4px 19px;" title="'txt-delete' | translate" class="btn btn-danger pull-right">
+                            <i class="fa fa-times-circle" aria-hidden="true"></i>&emsp; Xóa
+                        </button>
+                        <button type="submit" style="margin: -8px -14px 4px 19px;" title="'txt-add' | translate" class="btn btn-success pull-right" data-toggle="modal" data-target="#modal-default">
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;&nbsp;Thêm mới
+                        </button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form class="form-horizontal">
+                    <div class="box-body">
+                        <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="dataTables_length" id="example1_length">
+                                        <label>
+                                            Số lượng hiển thị
+                                            @*<select ng-model="rowInpage" ng-change="refresh(1)" name="example1_length" aria-controls="example1" class="selectOption-trong form-control input-sm">
+                                                <option ng-repeat="obj in listRowInPage" value="obj">obj</option>
+                                            </select>*@
+                                            bản ghi
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table id="example1" class="table table-bordered table-striped">
+                                        <thead class="color-trong">
+                                        <tr>
+                                            <th style="width: 2%; text-align: center">
+                                                <span> <input type="checkbox" class="flat-red"></span>
+                                            </th>
+                                            <th style="width: 5%; text-align: center">STT</th>
+                                            <th style="width: 5%; text-align: center">CN</th>
+                                            <th style="width: 30%; text-align: center">Tên nhóm</th>
+                                            <th style="text-align: center">Ngày tạo</th>
+                                            <th style="text-align: center">Người tạo</th>
+                                            <th style="text-align: center">Trạng thái</th>
+                                            <th style="text-align: center; width: 15%;">Người dùng</th>
+                                            <th style="text-align: center; width: 10%;">Api</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr style="text-align: center">
+                                            <td style="text-align: center">
+                                                <input type="checkbox">
+                                            </td>
+                                            <td>1</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn color-trong dropdown-toggle" style="color: white;" data-toggle="dropdown" aria-expanded="false">
+                                                        <i class="fa fa-cog" aria-hidden="true"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu setting-menu" role="menu">
+                                                        <li ng-click="edit(record)"><a href=""><i class="fa fa-pencil-square-o" aria-hidden="true"></i>"txt-edit" | translate</a></li>
+                                                        <li class="divider"></li>
+                                                        <li ng-click="delete(record)"><a href=""><i class="fa fa-times-circle" aria-hidden="true"></i>"txt-delete" | translate</a></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                            <td style="text-align: left; padding-left: 40px;">
+                                                record.Name
+                                            </td>
+                                            <td>record.CreatedDate| date:'dd/MM/yyyy'</td>
+                                            <td>record.UserName</td>
+                                            <td ng-show="record.UsedState==1" title="'txt-state-unlock' | translate"><i class="fa fa-lg fa-unlock"></i></td>
+                                            @* <td ng-show="record.UsedState==0" title="'txt-state-lock' | translate"><i class="fa fa-lg fa-lock"></i></td>*@
+                                            <td>
+                                                <a href="" ng-click="listUser(record)"><i class="fa fa-users" aria-hidden="true" title="Danh sách người dùng"></i>&nbsp</a>
+                                                <a href="" ng-click="addUser(record)"><i class="fa fa-user-plus" aria-hidden="true" title="Thêm mới người dùng"></i>&nbsp</a>
+                                            </td>
+                                            <td>
+                                                <a href="" ng-click="addControl(record)"><i class="fa fa-database" aria-hidden="true" title="Quản lý Control"></i>&nbsp</a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row" paging-nvt>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="modal fade" id="modal-default">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <h4 class="modal-title">Default Modal</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p>One fine body&hellip;</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+
+            </div>
+        </div>
+        <!-- /.box -->
+        <!-- general form elements disabled -->
+        <!-- /.box -->
+    </div>
+    <!--/.col (right) -->
+    <!-- /.content -->
+    <script>
+    </script>
+</section>
+

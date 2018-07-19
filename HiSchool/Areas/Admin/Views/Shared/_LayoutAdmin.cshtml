@@ -1,0 +1,842 @@
+﻿@using Core.Service
+
+@{
+    Layout = null;
+    int userId = WebSecurity.CurrentUserId;
+    var userModel = new SysUserAction().GetById(userId);
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Quản trị hệ thống </title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="/Assets/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/Assets/bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="/Assets/bower_components/Ionicons/css/ionicons.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="/Assets/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/Assets/dist/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="/Assets/dist/css/skins/_all-skins.min.css">
+    <!-- fullCalendar -->
+    <link rel="stylesheet" href="/Assets/bower_components/fullcalendar/dist/fullcalendar.min.css">
+    <link rel="stylesheet" href="/Assets/bower_components/fullcalendar/dist/fullcalendar.print.min.css" media="print">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <link href="~/Assets/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css" rel="stylesheet" />
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="/Assets/plugins/iCheck/all.css">
+    <link href="~/Assets/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" rel="stylesheet" />
+    <!-- Google Font -->
+    <!--lib css-->
+    <link href="/Assets/toastr.min.css" rel="stylesheet" />
+    <link href="/Assets/select.css" rel="stylesheet" />
+    <!-- Loading modal css -->
+    <link href="/Assets/Skin/loading.css" rel="stylesheet" />
+    <!-- MySkin css -->
+    <link href="/Assets/skin.css" rel="stylesheet" />
+    <!--lib js-->
+    <script src="/Assets/toastr.min.js"></script>
+
+    <link href="~/Assets/select2.css" rel="stylesheet" />
+    <link href="~/Assets/bootstrap-tooggle.min.css" rel="stylesheet" />
+    <link href="~/Assets/ImageZoom.css" rel="stylesheet" />
+
+    <style>
+        .toggle.android {
+            border-radius: 0px;
+        }
+
+            .toggle.android .toggle-handle {
+                border-radius: 0px;
+            }
+    </style>
+
+    <style>
+        body {
+            font-size: 12.7px;
+        }
+
+        .logo {
+            background-color: #1e6e9c !important;
+        }
+
+        .textleft {
+            text-align: left !important;
+        }
+
+        .fixed .content-wrapper, .fixed .right-side {
+            padding-top: 42px;
+        }
+
+        .select2-container .select2-selection--single {
+            height: 34px;
+        }
+
+        .example-modal .modal {
+            position: relative;
+            top: auto;
+            bottom: auto;
+            right: auto;
+            left: auto;
+            display: block;
+            z-index: 1;
+        }
+
+        .example-modal .modal {
+            background: transparent !important;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: #00476f;
+        }
+
+        .select2-container--default {
+            width: 100% !important;
+        }
+    </style>
+
+
+    <script src="/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="/Scripts/jquery.signalR-2.2.3.min.js"></script>
+    <script src="/signalr/hubs"></script>
+
+    <link href="~/Content/checkbox.css" rel="stylesheet" />
+    @RenderSection("header", false);
+    @*
+        <base href="/">
+    *@
+</head>
+
+<!-- ADD THE CLASS fixed TO GET A FIXED HEADER AND SIDEBAR LAYOUT -->
+<!-- the fixed layout is not compatible with sidebar-mini -->
+
+<body class="hold-transition skin-blue fixed sidebar-mini">
+    <!-- Site wrapper -->
+    <div class="wrapper">
+        @*<div class="_modal" ng-show="isLoading">
+                <div class="cssload-container">
+                    <div class="cssload-speeding-wheel"></div>
+                    <div id="veil"></div>
+                </div>
+            </div>*@
+        <header class="main-header">
+            <!-- Logo -->
+            <a href="@Url.Action("Index","Admin")" class="logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini"><b>A</b>LT</span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg">Hệ thống học trực tuyến</span>
+            </a>
+            <!-- Header Navbar: style can be found in header.less -->
+            <nav class="navbar navbar-static-top color-trong">
+                <!-- Sidebar toggle button-->
+                <a class="sidebar-toggle" data-toggle="push-menu" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown messages-menu">
+                            <!-- Menu toggle button -->
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-globe" style="font-size: 1.5em;"></i>
+                                <span class="label label-warning studentNew">0</span>
+                            </a>
+
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <!-- inner menu: contains the messages -->
+                                    <ul class="menu" id="studentNew">
+                                        <!-- end message -->
+                                    </ul>
+                                    <!-- /.menu -->
+                                </li>
+                                <li class="footer"><a href="@Url.Action("Index","HistoryPayment")">Xem tất cả</a></li>
+                            </ul>
+                        </li>
+                        <!-- Messages: style can be found in dropdown.less-->
+                        <li class="dropdown messages-menu">
+                            <!-- Menu toggle button -->
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" onclick="ActiveAllComment()">
+                                <i class="fa fa-envelope-o" style="font-size: 1.5em;"></i>
+                                <span class="label label-danger studentChat">0</span>
+                            </a>
+
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <!-- inner menu: contains the messages -->
+                                    <ul class="menu" id="studentChat">
+                                        <!-- end message -->
+                                    </ul>
+                                    <!-- /.menu -->
+                                </li>
+                                <li class="footer"><a href="@Url.Action("Index","CmsSupport")">Xem tất cả</a></li>
+                            </ul>
+                        </li>
+                        <!-- /.messages-menu -->
+                        <!-- User Account: style can be found in dropdown.less -->
+                        <li class="dropdown user user-menu">
+                            <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                                <img src="@userModel.ImageUrl" class="user-image" alt="User Image">
+                                <span class="hidden-xs">@userModel.FullName</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <!-- User image -->
+                                <li class="user-header">
+                                    <img src="@userModel.ImageUrl" class="img-circle" alt="User Image">
+
+                                    <p>
+                                        @userModel.FullName
+                                        <small>@userModel.Email</small>
+                                        <small>Số tiền : @String.Format("{0:0,0}", userModel.BCoin) VNĐ</small>
+                                    </p>
+                                </li>
+                                <!-- Menu Body -->
+                                <!-- Menu Footer-->
+                                <li class="user-footer">
+                                    <div class="pull-left">
+                                        <a href="#" class="btn btn-default btn-flat">Cá nhân</a>
+                                    </div>
+                                    <div class="pull-left" style="padding-left: 13px;">
+                                        <a href="javascript:ShowPayMent()" class="btn btn-default btn-flat"><i class="fa fa-credit-card" aria-hidden="true"></i>&nbsp;Rút tiền</a>
+                                    </div>
+                                    <div class="pull-right">
+                                        <a href="@Url.Action("LogOut","Admin")" class="btn btn-default btn-flat">Thoát</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- Control Sidebar Toggle Button -->
+                        <li>
+                            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!--<ng-include src="'/app/view/layout/nav.html'"></ng-include>-->
+        <aside class="main-sidebar">
+            <!-- sidebar: style can be found in sidebar.less -->
+            <section class="sidebar">
+                <!-- Sidebar user panel -->
+                <!-- Sidebar user panel -->
+                <!-- /.search form -->
+                <!-- sidebar menu: : style can be found in sidebar.less -->
+                <aside class="main-sidebar">
+                    <!-- sidebar: style can be found in sidebar.less -->
+                    <section class="sidebar">
+                        <!-- Sidebar user panel -->
+                        <div class="user-panel">
+                            <div class="pull-left image">
+                                <img src="@userModel.ImageUrl" class="img-circle" alt="User Image">
+                            </div>
+                            <div class="pull-left info">
+                                <p>@userModel.FullName</p>
+                                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                            </div>
+                        </div>
+                        <!-- search form -->
+                        <!-- search form -->
+                        <!-- /.search form -->
+                        <!-- sidebar menu: : style can be found in sidebar.less -->
+                        <ul class="sidebar-menu" data-widget="tree">
+                            <li class="header">DANH SÁCH CÁC DANH MỤC</li>
+                            @*@if (Session["Menu"] == null)
+                                {
+                                    Session["Menu"] = HiSchool.Models.Menu.GetMenu();*@
+                            @Html.Raw(HiSchool.Models.Menu.GetMenu())
+                            @*}
+                                else
+                                {
+                                    @Html.Raw(Session["Menu"])
+                                }*@
+
+
+
+                        </ul>
+                    </section>
+                    <!-- /.sidebar -->
+                </aside>
+                <!--<ul class="sidebar-menu" data-widget="tree" ng-bind-html="myHTML1" ></ul>-->
+            </section>
+            <!-- /.sidebar -->
+        </aside>
+        <div class="content-wrapper">
+            @RenderBody()
+        </div>
+
+        <div class="control-sidebar-bg"></div>
+    </div>
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+            <b>Version</b> 2.4.0
+        </div>
+        <strong>Liên hệ : <a href="#">trongnv1507@gmail.com</a>.</strong>
+        0973002521.
+    </footer>
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Create the tabs -->
+        <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+            <li><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
+            <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <!-- Home tab content -->
+            <div class="tab-pane" id="control-sidebar-home-tab">
+                <h3 class="control-sidebar-heading">Recent Activity</h3>
+                <ul class="control-sidebar-menu">
+                    <li>
+                        <a href="javascript:void(0)">
+                            <i class="menu-icon fa fa-birthday-cake bg-red"></i>
+                            <div class="menu-info">
+                                <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
+                                <p>Will be 23 on April 24th</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)">
+                            <i class="menu-icon fa fa-user bg-yellow"></i>
+                            <div class="menu-info">
+                                <h4 class="control-sidebar-subheading">Frodo Updated His Profile</h4>
+                                <p>New phone +1(800)555-1234</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)">
+                            <i class="menu-icon fa fa-envelope-o bg-light-blue"></i>
+                            <div class="menu-info">
+                                <h4 class="control-sidebar-subheading">Nora Joined Mailing List</h4>
+                                <p>nora@example.com</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)">
+                            <i class="menu-icon fa fa-file-code-o bg-green"></i>
+                            <div class="menu-info">
+                                <h4 class="control-sidebar-subheading">Cron Job 254 Executed</h4>
+                                <p>Execution time 5 seconds</p>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+                <!-- /.control-sidebar-menu -->
+                <h3 class="control-sidebar-heading">Tasks Progress</h3>
+                <ul class="control-sidebar-menu">
+                    <li>
+                        <a href="javascript:void(0)">
+                            <h4 class="control-sidebar-subheading">
+                                Custom Template Design
+                                <span class="label label-danger pull-right">70%</span>
+                            </h4>
+                            <div class="progress progress-xxs">
+                                <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)">
+                            <h4 class="control-sidebar-subheading">
+                                Update Resume
+                                <span class="label label-success pull-right">95%</span>
+                            </h4>
+                            <div class="progress progress-xxs">
+                                <div class="progress-bar progress-bar-success" style="width: 95%"></div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)">
+                            <h4 class="control-sidebar-subheading">
+                                Laravel Integration
+                                <span class="label label-warning pull-right">50%</span>
+                            </h4>
+                            <div class="progress progress-xxs">
+                                <div class="progress-bar progress-bar-warning" style="width: 50%"></div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)">
+                            <h4 class="control-sidebar-subheading">
+                                Back End Framework
+                                <span class="label label-primary pull-right">68%</span>
+                            </h4>
+                            <div class="progress progress-xxs">
+                                <div class="progress-bar progress-bar-primary" style="width: 68%"></div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+                <!-- /.control-sidebar-menu -->
+            </div>
+            <!-- /.tab-pane -->
+            <!-- Stats tab content -->
+            <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div>
+            <!-- /.tab-pane -->
+            <!-- Settings tab content -->
+            <div class="tab-pane" id="control-sidebar-settings-tab">
+                <form method="post">
+                    <h3 class="control-sidebar-heading">General Settings</h3>
+                    <div class="form-group">
+                        <label class="control-sidebar-subheading">
+                            Report panel usage
+                            <input type="checkbox" class="pull-right" checked>
+                        </label>
+                        <p>
+                            Some information about this general settings option
+                        </p>
+                    </div>
+                    <!-- /.form-group -->
+                    <div class="form-group">
+                        <label class="control-sidebar-subheading">
+                            Allow mail redirect
+                            <input type="checkbox" class="pull-right" checked>
+                        </label>
+                        <p>
+                            Other sets of options are available
+                        </p>
+                    </div>
+                    <!-- /.form-group -->
+                    <div class="form-group">
+                        <label class="control-sidebar-subheading">
+                            Expose author name in posts
+                            <input type="checkbox" class="pull-right" checked>
+                        </label>
+                        <p>
+                            Allow the user to show his name in blog posts
+                        </p>
+                    </div>
+                    <!-- /.form-group -->
+                    <h3 class="control-sidebar-heading">Chat Settings</h3>
+                    <div class="form-group">
+                        <label class="control-sidebar-subheading">
+                            Show me as online
+                            <input type="checkbox" class="pull-right" checked>
+                        </label>
+                    </div>
+                    <!-- /.form-group -->
+                    <div class="form-group">
+                        <label class="control-sidebar-subheading">
+                            Turn off notifications
+                            <input type="checkbox" class="pull-right">
+                        </label>
+                    </div>
+                    <!-- /.form-group -->
+                    <div class="form-group">
+                        <label class="control-sidebar-subheading">
+                            Delete chat history
+                            <a href="javascript:void(0)" class="text-red pull-right"><i class="fa fa-trash-o"></i></a>
+                        </label>
+                    </div>
+                    <!-- /.form-group -->
+                </form>
+            </div>
+            <!-- /.tab-pane -->
+        </div>
+    </aside>
+    <div class="modal fade" id="modal-payment">
+        <div class="modal-dialog" style="width: 45%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Thông tin giao dịch</h4>
+                    <input type="hidden" id="txtUserId2" value="@userModel.UserId" />
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal2">
+                        <div class="row">
+                            <div class="form-group col-sm-12">
+                                <label class="col-sm-4 control-label"> Họ tên </label>
+
+                                <div class="col-sm-8">
+                                    <label>@userModel.FullName</label>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="col-sm-4 control-label"> Tài khoản </label>
+
+                                <div class="col-sm-8">
+                                    <label>@userModel.UserName</label>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="col-sm-4 control-label"> Email </label>
+
+                                <div class="col-sm-8">
+                                    <label>@userModel.Email</label>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="col-sm-4 control-label"> Số tiền hiện tại </label>
+
+                                <div class="col-sm-8">
+                                    <span class="badge bg-green">  @String.Format("{0:0,0}", userModel.BCoin) VNĐ</span>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="col-sm-4 control-label"> Số tiền </label>
+                                <div class="col-sm-8">
+                                    <input type="number" id="txtMoney2" onkeypress=" return isNumberKey(event) " placeholder="Nhập số tiền giao dịch" class="form-control" name="name" value="" />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" onclick="Print()"><i class="fa fa-print" aria-hidden="true"></i>&nbsp;In hóa đơn &nbsp;</button>
+                    <button type="button" class="btn btn-success" id="btnSave" onclick="Payment()"><i class="fa fa-save" aria-hidden="true"></i>&nbsp;Gửi &nbsp;</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- jQuery 3 -->
+    <script src="~/Content/MyHubJs.js"></script>
+    <!-- Bootstrap 3.3.7 -->
+    <script src="/Assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/Assets/jquery.validate.js"></script>
+    <!-- DataTables -->
+    <script src="/Assets/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="/Assets/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <!-- SlimScroll -->
+    <script src="/Assets/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+    <!-- FastClick -->
+    <script src="/Assets/bower_components/fastclick/lib/fastclick.js"></script>
+
+    <!-- AdminLTE App -->
+    <script src="/Assets/dist/js/adminlte.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="/Assets/dist/js/demo.js"></script>
+    <!-- iCheck 1.0.1 -->
+    <script src="/Assets/plugins/iCheck/icheck.min.js"></script>
+    <!-- DataTables -->
+    <script src="/Assets/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <!--toast-->
+    <script src="/Assets/toastr.min.js"></script>
+    <script src="~/Assets/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+    <!--Date picker-->
+    <script src="~/Assets/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <!--Date picker-->
+    <script src="~/Assets/select2.js"></script>
+    <script src="~/Assets/CommonJs.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/Plugins/ckfinder/ckfinder.js"></script>
+    <script src="~/Plugins/ckeditor/ckeditor.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
+    <script src="~/Assets/jquery.countup.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".summary-wysi").wysihtml5();
+            $('.js-select2-clear').select2({ placeholder: '', allowClear: true });
+            $('.js-select2').select2();
+            $('input[type="checkbox"].checkbox-blue').iCheck({
+                checkboxClass: 'icheckbox_minimal-blue',
+                radioClass: 'iradio_minimal-blue'
+            })
+        });
+
+        function ToastMessage(msgType, message) {
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "positionClass": "toast-top-right",
+                "onClick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "2000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+            toastr[msgType](message, "Thông báo");
+        };
+        function ToastMessageBottom(msgType, message) {
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "positionClass": "toast-bottom-right",
+                "onClick": null,
+                "showDuration": "5000",
+                "hideDuration": "5000",
+                "timeOut": "5000",
+                "extendedTimeOut": "5000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+            toastr[msgType](message, "Tin nhắn");
+        };
+    </script>
+    <!-- fullCalendar -->
+    <script src="/Assets/bower_components/moment/moment.js"></script>
+    <script src="/Assets/bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
+
+    <!-- Page specific script -->
+    <script>
+        $(function () {
+
+            /* initialize the external events
+             -----------------------------------------------------------------*/
+            function init_events(ele) {
+                ele.each(function () {
+
+                    // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+                    // it doesn't need to have a start or end
+                    var eventObject = {
+                        title: $.trim($(this).text()) // use the element's text as the event title
+                    }
+
+                    // store the Event Object in the DOM element so we can get to it later
+                    $(this).data('eventObject', eventObject)
+
+                    // make the event draggable using jQuery UI
+                    $(this).draggable({
+                        zIndex: 1070,
+                        revert: true, // will cause the event to go back to its
+                        revertDuration: 0 //  original position after the drag
+                    })
+
+                })
+            }
+
+            init_events($('#external-events div.external-event'))
+
+            /* initialize the calendar
+             -----------------------------------------------------------------*/
+            //Date for the calendar events (dummy data)
+            var date = new Date()
+            var d = date.getDate(),
+                m = date.getMonth(),
+                y = date.getFullYear()
+            $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                buttonText: {
+                    today: 'today',
+                    month: 'month',
+                    week: 'week',
+                    day: 'day'
+                },
+                //Random default events
+                events: [
+                    {
+                        title: 'All Day Event',
+                        start: new Date(y, m, 1),
+                        backgroundColor: '#f56954', //red
+                        borderColor: '#f56954' //red
+                    },
+                    {
+                        title: 'Long Event',
+                        start: new Date(y, m, d - 5),
+                        end: new Date(y, m, d - 2),
+                        backgroundColor: '#f39c12', //yellow
+                        borderColor: '#f39c12' //yellow
+                    },
+                    {
+                        title: 'Meeting',
+                        start: new Date(y, m, d, 10, 30),
+                        allDay: false,
+                        backgroundColor: '#0073b7', //Blue
+                        borderColor: '#0073b7' //Blue
+                    },
+                    {
+                        title: 'Lunch',
+                        start: new Date(y, m, d, 12, 0),
+                        end: new Date(y, m, d, 14, 0),
+                        allDay: false,
+                        backgroundColor: '#00c0ef', //Info (aqua)
+                        borderColor: '#00c0ef' //Info (aqua)
+                    },
+                    {
+                        title: 'Birthday Party',
+                        start: new Date(y, m, d + 1, 19, 0),
+                        end: new Date(y, m, d + 1, 22, 30),
+                        allDay: false,
+                        backgroundColor: '#00a65a', //Success (green)
+                        borderColor: '#00a65a' //Success (green)
+                    },
+                    {
+                        title: 'Click for Google',
+                        start: new Date(y, m, 28),
+                        end: new Date(y, m, 29),
+                        url: 'http://google.com/',
+                        backgroundColor: '#3c8dbc', //Primary (light-blue)
+                        borderColor: '#3c8dbc' //Primary (light-blue)
+                    }
+                ],
+                editable: true,
+                droppable: true, // this allows things to be dropped onto the calendar !!!
+                drop: function (date, allDay) { // this function is called when something is dropped
+
+                    // retrieve the dropped element's stored Event Object
+                    var originalEventObject = $(this).data('eventObject')
+
+                    // we need to copy it, so that multiple events don't have a reference to the same object
+                    var copiedEventObject = $.extend({}, originalEventObject)
+
+                    // assign it the date that was reported
+                    copiedEventObject.start = date
+                    copiedEventObject.allDay = allDay
+                    copiedEventObject.backgroundColor = $(this).css('background-color')
+                    copiedEventObject.borderColor = $(this).css('border-color')
+
+                    // render the event on the calendar
+                    // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                    $('#calendar').fullCalendar('renderEvent', copiedEventObject, true)
+
+                    // is the "remove after drop" checkbox checked?
+                    if ($('#drop-remove').is(':checked')) {
+                        // if so, remove the element from the "Draggable Events" list
+                        $(this).remove()
+                    }
+
+                }
+            })
+
+            /* ADDING EVENTS */
+            var currColor = '#3c8dbc' //Red by default
+            //Color chooser button
+            var colorChooser = $('#color-chooser-btn')
+            $('#color-chooser > li > a').click(function (e) {
+                e.preventDefault()
+                //Save color
+                currColor = $(this).css('color')
+                //Add color effect to button
+                $('#add-new-event').css({ 'background-color': currColor, 'border-color': currColor })
+            })
+            $('#add-new-event').click(function (e) {
+                e.preventDefault()
+                //Get value and make sure it is not null
+                var val = $('#new-event').val()
+                if (val.length == 0) {
+                    return
+                }
+
+                //Create events
+                var event = $('<div />')
+                event.css({
+                    'background-color': currColor,
+                    'border-color': currColor,
+                    'color': '#fff'
+                }).addClass('external-event')
+                event.html(val)
+                $('#external-events').prepend(event)
+
+                //Add draggable funtionality
+                init_events(event)
+
+                //Remove event from text input
+                $('#new-event').val('')
+            });
+        })
+
+    </script>
+
+    <script>
+        class myLoading {
+            constructor(obj, html) {
+                this.obj = obj;
+                this.html = $("#" + obj).html();
+            }
+            start() {
+                $("#" + this.obj).attr("disabled", "disabled");
+                $("#" + this.obj).html("<i class='fa fa-cog fa-spin' aria-hidden='true'></i>&nbsp; Đang xử lý &nbsp;");
+            }
+            stop() {
+                $("#" + this.obj).prop('disabled', false);
+                $("#" + this.obj).html(this.html);
+            }
+        }
+    </script>
+    @RenderSection("jsFooter", false)
+    <script>
+        $(function () {
+            var url = window.location.href;
+            var spl = url.split("/System/");
+            if (spl.length == 2) {
+                $("#menu_" + spl[1]).addClass("active");
+                $("#menu_" + spl[1]).parent().parent().addClass("active");
+            }
+        })
+          function Payment() {
+                myLoop = new myLoading("btnSave", "");
+                myLoop.start();
+                var data = new Object();
+                data.Id = $("#txtUserId2").val();
+                data.Type = -1;
+                data.Money = $("#txtMoney2").val();
+                console.log(data);
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Payment", "Cms_Teacher")',
+                    data: "{'userId':'" + data.Id + "','type':'" + data.Type + "','money':'" + data.Money + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+                        myLoop.stop();
+                        if (msg.status === "success") {
+                            ToastMessage("success", "Gửi yêu câu rút tiền thành công !");
+                            $("#modal-payment").modal('hide');
+                        }else if (msg.status === "money") {
+                            ToastMessage("warning", "Số tiền vượt quá so với số tiện hiện có !");
+                        } else
+                            ToastMessage("error", "Xảy ra lỗi !");
+                    },
+                    err: function () {
+                        myLoop.stop();
+                        ToastMessage("error", "Xảy ra lỗi !");
+                    }
+                });
+        }
+        function ShowPayMent() {
+            $("#modal-payment").modal();
+
+        }
+        function ActiveAllComment() {
+             $.ajax({
+                type: "POST",
+                 url: '/KhoaHoc/ActiveAllComment',
+                contentType: "application/json; charset=utf-8",
+                data: "{'check':'0'}",
+                dataType: "json",
+                 success: function (res) {
+                     console.log("Active Chat thành công");
+                     $('span.studentChat').text("0");
+                     $('span.studentChat').hide();
+                }, error: function (msg) {
+                    console.log("Lỗi tải Các Comment");
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

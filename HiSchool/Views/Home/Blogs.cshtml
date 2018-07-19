@@ -1,0 +1,231 @@
+﻿
+@{
+    ViewBag.Title = "Blog";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Header
+{
+    @if (ViewBag.Blog != null)
+    {
+        <title>@ViewBag.Blog.Name</title>
+        <meta name="description" content="@ViewBag.Blog.Title" />
+        <meta name="keyword" content="" />
+        <meta name="title" content="@ViewBag.Blog.Name" />
+        <meta property="og:title" content="@ViewBag.Blog.Name" />
+        <meta property="og:type" content="article" />
+        <meta property="og:image" content="@ViewBag.Blog.Image" />
+        <meta property="og:description" content="@ViewBag.Blog.Title" />
+
+    }
+    else
+    {
+        <title>Tin tức</title>
+    }
+    <link type="text/css" rel="stylesheet" href="/Content/public/templates/site/css/blog.css" />
+}
+@section Slide{
+    <div class="banner">
+        <p><img alt="" src="/Uploads/core/logo-02.png" style="height:119px; width:100px" /></p>
+    </div>
+}
+@if (Model != null)
+{
+    <section>
+        <div class="module-home">
+            <article>
+                <h2>TIN TỨC</h2>
+                <div class="container">
+                    <div class="category">
+                        <ul>
+                            @if (ViewBag.ListType != null)
+                            {
+                                if (ViewBag.Type == null)
+                                {
+                                    <li class="active"><a href="@Url.Action("Blogs","Home",new{page=1})">Tất cả</a></li>
+                                }
+                                else
+                                {
+                                    <li class=""><a href="/blog">Tất cả</a></li>}
+
+                                foreach (var item in ViewBag.ListType)
+                                {
+                                    <li class="@((ViewBag.Type == item.ShortUrl)?"active":"")"><a href="@Url.Action("Blogs","Home",new{page=1,type=item.ShortUrl})">@item.Name</a></li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        @if (Model != null)
+                        {
+                            for (int i = 1; i <= Model.Count; i++)
+                            {
+                                if (i % 3 == 1)
+                                {
+                                    <div class="row"></div>
+                                    for (int k = i - 1; k < i + 2; k++)
+                                    {
+                                        if (k < Model.Count)
+                                        {
+                                            <div class="col-sm-4 col-md-4 item-product">
+                                                <div class="product blogimg">
+                                                    <a title="@Model[k].Name" href="@Url.Action("Blogs", "Home", new {id = Model[k].Id, title = Core.Ultity.Common.ConvertNameUrl.CovnertName(Model[k].Name), type = Model[k].ShortUrl})">
+                                                        <img alt="@Model[k].Name" src="@Model[k].Image">
+                                                    </a>
+                                                </div>
+                                                <div class="info-product">
+                                                    <h3 class="name"><a title="@Model[k].Name" href="@Url.Action("Blogs", "Home", new {id = Model[k].Id, title = Core.Ultity.Common.ConvertNameUrl.CovnertName(Model[k].Name), type = Model[k].ShortUrl})">@Model[k].Name</a></h3>
+                                                    <div class="description">@Core.Ultity.SplitStringtoWord.SplittoWord(Model[k].Title, 150)</div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    <div class="row"></div>
+                                }
+                            }
+                        }
+
+                    </div>
+                    <nav>
+                        <ul class="pagination">
+                            @if (ViewBag.PageCount >= 1)
+                            {
+                                try
+                                {
+                                    var start = (ViewBag.PageCurrent - 3 < 0) ? 1 : ViewBag.PageCurrent - 3;
+                                    var end = start + 5;
+                                    end = (end > ViewBag.PageCount) ? ViewBag.PageCount : end;
+                                    if (ViewBag.PageCurrent != 1)
+                                    {
+                                        <li><a href="@Url.Action("Blogs", "Home", new {page = 1})">«</a></li>
+                                        <li><a href="@Url.Action("Blogs", "Home", new {page = (ViewBag.PageCurrent - 1)})">‹</a></li>
+                                    }
+                                    for (int k = start; k <= end; k++)
+                                    {
+                                        if (k == ViewBag.PageCurrent)
+                                        {
+                                            <li class="active"><a href="@Url.Action("Blogs", "Home", new {page=k})">@k</a> </li>
+                                        }
+                                        else
+                                        {
+                                            <li><a href="@Url.Action("Blogs", "Home", new {page=k})">@k</a> </li>
+                                        }
+                                    }
+
+
+                                    if (ViewBag.PageCurrent != ViewBag.PageCount)
+                                    {
+                                        <li><a href="@Url.Action("Blogs", "Home", new {page=(ViewBag.PageCurrent+1)})">›</a></li>
+                                        <li><a href="@Url.Action("Blogs", "Home", new {page=ViewBag.PageCount})">»</a></li>
+                                    }
+                                }
+                                catch (Exception e) { }
+                            }
+                        </ul><div class="total-pagination">Có <b>@ViewBag.Total</b> mẫu tin được tìm thấy</div>
+                    </nav>
+                </div>
+            </article>
+        </div>
+    </section>
+}
+else
+{
+    <section>
+        <div class="module-home">
+            <article>
+                <h2>TIN TỨC</h2>
+                <div class="container">
+                    <div class="row pages-detail">
+                        <div class="blog">
+                            @if (ViewBag.Blog != null)
+                            {
+                                <div class="col-md-12 info-blog info-blog-details">
+                                    <div class="pull-left">
+                                        <img src="@ViewBag.Blog.Image">
+                                    </div>
+                                    <p class="name"><a title="@ViewBag.Blog.Name" href="12-things-you-didnt-know-about-finding-nemo-273.html">@ViewBag.Blog.Name</a></p>
+                                    <div class="info-auth">
+                                        <!-- <span class="auth"><i class="fa fa-user"></i> Mr. Sơn</span> -->
+                                        <span class="date-time"> <i class="fa fa-clock-o"></i> @(String.Format("{0:dd/MM/yyyy}", ViewBag.Blog.CreatedDate))</span>
+                                        <span class="hits"><i class="fa fa-eye"></i> @ViewBag.Blog.NumberView lượt xem</span>
+                                    </div>
+                                    <p><strong>@Html.Raw(ViewBag.Blog.Title)</strong></p>
+                                    <div class="clearfix"></div>
+                                    <div class="desc">
+                                        @Html.Raw(ViewBag.Blog.Summary)
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="info-blog-social">
+                                        <ul>
+                                            <li>
+                                                <a href="javascript:;"
+                                                   onclick="window.open('https://www.facebook.com/sharer/sharer.php?app_id=477389032314546&amp;sdk=joey&amp;u=http://bookid.vn/@ViewBag.Type/@Core.Ultity.Common.ConvertNameUrl.CovnertName(ViewBag.Blog.Name)-@ViewBag.Blog.Id', '_blank', 'scrollbars=yes, width=500, height=300');">
+                                                    <i class="fa fa-facebook-square"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" onclick="window.open('https://plus.google.com/share?url=http://bookid.vn/@ViewBag.Type/@Core.Ultity.Common.ConvertNameUrl.CovnertName(ViewBag.Blog.Name)-@ViewBag.Blog.Id', '_blank', 'scrollbars=yes, width=500, height=300');">
+                                                    <i class="fa fa-google-plus-square"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" onclick="window.open('https://twitter.com/intent/tweet?text=12%20Things%20You%20Didn%e2%80%99t%20Know%20About%20Finding%20Nemo&amp;url=http://bookid.vn/@ViewBag.Type/@Core.Ultity.Common.ConvertNameUrl.CovnertName(ViewBag.Blog.Name)-@ViewBag.Blog.Id', '_blank', 'scrollbars=yes, width=500, height=300');">
+                                                    <i class="fa fa-twitter-square"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div class="module-home">
+            <article>
+                <h2>Cùng loại</h2>
+                <div class="container">
+                    <div class="row">
+                        @if (ViewBag.LienQuan != null)
+                        {
+                            try
+                            {
+                                foreach (var item in ViewBag.LienQuan)
+                                {
+
+                                    <div class="col-sm-4 col-md-4 item-product">
+                                        <div class="product">
+                                            <a title="@item.Name" href="@Url.Action("Blogs", "Home", new {id = item.Id, title = Core.Ultity.Common.ConvertNameUrl.CovnertName(item.Name), type = item.ShortUrl})">
+                                                <img title="@item.Name" alt="@item.Name" src="@item.Image">
+                                            </a>
+
+                                        </div>
+                                        <div class="info-product blg">
+                                            <h3 class="name"><a title="@item.Name" href="@Url.Action("Blogs", "Home", new {id = item.Id, title = Core.Ultity.Common.ConvertNameUrl.CovnertName(item.Name), type = item.ShortUrl})">@item.Name</a></h3>
+                                            <div class="description">@Core.Ultity.SplitStringtoWord.SplittoWord(item.Title, 120)</div>
+                                        </div>
+                                    </div>
+
+                                }
+                            }
+                            catch (Exception e) { }
+                        }
+
+
+
+                    </div>
+                </div>
+                @if (ViewBag.LienQuan.Count > 30)
+                {
+                    <div class="clearfix"></div>
+                    <div class="more"> <a href="/san-pham/@ViewBag.Type" title="Xem thêm" class="btns btn-1c">Xem thêm</a> </div>
+                }
+            </article>
+        </div>
+    </section>
+
+}

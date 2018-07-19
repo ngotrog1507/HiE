@@ -1,0 +1,830 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var isHost = ViewBag.Host != null && (bool)ViewBag.Host;
+}
+<link href="~/Content/ImageZoom.css" rel="stylesheet" />
+<div class="_modal">
+    <div class="cssload-container">
+        <div class="cssload-speeding-wheel"></div>
+        <div id="veil"></div>
+    </div>
+</div>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i>Quản lý đề thi</a></li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Tìm kiếm </h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <div class="form-horizontal">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="row">
+                                <div class="form-group col-sm-1"></div>
+                                <div class="form-group col-sm-3">
+                                    <label class="col-sm-3 control-label">Môn học</label>
+                                    <div class="col-sm-9">
+                                        @if (ViewBag.ListSearch != null)
+                                        {
+                                            @Html.DropDownList("ListSearch", ViewBag.ListSearch as SelectList, null, new { @class = "js-select2 col-sm-12" })
+                                        }
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-5">
+                                    <label class="col-sm-3 control-label">Tên đề thi</label>
+
+                                    <div class="col-sm-9">
+                                        <input type="text" id="Key" name="key" class="form-control " placeholder="Từ khóa">
+                                        @* @Html.TextBox("Key", (string)ViewBag.Search, new { @placeholder = "", @maxlength = "300", @class = "form-control" })*@
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-4">
+                                    <label class="col-sm-3 control-label">Trạng thái</label>
+                                    <div class="col-sm-9">
+                                        @if (ViewBag.UsedState != null)
+                                        {
+                                            @Html.DropDownList("UsedState", ViewBag.UsedState as SelectList, null, new { @class = "js-select2 col-sm-12" })
+                                        }
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-1"></div>
+                            </div>
+                            <div class="form-group col-sm-12" style="text-align: center;">
+                                <button type="button" title="Tìm kiếm" class="btn color-trong btn-trong" onclick=" refresh(currentPage) ">
+                                    <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Tìm kiếm
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box box-success">
+                    <div class="box-header with-border" style="padding-bottom: 0px;">
+                        <div class="col-sm-6">
+                            <h3 class="box-title" style="margin-left: -18px;"> Danh sách</h3>
+                        </div>
+                        <!--trongnv-->
+                        <div class="col-sm-6">
+                            @if ((ViewBag.Delete != null && (bool)ViewBag.Delete) || isHost)
+                            {
+                                <button type="submit" style="margin: -8px -14px 4px 19px;" title="Xóa' | translate" class="btn btn-danger pull-right" onclick=" DeleteAll(null, '@Url.Action("Delete", "Ex_Exam")' ) ">
+                                    <i class="fa fa-times-circle" aria-hidden="true"></i>&emsp; Xóa &emsp;
+                                </button>
+                            }
+                            @if ((ViewBag.Add != null && (bool)ViewBag.Add) || isHost)
+                            {
+                                <button type="submit" style="margin: -8px -14px 4px 19px;" title="Thêm mới" class="btn btn-success pull-right" onclick=" AddRecords() ">
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;&nbsp;Thêm mới
+                                </button>
+                            }
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <!-- form start -->
+                    <form class="form-horizontal">
+                        <div class="box-body">
+                            <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="dataTables_length">
+                                            <label>
+                                                Số lượng hiển thị
+                                                <select name="example1_length" id="sizePage" onchange=" refresh(currentPage) " aria-controls="example1" class="selectOption-trong form-control input-sm">
+                                                    <option value="10">10</option>
+                                                    <option value="20">20</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+                                                </select>
+                                                bản ghi
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table id="example1" class="table table-bordered table-striped">
+                                            <thead class="color-trong">
+                                                <tr>
+                                                    <th style="width: 2%; text-align: center">
+                                                        <span><input type="checkbox" onclick=" CheckAll() " class="ace check-all" data-id="0" /></span>
+                                                    </th>
+                                                    <th style="width: 5%; text-align: center">STT</th>
+                                                    <th style="width: 5%; text-align: center">CN</th>
+                                                    <th style="width: 7%; text-align: center">Khối</th>
+                                                    <th style="width: 10%; text-align: center">Tên môn học</th>
+                                                    <th style="width: 7%; text-align: center">Mã đề</th>
+                                                    <th style=" text-align: center">Tên đề</th>
+                                                    <th style="width: 6%; text-align: center">Sô câu</th>
+                                                    <th style="width: 6%; text-align: center">Time(m)</th>
+                                                    <th style="width: 6%; text-align: center">Giá</th>
+                                                    <th style="width: 7%; text-align: center">Ngày tạo</th>
+                                                    <th style="width: 7%; text-align: center">Người tạo</th>
+                                                    <th style="width: 8%; text-align: center">Trạng thái</th>
+                                                    <th style="width: 5%; text-align: center"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="data"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div id="paging"></div>
+                                @*  @Html.Raw(MvcPagingByFrameWork.Paging(Model.PageCount, Model.PageIndex, "System/Ex_Exam/Index", ViewBag.Search))*@
+                            </div>
+                        </div>
+                    </form>
+                    <div class="modal fade" id="modal-default">
+                        <div class="modal-dialog" style="width: 100%">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <h4 class="modal-title">Thông tin đề thi</h4>
+                                    <input type="hidden" id="txtId" />
+                                </div>
+                                <div class="modal-body">
+                                    <form class="form-horizontal2">
+                                        <div class="row">
+                                            <div class="form-group col-sm-6">
+                                                <label class="col-sm-4 control-label">Khối <span style="color: red">(*)</span></label>
+
+                                                <div class="col-sm-8">
+                                                    <div class="clearfix">
+                                                        @if (ViewBag.Grade != null)
+                                                        {
+                                                            <select class="js-select2 col-sm-12" name="Grade" id="Grade" onchange="changeGrade()">
+                                                                <option value="">------Chọn khối-----</option>
+                                                                @*<option value="">Chọn thể loại</option>*@
+                                                                @for (int i = 0; i < ViewBag.Grade.Count; i++)
+                                                                {
+                                                                    <option value="@ViewBag.Grade[i].TypeCode.Trim()">@ViewBag.Grade[i].Name</option>
+                                                                }
+                                                            </select>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-sm-5">
+                                                <label class="col-sm-4 control-label">Giá</label>
+                                                <div class="col-sm-8">
+                                                    <div class="clearfix">
+                                                        <input type="number" id="Price" name="Price" class="form-control " value="0" onkeypress=" return isNumberKey(event) ">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-sm-6">
+                                                <label class="col-sm-4 control-label">Tên đề thi<span style="color: red">(*)</span></label>
+
+                                                <div class="col-sm-8">
+                                                    <div class="clearfix">
+                                                        <input type="text" id="Name" name="Name" class="form-control " placeholder="Tên">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-sm-5">
+                                                <label class="col-sm-4 control-label">Môn học</label>
+                                                <div class="col-sm-8">
+                                                    <select class="js-select2 col-sm-12" id="Subject" name="Subject">
+                                                        <option value="">------Chọn môn-----</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group col-sm-1"></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-sm-6">
+                                                <label class="col-sm-4 control-label">Tổng số câu</label>
+                                                <div class="col-sm-8">
+                                                    <div class="clearfix">
+                                                        <input type="number" id="TotalNumber" name="TotalNumber" class="form-control " value="1" onkeypress=" return isNumberKey(event) ">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-sm-5">
+                                                <label class="col-sm-4 control-label">Thời gian</label>
+                                                <div class="col-sm-8">
+                                                    <div class="clearfix">
+                                                        <input type="number" id="Time" name="Time" class="form-control " value="1" onkeypress=" return isNumberKey(event) ">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-sm-6">
+                                                <label class="col-sm-4 control-label">Orders</label>
+                                                <div class="col-sm-8">
+                                                    <div class="clearfix">
+                                                        <input type="number" id="Orders" name="Orders" class="form-control " value="1" onkeypress=" return isNumberKey(event) ">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-sm-5">
+                                                <label class="col-sm-4 control-label">Trạng thái</label>
+                                                <div class="col-sm-8">
+                                                    @if (ViewBag.UsedState != null)
+                                                    {
+                                                        @Html.DropDownList("UsedStateAdd", ViewBag.UsedStateAdd as SelectList, null, new { @class = "js-select2 col-sm-12" })
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Đóng</button>
+                                    <button type="button" class="btn btn-success" id="btnAdd" onclick=" Save('add') "><i class="fa fa-save" aria-hidden="true"></i>&nbsp; Lưu &nbsp;</button>
+                                    <button type="button" class="btn btn-primary" id="btnEdit" onclick=" Save('edit')"><i class="fa fa-save" aria-hidden="true"></i>&nbsp;Lưu &nbsp;</button>
+                                </div>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+                </div>
+            </div>
+            <!-- /.box -->
+            <!-- general form elements disabled -->
+            <div class="modal fade" id="modal-list-subject">
+                <div class="modal-dialog" style="width: 95%">
+
+                    <div class="modal-content" style="width: 95%">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="box box-success">
+                                        <div class="box-header with-border">
+                                            <h3 class="box-title">Danh sách chương trong đề <b id="tenMonHoc"></b> </h3>
+                                        </div>
+                                        <!-- /.box-header -->
+                                        <!-- form start -->
+                                        <form class="form-horizontal">
+                                            <div class="box-body">
+
+                                                <div class="row">
+                                                    <div class="form-group col-sm-4">
+                                                        <label class="col-sm-2 control-label">Tên chương</label>
+
+                                                        <div class="col-sm-10">
+                                                            <input type="text" id="txtName" class="form-control " placeholder="Nhấn Enter để tìm kiếm">
+                                                            <input type="hidden" id="txtSubjectId">
+                                                            <input type="hidden" id="txtSId">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-3">
+                                                        <label class="col-sm-2 control-label">Mức độ</label>
+                                                        <div class="col-sm-10">
+                                                            @if (ViewBag.Level != null)
+                                                            {
+                                                                <select class="js-select2 col-sm-12" name="Level" id="Level">
+                                                                    @for (int i = 0; i < ViewBag.Level.Count; i++)
+                                                                    {
+                                                                        <option value="@ViewBag.Level[i].TypeCode.Trim()">@ViewBag.Level[i].Name</option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group col-sm-3">
+                                                        <label class="col-sm-2 control-label">Số lượng</label>
+                                                        <div class="col-sm-10">
+                                                            <input type="number" id="TotalNumber2" name="TotalNumber2" min="0" class="form-control " value="1" onkeypress=" return isNumberKey(event) ">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-2">
+                                                        <button type="button" onclick="themChuong()" title="Thêm mới" id="btnChuong" class="btn btn-success">
+                                                            <i class="fa fa-save" aria-hidden="true"></i>&nbsp;&nbsp;Thêm mới
+                                                        </button>
+                                                        <button type="button" onclick="themChuong()" title="Lưu thay đổi" id="btnLuuChuong" class="btn btn-primary" style="display:none">
+                                                            <i class="fa fa-save" aria-hidden="true"></i>&nbsp;&nbsp;Lưu thay đổi
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="box box-success">
+                                        <div class="box-header with-border" style="padding-bottom: 0px;">
+                                            <div class="col-sm-6">
+                                                <h3 class="box-title" style="margin-left: -18px;">Danh sách bản ghi</h3>
+                                            </div>
+                                            <!--trongnv-->
+                                        </div>
+                                        <!-- Horizontal Form -->
+                                        <form class="form-horizontal">
+                                            <div class="box-body scoll-box-body">
+                                                <div id="example1_wrapper2" class="dataTables_wrapper form-inline dt-bootstrap">
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <table class="table table-bordered table-striped">
+                                                                <thead class="color-trong">
+                                                                    <tr>
+                                                                        <th style="width: 5%; text-align: center">STT</th>
+                                                                        <th style="width: 12%; text-align: center">Mã đề</th>
+                                                                        <th style="text-align: center">Chương</th>
+                                                                        <th style="width: 15%; text-align: center">Độ khó</th>
+                                                                        <th style="width: 15%; text-align: center">Số lượng</th>
+                                                                        <th style="text-align: center;width: 10%;">CN</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="rptList"></tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-horizontal">
+                                                <div class="box-body">
+                                                    <p class="hidden_List" hidden> Không có bản ghi nào</p>
+                                                    <div class="row modal-footer" style="text-align: center;">
+                                                        <button title="Quay lại" class="btn btn-danger" data-dismiss="modal">
+                                                            <i class="fa fa-reply"></i>&nbsp;Quay lại
+                                                        </button>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                    <!-- /.box -->
+                                    <!-- general form elements disabled -->
+                                    <!-- /.box -->
+                                </div>
+                                <!--/.col (right) -->
+                                <!-- /.content -->
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box -->
+                <!-- general form elements disabled -->
+                <!-- /.box -->
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+</section>
+<!--/.col (right) -->
+<!-- /.content -->
+@section jsFooter{
+    <script>
+        $('.form-horizontal2').validate({
+            errorElement: 'div',
+            errorClass: 'help-block',
+            focusInvalid: false,
+            ignore: "",
+            rules: {
+                Name: {
+                    required: true
+                },
+                Time: {
+                    required: true
+                },
+                EditSearch: {
+                    required: true
+                },
+                Grade: {
+                    required: true
+                }
+            },
+
+            messages: {
+                Name: {
+                    required: "Trường này không được bỏ trống ."
+                },
+                Time: {
+                    required: "Trường này không được bỏ trống ."
+                },
+                EditSearch: {
+                    required: "Trường này không được bỏ trống ."
+                },
+                Grade: {
+                    required: "Trường này không được bỏ trống ."
+                }
+            },
+
+            highlight: function (e) {
+                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+            },
+
+            success: function (e) {
+                $(e).closest('.form-group').removeClass('has-error'); //.addClass('has-info');
+                $(e).remove();
+            },
+
+            errorPlacement: function (error, element) {
+                if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                    var controls = element.closest('div[class*="col-"]');
+                    if (controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                    else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                } else if (element.is('.select2')) {
+                    error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+                } else if (element.is('.chosen-select')) {
+                    error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                } else error.insertAfter(element.parent());
+            }
+
+            //submitHandler: function (form) {
+
+            //},
+            //invalidHandler: function (form) {
+            //}
+        });
+    </script>
+    <script>
+        refresh(currentPage);
+
+        function refresh(page) {
+            $("._modal").show();
+            var sData = "{'page':'" + page + "','key':'" + $("#Key").val() + "','sort':'','usedState':'" + $('#UsedState').find(":selected").val() + "','pageSize':'" + $("#sizePage").find(":selected").val() + "','subjectId':'" + $('#ListSearch').find(":selected").val() +"'}";
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetData", "Ex_Exam")',
+                data: sData,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(response) {
+                    $("._modal").hide();
+                    if (response.status == "success") {
+                        var listData = response.Data;
+                        var totalRecord = response.TotalPage;
+                        var pageSize = response.PageSize;
+                        var totalPage = (totalRecord % pageSize != 0) ? Math.floor(totalRecord / pageSize) + 1 : Math.floor(totalRecord / pageSize);
+                        var currentPage = response.CurrentPage;
+                        var str = "";
+                        var roleDelete = ('@ViewBag.Delete' === 'True');
+                        var roleEdit = ('@ViewBag.Edit' === 'True');
+
+                        listData.forEach(function (item, index) {
+                                str += "<tr style='text-align: center'>";
+                                str += "                        <td style='text-align: center'>";
+                                str += "<input type='checkbox' name='check-row' class='ace check-row' data-id='" + item.Id + "'>";
+                                str += "</td>";
+                                str += "         <td>" + (pageSize * currentPage + index + 1) + "</td>";
+                                str += "<td>";
+                                str += "              <div class='btn-group'>";
+                                if (('@ViewBag.Host' === 'True')) {
+                                    str += "<button type='button' class='btn color-trong dropdown-toggle' style='color: white;' data-toggle='dropdown' aria-expanded='false'>";
+                                    str += "<i class='fa fa-cog' aria-hidden='true'></i>";
+                                    str += "</button>";
+
+                                    str += " <ul class='dropdown-menu setting-menu' role='menu'>";
+                                    str += "<li onclick='EditRecord(" + item.Id + ")'><a class='noClick' href=''><i class='fa fa-pencil-square-o' aria-hidden='true' ></i>Chỉnh sửa</a></li>";
+                                    str += "<li class='divider'></li>";
+                                    str += "<li onclick='DeleteItem(" + item.Id + ")'><a class='noClick' href=''><i class='fa fa-times-circle' aria-hidden='true'></i>Xóa</a></li>";
+                                } else {
+                                    if (item.CreatedBy == @WebSecurity.CurrentUserId) {
+                                        str += "<button type='button' class='btn color-trong dropdown-toggle' style='color: white;' data-toggle='dropdown' aria-expanded='false'>";
+                                        str += "<i class='fa fa-cog' aria-hidden='true'></i>";
+                                        str += "</button>";
+                                        str += "             <ul class='dropdown-menu setting-menu' role='menu'>";
+                                        if (roleEdit != null && roleEdit && roleDelete != null && roleDelete) {
+                                            str += "<li onclick='EditRecord(" + item.Id + ")'><a class='noClick' href=''><i class='fa fa-pencil-square-o' aria-hidden='true' ></i>Chỉnh sửa</a></li>";
+                                            str += "<li class='divider'></li>";
+                                            str += "<li onclick='DeleteItem(" + item.Id + ")'><a class='noClick' href=''><i class='fa fa-times-circle' aria-hidden='true'></i>Xóa</a></li>";
+                                        } else if (roleEdit != null && roleEdit) {
+                                            str += "<li onclick='EditRecord(" + item.Id + ")'><a class='noClick' href=''><i class='fa fa-pencil-square-o' aria-hidden='true' ></i>Chỉnh sửa</a></li>";
+                                        } else if (roleDelete != null && roleDelete) {
+                                            str += "<li onclick='DeleteItem(" + item.Id + ")'><a class='noClick' href=''><i class='fa fa-times-circle' aria-hidden='true'></i>Xóa</a></li>";
+                                        }
+                                        str += "</ul>";
+                                    }
+                                }
+                                str += "             </div>";
+                                str += "</td>";
+                                str += "</td>";
+                                str += "</td>";
+                                str += "         <td style='text-align: center'>";
+                                str += item.GradeName;
+                                str += "    </td>";
+                                str += "         <td style='text-align: left; padding-left: 20px;' id='name_"+item.Id+"'>";
+                                str += item.SubjectName;
+                                str += "    </td>";
+                                str += "<td> <span class='badge bg-green'>" + item.Code + "</span></td>";
+                                str += "         <td style='text-align: left; padding-left: 20px;' id='name_" + item.Id + "'>";
+                                str += item.Name;
+                                str += "    </td>";
+                                str += "<td>"+item.TotalNumber+"</td>";
+                            str += "<td>" + item.Time + "</td>";
+                            str += "<td>" + item.Price + "</td>";
+                                var date = new Date(parseInt(item.CreatedDate.replace(/(^.*\()|([+-].*$)/g, '')));
+                                var dateString = (date.getDate() + 1) + '/' + date.getMonth() + '/' + date.getFullYear();
+                                str += "     <td>" + dateString + "</td>";
+                                str += "<td>" + item.CreatedByName + "</td>";
+                                if (item.UsedState == 1) {
+                                    str += "<td  title='Đang hoạt động'><span class='badge label-success'><i class='fa fa-fw fa-check-circle'></i></span></td>";
+                                } else if (item.UsedState == 0) {
+                                    str += "<td  title='Đang bị khóa'><span class='badge label-warning'><i class='fa fa-fw fa-check-circle'></i></span></td>";
+                                }
+                                else if (item.UsedState == -1) {
+                                    str += "<td  title='Chưa phê duyệt'><span class='badge label-primary'><i class='fa fa-fw fa-check-circle'></i></span></td>";
+                                }
+                                else {
+                                    str += "<td  title='Yêu cầu xóa'><span class='badge label-danger'><i class='fa fa-fw fa-check-circle'></i></span></td>";
+                            }
+                                str += " <td><a href='' class='noClick' data-id='" + item.Name + "' data-code='"+item.Code+"' onclick='managerSubject(this)'><i class='fa fa-tasks  fa-lg' aria-hidden='true' title='Quản lý chương'></i>&nbsp;</a></td>";
+                                str += "     </tr>";
+                        })
+                        $("#data").html(str);
+                        $("#paging").html(paging(totalPage, page, $("#Key").val()));
+                        $('a.noClick').on('click', function(e) {
+                            e.preventDefault();
+                            //do other stuff when a click happens
+                            });
+                    }
+
+                    //window.location.href = url;
+                },
+                error: function() {
+                    ToastMessage("error", "Xảy ra lỗi !");
+                }
+            });
+        }
+    </script>
+    <script>
+        function AddRecords() {
+            Reset();
+            $("#modal-default").modal();
+            $("#btnAdd").show();
+            $("#btnEdit").hide();
+            $(".modal-content").css("max-width", "61%");
+        }
+
+
+        function Reset() {
+            $("#Name").val("");
+            $("#Time").val("");
+            $("#Price").val("0");
+            $("#TotalNumber").val("");
+            $("#Orders").val("1");
+            $("#txtId").val("");
+            $("#UsedStateAdd").val(1).change();
+            $("#Subject").val("").change();
+            $("#Grade").val("").change();
+        }
+
+        function DeleteItem(id) {
+            if (confirmDelete()) {
+                ajax_delete(id, '@Url.Action("Delete", "Ex_Exam")');
+            }
+        }
+
+        function Save(type) {
+            if ($('.form-horizontal2').valid()) {
+                var data = new Object();
+                data.Id = $("#txtId").val();
+                data.Name = $("#Name").val();
+                data.Time = $("#Time").val();
+                data.TotalNumber = $("#TotalNumber").val();
+                data.Orders = $("#Orders").val();
+                data.Price =$("#Price").val();
+                data.UsedState = $("#UsedStateAdd").find(":selected").val();
+                data.SubjectId = $("#Subject").find(":selected").val();
+                data.Grade = $("#Grade").find(":selected").val();
+
+                myLoop = new myLoading(type === 'add'?"btnAdd":"btnEdit", "");
+                myLoop.start();
+
+                var json = JSON.stringify(data);
+                console.log(data);
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Edit", "Ex_Exam")',
+                    data: json,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+                        myLoop.stop();
+                        if (msg.status == "success") {
+                            if (type == 'add')
+                                ToastMessage("success", "Thêm mới thành công !");
+                            else ToastMessage("success", "Sửa thành công !");
+                            $("#modal-default").modal('hide');
+                            refresh(currentPage);
+                        } else
+                            ToastMessage("error", "Xảy ra lỗi !");
+                    }
+                });
+            }
+        }
+
+        function EditRecord(id) {
+            $(".modal-content").css("max-width", "61%");
+            $("#btnAdd").hide();
+            $("#btnEdit").show();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetById", "Ex_Exam")',
+                data: "{'id':'" + id + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(msg) {
+                    if (msg.status == "success") {
+                        $("#modal-default").modal();
+                        $("#Name").val(msg.Data.Name);
+                        $("#Time").val(msg.Data.Time);
+                        $("#TotalNumber").val(msg.Data.TotalNumber);
+                        $("#Orders").val(msg.Data.Orders);
+                        $("#txtId").val(msg.Data.Id);
+                        $("#Price").val(msg.Data.Price);
+                        $("#UsedStateAdd").val(msg.Data.UsedState).change();
+                        $("#Grade").val(msg.Data.Grade.trim()).change();
+                        setTimeout(function () {
+                            $("#Subject").val(msg.Data.SubjectId).change();
+                        }, 1000);
+                        
+                       
+
+                    } else
+                        ToastMessage("error", "Xảy ra lỗi !");
+                }
+            });
+        }
+
+
+    </script>
+    <script>
+        $('#txtName').keypress(function (e) {
+            if (e.which == 13) {
+                    loadSubject($("#txtName").val(), $("#txtSubjectId").val());
+                    return false;    //<---- Add this line
+                }
+            });
+        function loadSubject(key,code) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetChuong", "Ex_Exam")',
+                data: "{'key':'" + key + "','code':'" + code+"'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.status == "success") {
+                        var html = "";
+                        $("#rptList").html("");
+                        var rptData = msg.Data;
+                        if (rptData.length == 0) { $(".hidden_List").show(); } else {
+                            $(".hidden_List").hide();
+                            rptData.forEach(function (item, index) {
+                                html += "<tr><td style='text-align: center'>" + (index + 1) + "</td>";
+                                html += "<td style='text-align: center'><span class='badge bg-green'>" + item.ExamCode.trim() + "</span></td>";
+                                html += "<td id='nameT_" + item.Id + "' >" + item.Section + "</td>";
+                                html += "<td style='text-align: center'>" + item.DiffName + "</td>";
+                                html += "<td style='text-align: center'>" + item.TotalNumber + "</td>";
+                                html += " <td style='text-align: center'> <a href=\"\" onclick=\"suaChuong(" + item.Id + ")\" class=\"noClick\"><i class=\"fa fa-edit fa-lg\" aria-hidden=\"true\" title=\"Sửa chương\"></i>&nbsp&nbsp;&nbsp;</a>";
+                                html += "<a id='td_" + item.Id + "' data-level='" + item.LevelDifficult.trim() + "' data-num='" + item.TotalNumber + "' href=\"\" onclick=\"deleteChuong(" + item.Id + ")\" class=\"noClick\"><i class=\"fa fa-window-close-o fa-lg\" aria-hidden=\"true\" title=\"Xóa Chương\"></i>&nbsp</a></tr>";
+                            })
+                            $("#rptList").html(html);
+                            $('a.noClick').on('click', function (e) {
+                                e.preventDefault();
+                                //do other stuff when a click happens
+                            });
+                        }
+                    } else
+                        ToastMessage("error", "Xảy ra lỗi !");
+                },
+                error: function () {
+                    debugger;
+                }
+            })
+        }
+        var checkAdd = true;
+        function managerSubject(obj) {
+            var code = $(obj).attr("data-code");
+            $("#modal-list-subject").modal();
+            $("#tenMonHoc").text($("#name_" + code).text());
+            $("#txtSubjectId").val(code);
+
+            loadSubject($("#txtName").val(), code);
+
+            $("#btnChuong").show();
+            $("#btnLuuChuong").hide();
+            $("#txtName").val("");
+            $("#Level").val("DK-1").change();
+            $("#TotalNumber2").val("1");
+        }
+        function themChuong() {
+            if ($("#txtName").val() === "") {
+                alert("Vui lòng nhập tên chương !");
+                return;
+            }
+            var data = new Object();
+            data.Id = (checkAdd == true) ? "0" : $("#txtSId").val();
+            data.Section = $("#txtName").val();
+            data.ExamCode = $("#txtSubjectId").val().trim();
+            data.TotalNumber = $("#TotalNumber2").val();
+            data.LevelDifficult = $("#Level").find(":selected").val();
+            data.Orders = "1";
+            data.UsedState = "1";
+
+            myLoop = new myLoading((checkAdd == true)? "btnChuong":"btnLuuChuong", "");
+            myLoop.start();
+
+            var json = JSON.stringify(data);
+            console.log(data);
+             $.ajax({
+                type: "POST",
+                url: '@Url.Action("Edit", "Ex_ExamConfig")',
+                data: json,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                 success: function (msg) {
+                     myLoop.stop();
+                     if (msg.status == "success") {
+                         checkAdd = true;
+                         $("#btnChuong").show();
+                         $("#btnLuuChuong").hide();
+                         $("#txtName").val("");
+                         ToastMessage("success", (checkAdd == true)?"Thêm mới thành công !":"Thay đổi thành công !");
+                         loadSubject("", data.ExamCode);
+                    } else
+                        ToastMessage("error", "Xảy ra lỗi !");
+                },
+                error: function () {
+                    debugger;
+                }
+            })
+        }
+        function suaChuong(id) {
+            $("#txtSId").val(id);
+            $("#btnChuong").hide();
+            $("#btnLuuChuong").show();
+            checkAdd = false;
+            $("#txtName").val($("#nameT_" + id).text());
+            var level = $("#td_" + id).attr("data-level");
+            var num = $("#td_" + id).attr("data-num");
+            $("#Level").val(level.trim()).change();
+            $("#TotalNumber2").val(num);
+
+        }
+        function deleteChuong(id) {
+            if (confirm("Bạn có chắc chắn xóa !")){
+                ToastMessage("success", "Chưa viết code chức năng này !");
+            }
+        }
+         function changeGrade() {
+            $(".loadingSpin").show();
+            var grade = $('#Grade').find(":selected").val();
+            if (grade === "") { $(".loadingSpin").hide();$("#Subject").html(""); return };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetSubjectByGrade", "Cms_Class")',
+                data: "{'grade':'" + grade + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(response) {
+
+                    $(".loadingSpin").hide();
+                    var listData = response.Data;
+                    $("#Subject").html("");
+                    listData.forEach(function(item, index) {
+                        $("#Subject").append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                    })
+                    if ($("#txtId").val() != "");
+                    {
+                        $("#Subject").val($("#hiddenSubject").val()).change();
+                    }
+                },
+                err: function() {
+
+                }
+            });
+
+        }
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,357 @@
+﻿@using Core.Model;
+@{
+    ViewBag.Title = "VaoHoc";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var makh = Request.QueryString["mkh"];
+    var src = "";
+    var nameVideo = "";
+    if (ViewBag.ListVideoClass.Count>0)
+    {
+        src = ViewBag.ListVideoClass[0].Link;
+        nameVideo = ViewBag.ListVideoClass[0].Name;
+    }
+}
+@section JsHeader{
+    <link rel="stylesheet" href="~/Content/min/s/1522468462/b%3dclass/css%26f%3dclass.css%2cva.css%2choc.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/min/s/1522468462/b%3dheader/css%26f%3dmain.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/vendors/owl-carousel/3.3/owl.carouself700.css?v=1.0.1" type="text/css">
+    <link rel="stylesheet" href="~/Content/min/s/1522468462/b%3dfooter/css%26f%3dmain.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/min/s/1522468462/b%3dcss%26f%3ddefault.css" type="text/css">
+    <link href="http://vjs.zencdn.net/6.6.3/video-js.css" rel="stylesheet">
+    <script src="/Content/MyHubJs.js"></script>
+    <!-- If you'd like to support IE8 -->
+    <script src="http://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
+    <style>
+        .p-y-lg {
+            padding-bottom: 0 !important;
+        }
+
+        .avata {
+            display: block;
+            width: 30px;
+            height: 30px;
+        }
+
+        img.media-object.img-circle.img-responsive {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .liActive {
+            background-color: #d9e1f7;
+        }
+    </style>
+    <script>
+        function bindingChatTeacher(makh,item) {
+            console.log(item);
+            for (var i = 0; i < item.length; i++) {
+                var html = "";
+                var date = new Date(parseInt(item[i].CreatedDate.replace(/(^.*\()|([+-].*$)/g, '')));
+
+                html += "<li class='media'>";
+                html += "   <div class='media-left'>";
+                html += "       <a class='avata' href='#' title='" + item[i].FullName + "'>";
+                html += "           <img src='" + item[i].ImageUrl + "' alt='" + item[i].FullName + "' class='media-object img-circle img-responsive'>";
+                html += "       </a>";
+                html += "   </div>";
+                html += "   <div class='media-body'>";
+                html += "       <h4 class='media-heading' title='Edus365 admin'>";
+                html += "       <a href='#'>" + item[i].FullName + "</a>";
+                html += "           <span class='time'>" + item[i].CreatedDateStr + "</span>";
+                html += "       </h4>";
+                html += "       <p class='content'>" + item[i].Comments;
+                html += "       </p>";
+                html += "   </div>";
+                html += " </li>";
+
+                $('#' + makh+'-comments').append(html);
+            }
+        }
+        function bindingPreChatTeacher(makh, item) {
+            bindingPreChatTeacherComment(makh, item);
+            ToastMessage("success", item[0].Comments);
+        }
+        function bindingPreChatTeacherComment(makh, item) {
+            
+            for (var i = 0; i < item.length; i++) {
+                var html = "";
+                var date = new Date(parseInt(item[i].CreatedDate.replace(/(^.*\()|([+-].*$)/g, '')));
+
+                html += "<li class='media'>";
+                html += "   <div class='media-left'>";
+                html += "       <a class='avata' href='#' title='" + item[i].FullName + "'>";
+                html += "           <img src='" + item[i].ImageUrl + "' alt='" + item[i].FullName + "' class='media-object img-circle img-responsive'>";
+                html += "       </a>";
+                html += "   </div>";
+                html += "   <div class='media-body'>";
+                html += "       <h4 class='media-heading' title='Edus365 admin'>";
+                html += "       <a href='#'>" + item[i].FullName + "</a>";
+                html += "           <span class='time'>" + item[i].CreatedDateStr + "</span>";
+                html += "       </h4>";
+                html += "       <p class='content'>" + item[i].Comments;
+                html += "       </p>";
+                html += "   </div>";
+                html += " </li>";
+
+                $('#' + makh + '-comments').prepend(html);
+            }
+        }
+    </script>
+}
+    <div class="site-body bs-study-top-user-page">
+        <!--breadcrumb:-->
+        <div class="breadcrumb-outer">
+            <div class="container">
+                <ol class="breadcrumb breadcrumb-primary">
+                    <li><a href="#">Học</a></li>
+                    <li><a href="#">Bài giảng</a></li>
+                    <li>
+                        <a href="#">Vào học</a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <iframe id="my_download" style="display:none;"></iframe>
+        <!--main content:-->
+        <div class="container">
+            <div class="p-y-lg row">
+                <div class="p-b-lg" id="footer">
+                    <div class="panel">
+                        <div class="panel-body">
+                            <h1 class="bs-page-title text-center m-b-md"> Khóa học : @ViewBag.ClassName</h1>
+                            <div class="row">
+                                <!--left:-->
+                                <div class="col-sm-3">
+                                    <h4>Bài giảng trong lớp học</h4>
+                                    <div class="heading-line"></div>
+                                    <ul class="media-list">
+                                        @if (ViewBag.ListVideoClass != null)
+                                    {
+                                        foreach (var item in (List<Cms_ClassVideo>)ViewBag.ListVideoClass)
+                                        {
+                                            <li class="media bs-lecture-recommend-item " id="item_@item.Id">
+                                                <div class="media-left">
+                                                    <a href="lesson.html?cmd=view_info&id=10809">
+                                                        <img class="media-object" src="~/Content/img/subjects/Subject-detail-6.png" />
+                                                    </a>
+                                                </div>
+                                                <div class="media-body">
+                                                    <p class="media-heading">
+                                                        <strong><a class="lecture-title" data-li="item_@item.Id" href="javascript:onWatch('@item.Name','@item.Link','@item.Id')">@item.Name</a></strong>
+                                                    </p>
+                                                    <div>
+                                                        @if (item.IsFree)
+                                                    {
+
+                                                        <div class="inline-block" style="margin-left:5px;">
+                                                            <span class="label label-danger">Học thử</span>
+                                                        </div>}
+
+                                                    </div>
+                                                </div>
+                                            </li>
+                                    }
+                                }
+
+                                    </ul>
+                                    <div class="form-group">
+
+                                        <p class="text-center mt-10">
+                                            <button type="button" class="btn btn-success " id="btnDownload" onClick="myDownload()"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>&nbsp; Tải tài liệu &nbsp;</button>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-9">
+
+                                    <div class="panel">
+                                        <div class="panel-body p-a-md">
+                                            <h4 class="m-t-0 myModalLabel">
+                                                @nameVideo
+                                            </h4>
+                                            <div class="heading-line"></div>
+                                            <div class="row">
+                                                <video id="my-video"
+                                                       class="video-js vjs-default-skin"
+                                                       controls
+                                                       style="width: 100%;height: -webkit-fill-available;"></video>
+                                                <script src="http://vjs.zencdn.net/6.6.3/video.js"></script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel">
+                                        <div class="panel-body p-a-md">
+                                            <h4 class="m-t-0 ">
+                                                <i class="fa fa-fw fa-commenting"></i>
+                                                Chat với giáo viên
+                                            </h4>
+                                            <div class="heading-line"></div>
+                                            <div class="row">
+                                                <ul>
+                                                    <li class="media">
+                                                        <div class="media-left discussion_u_info">
+                                                            <a class="avata" href="https://hocexcel.online/u/705-chuc-nq" title="Chuc NQ">
+                                                                <img src="https://hocexcel.online/default/hocexcel/user.png" alt="Chuc NQ" class=" img-chat media-object img-circle img-responsive">
+                                                            </a>
+                                                        </div>
+                                                        <div class="media-body">
+                                                            <form class="discussions has-primary-unibee" id="lecture_discussions" method="POST" action="https://hocexcel.online/discussion/create">
+                                                                <textarea data-id="@makh" name="content" rows="3" class="form-control content" placeholder="Nhập nội dung" id="txtComment" style="margin-bottom: 5px"></textarea>
+
+                                                                <button style="float: right;margin-left: 5px;" type="button" id="send_discussion" onclick="sentMessage()" class="btn btn-primary btn-sm ishide ">Gửi</button>
+                                                                <input type="hidden" name="_token" value="2SwonHQDTaEOWY1c6k73PtbLZMLcL4pp53uLU6bM">
+                                                            </form>
+
+                                                        </div>
+
+
+                                                    </li>
+                                                </ul>
+                                                <ul id="@makh-comments"></ul>
+                                                <ul>
+                                                    <div style="width: 100%;position: relative;height: auto;display: flex; margin: 20px 0 40px 0;border-top: 1px solid #d5d5d5;padding-top: 20px" class="click_load_discussion ">
+                                                        <button onclick="loadPlusMessage()" style="margin: auto" class="btn btn-success" id="click_load_discussion">
+                                                            Tải thêm
+                                                            <i class="fa fa-angle-double-down fa-lg"></i>
+                                                        </button>
+                                                    </div>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@section JsFooter{
+
+    <script>
+        $(function () {
+            loadMessage(0, 10);
+            $(".menu").removeClass("active");
+            $(".li-hoc").addClass("active");
+            $(".img-chat").attr("src", ($($(".img-rounded")[0]).attr("src")));
+            function getCaret(el) {
+                if (el.selectionStart) {
+                    return el.selectionStart;
+                } else if (document.selection) {
+                    el.focus();
+                    var r = document.selection.createRange();
+                    if (r == null) {
+                        return 0;
+                    }
+                    var re = el.createTextRange(), rc = re.duplicate();
+                    re.moveToBookmark(r.getBookmark());
+                    rc.setEndPoint('EndToStart', re);
+                    return rc.text.length;
+                }
+                return 0;
+            }
+            $("#txtComment").on('keyup', function (e) {
+                if (e.keyCode == 13) {
+                    var content = this.value;
+                    var caret = getCaret(this);
+                    if (event.shiftKey) {
+                        event.stopPropagation();
+                    } else {
+                        sentMessage();
+                    }
+                }
+            });
+        })
+        var player = videojs('my-video', {
+            controls: true,
+            sources: [{ src: '@src', type: 'video/mp4' }]
+        });
+        function onWatch(name, link, id) {
+            var sources = [{ "type": "video/mp4", "src": link }];
+            player.pause();
+            player.src(sources);
+            player.load();
+            player.play();
+            $(".myModalLabel").text(name);
+            activeItemli(id);
+        }
+        function activeItemli(id) {
+            var lstItem = $(".media-list li").removeClass("liActive");
+            $("#item_" + id).addClass("liActive");
+        }
+        function getParameterByName(url, name) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+        function loadMessage(from,to) {
+            var makh = '@makh';
+            myLoop = new myLoading("click_load_discussion", "");
+            myLoop.start();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetAllComment", "KhoaHoc")',
+                contentType: "application/json; charset=utf-8",
+                data: "{'mkh':'" + makh + "','from':'" + from+"','to':'"+to+"'}",
+                dataType: "json",
+                success: function (res) {
+                    myLoop.stop();
+                    var item = res.value;
+                    if (item.length == 10) {
+                        $("#click_load_discussion").show();
+                    } else {
+                        $("#click_load_discussion").hide();
+                    }
+                    bindingChatTeacher(makh,item);
+                }, error: function (msg) {
+                    myLoop.stop();
+                    console.log("Lỗi tải Các Comment");
+                }
+            });
+        }
+        function loadPlusMessage() {
+            var makh = '@makh';
+            var from = $("#@makh-comments li").length;
+            loadMessage(from + 1, from + 10);
+        }
+        function sentMessage() {
+            var makh = '@makh';
+            var obj = new Object();
+            obj.Comments = $("#txtComment").val();
+            obj.IdGuid = getParameterByName(null, "ids");
+            obj.mkh = makh;
+            var json = JSON.stringify(obj);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("AddComment", "KhoaHoc")',
+                data: json,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    $("#txtComment").val("")
+                    var item = [];
+                    item.push(res.value);
+                    bindingPreChatTeacherComment(makh,item);
+                }, error: function (msg) {
+                    alert("Lỗi gửi tin nhắn.");
+                }
+            });
+        }
+        function myDownload() {
+            myLoop = new myLoading("btnDownload", "");
+            myLoop.start();
+            var url = '@ViewBag.LinkFile';
+            if (typeof (url) == 'undefined' || url === "") {
+                ToastMessage("warning", "Không có dữ liệu !");
+            } else {
+                document.getElementById('my_download').src = url;
+            }
+            setTimeout(function () { myLoop.stop(); }, 1000);
+        }
+    </script>
+}

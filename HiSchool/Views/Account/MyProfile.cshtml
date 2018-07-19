@@ -1,0 +1,321 @@
+﻿@using Core.Model
+
+@{
+    ViewBag.Title = "Test";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section JsHeader{
+    <link rel="stylesheet" href="https://cdn-s07.bigschool.vn/min/s/1522468462/b=ids/css&f=style.css,popup.css,custom-style.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn-s07.bigschool.vn/min/s/1522468462/b=js/croppic/assets/css&f=croppic.css" type="text/css">
+    <style>
+        .profile-cover.profile-cover-edit {
+            overflow: initial;
+        }
+    </style>
+}
+<div class="xs-nav  visible-xs">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 xs-menu-btn">
+                <div id="xs-menu-container">
+                    <div id="xs-menu-wrapper">
+                        <div id="xs-menu-button"><span></span><span></span><span></span></div>
+                    </div>
+                    <!-- menu-wrapper -->
+                    <ul class="xs-menu-list accordion"></ul>
+                    <!-- menu-list accordion-->
+                </div>
+            </div>
+            <div class="col-xs-3 pull-right">
+                <ul class="signed">
+                    <li class="dropdown one">
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="xs-overlay-1 visible-xs"></div>
+<!--</md-nav>-->
+<!--cover-->
+<section class="profile-cover profile-cover-edit">
+    <div class="profile-cover-photo">
+        <div id="profile_cover_full" style="background-image:url('https://cdn-s07.bigschool.vn/ids/img/bg.jpg');">
+        </div>
+        <div class="container full-height">
+            @if (ViewBag.UserLogin != null)
+            {
+                var userModel = (SysUser)ViewBag.UserLogin;
+                <div id="profile_cover_inner"
+                     class="profile-cover-photo-inner row full-height"
+                     style="background-image: url('https://cdn-s07.bigschool.vn/ids/img/bg.jpg');">
+                    <a style="z-index: 5" href="#" id="upload_cover_button" class="edit-link-icon edit-link-cover-photo absolute">
+                        <i class="fa fa-camera"></i> <span>Thay đổi ảnh bìa</span>
+                    </a>
+                    <div id="cropContainerModalCover" style="display: none; width: 940px; height: 310px;"></div>
+                    <div class="col-md-4 full-height">
+                        <div class="profile-info">
+                            <div class="profile-photo relative">
+                                <a href="#"
+                                   id="upload_avatar_button"
+                                   class="edit-link-icon edit-link-profile-photo absolute">
+                                    <i class="fa fa-camera"
+                                       data-toggle="tooltip"
+                                       data-placement="top"
+                                       data-container="div.profile-info"
+                                       title="Thay đổi ảnh cá nhân"></i>
+                                </a>
+                                <img id="class_avatar_img" src="https://graph.facebook.com/v2.8/876734712462320/picture" class="img-circle">
+                            </div>
+                            <div id="cropContainerModal" style="display: none; width: 128px; height: 128px;"></div>
+                            <div class="profile-info-highlight">
+                                <h1 class="profile-name">
+                                    @userModel.FullName
+                                    <a href="https://ids.bigschool.vn/profile.html"
+                                       class="edit-link-icon relative"
+                                       data-toggle="tooltip"
+                                       data-placement="right"
+                                       title="Cập nhật thông tin cá nhân">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                </h1>
+
+                            </div>
+
+                            <div class="profile-follow">
+                                <a href="#"
+                                   target="_blank" class="btn btn-primary btn-follow"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="Xem lịch sử giao dịch">
+                                    <strong class="tp-coin">   @String.Format("{0:0,0}", userModel.BCoin)</strong> VNĐ
+                                </a>
+                                <a href="@Url.Action("Index","Bank")"
+                                   target="_blank"
+                                   class="btn btn-default"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="Nạp tiền">
+                                    <i class="fa fa-plus"></i>
+                                </a>
+                            </div>
+                            <!-- done / ducnn - profile-follow (bigs/todo#533) -->
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="person-wrapper">
+                            <div class="panel person-btn">
+                                <div class="p-a-lg text-center text-muted">
+                                    <div class="dropdown">
+                                        <button class="dropdown-toggle ps-btn" id="ps-wrapper" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            <i class="fa fa-cog"></i> Tính năng
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="ps-wrapper">
+                                            <li>
+                                                <a href="https://ids.bigschool.vn/teacher.html" class="">Tìm giáo viên</a>
+                                            </li>
+                                            <li>
+                                                <a href="https://class.bigschool.vn/class.html?cmd=search" class="">Tìm lớp học</a>
+                                            </li>
+                                            <li>
+                                                <a href="https://class.bigschool.vn/" class="">Tìm bài giảng</a>
+                                            </li>
+                                            <li>
+                                                <a href="https://exam.bigschool.vn/" class="">Tìm đề thi</a>
+                                            </li>
+                                            <li>
+                                                <a href="https://ids.bigschool.vn/personal.html?cmd=history" class="">Xem học bạ</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<div class="container m-b-lg">
+    <div class="row">
+        <!--main content:-->
+        <div class="col-md-12">
+            <div class="profile-more-info">
+                <!-- Nav tabs -->
+                <ul class="list-unstyled" role="tablist">
+                    <li role="presentation" class="active">
+                        <a href="#home" aria-controls="home" role="tab" data-toggle="tab">
+                            Góc học tập
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#about" aria-controls="about" role="tab" data-toggle="tab">
+                            Thông tin cá nhân
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="home">
+                    <div class="row">
+                        <!-- Lop hoc:-->
+                        <div class="col-md-6">
+                            <section class="panel bs-profile--lecture-box class-box">
+                                <div class="p-a-md">
+                                    <h4 class="m-t-0">
+                                        Lớp đang học
+                                        <!-- <span class="badge">4</span> -->
+                                    </h4>
+                                    <div class="heading-line"></div>
+                                    @if (ViewBag.LstClass != null)
+                                    {
+                                        if (ViewBag.LstClass.Count > 0)
+                                        {
+                                            <div class="list-group js-eq">
+                                                @foreach (var item in (List<Cms_Class>)ViewBag.LstClass)
+                                                {
+                                                    <div class="list-group-item">
+                                                        <div class="media">
+                                                            <div class="media-left">
+                                                                <a href="@Url.Action("Details","KhoaHoc",new { ids=item.IdGuid})">
+                                                                    <img class="media-object" src="@item.Image" alt="" width="60">
+                                                                </a>
+                                                            </div>
+                                                            <div class="media-body">
+                                                                <h4 class="media-heading">
+                                                                    <a href="@Url.Action("Details","KhoaHoc",new { ids=item.IdGuid})">@item.Name</a>
+                                                                </h4>
+                                                                <div class="text-muted"></div>
+                                                                <div class="text-muted">
+                                                                    @item.GradeName &nbsp;&#8226;&nbsp; @item.SubjectName
+                                                                </div>
+                                                                <div>Giáo viên: @item.CreatedByName</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+
+                                        else
+                                        {
+                                            <p class="text-center">
+                                                Bạn chưa theo học lớp nào, hãy bắt đầu ở<a class="suggest-link" href="@Url.Action("Index","KhoaHoc")">đây</a>
+                                            </p>
+                                        }
+                                    }
+
+                                </div>
+                                <footer class="panel-footer"></footer>
+                            </section>
+                        </div>
+                        <!-- Đề thi :-->
+                        <div class="col-md-6">
+                            <section class="panel bs-profile--lecture-box class-box">
+                                <div class="p-a-md">
+                                    <h4 class="m-t-0">
+                                        Đề thi đã làm
+                                        <!-- <span class="badge">0</span> -->
+                                    </h4>
+                                    <div class="heading-line"></div>
+                                    @if (ViewBag.LstExam != null)
+                                    {
+                                        if (ViewBag.LstExam.Count > 0)
+                                        {
+                                            <div class="list-group js-eq">
+                                                @foreach (var item in (List<Ex_Exam>)ViewBag.LstExam)
+                                                {
+                                                    <div class="list-group-item">
+                                                        <div class="media">
+                                                            <div class="media-left">
+                                                                <a href="@Url.Action("Details","DeThi",new { ids=item.IdGuid})">
+                                                                    <img class="media-object" src="/Content/img/subjects/Subject-detail-6.png" alt="" width="60">
+                                                                </a>
+                                                            </div>
+                                                            <div class="media-body">
+                                                                <h4 class="media-heading">
+                                                                    <a href="@Url.Action("Details","DeThi",new { ids=item.IdGuid})">@item.Name</a>
+                                                                </h4>
+                                                                <div class="text-muted"></div>
+                                                                <div class="text-muted">
+                                                                    @item.GradeName &nbsp;&#8226;&nbsp; @item.SubjectName
+                                                                </div>
+                                                                <div>@item.TotalStudent <span class="text-muted">lượt làm</span></div>
+                                                                <div>Giáo viên: @item.CreatedByName</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-center">
+                                                Bạn chưa tham gia đề thi nào, hãy bắt đầu ở<a class="suggest-link" href="@Url.Action("Index","DeThi")">đây</a>
+                                            </p>}
+                                    }
+                                </div>
+                                <footer class="panel-footer"></footer>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div role="tabpanel" class="tab-pane" id="about">
+                    <div class="panel">
+                        <div class="p-a-md">
+                            <section class="m-b-lg bs-user-info-box">
+                                <h4 class="m-y">Thông tin cá nhân</h4>
+                                <div class="heading-line"></div>
+                                <dl class="dl-horizontal">
+                                    <dt>Họ và tên:</dt>
+                                    <dd> Ngô Trọng</dd>
+                                    <dt>ID tài khoản:</dt>
+                                    <dd>31357</dd>
+
+                                    <dt>Ngày sinh:</dt>
+                                    <dd></dd>
+
+                                    <dt>Học sinh lớp:</dt>
+                                    <dd>4</dd>
+
+                                    <dt>Số điện thoại:</dt>
+                                    <dd>01252358230</dd>
+                                    <dt>Email:</dt>
+                                    <dd>trongnv1507@gmail.com</dd>
+
+                                    <dt>Trường:</dt>
+                                    <dd></dd>
+                                    <dt>Tỉnh/Thành phố:</dt>
+                                    <dd></dd>
+                                </dl>
+                            </section>
+                            <section class="m-b-lg bs-user-info-intro-box">
+                                <h4 class="m-y">Giới thiệu về bản thân</h4>
+                                <div class="heading-line"></div>
+                                <div>
+                                    Chưa cập nhật thông tin
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /main content-->
+    </div>
+</div>
+
+
+@section JsFooter{
+    <script>
+        $(function () { 
+            $("#class_avatar_img").attr("src", ($($(".img-rounded")[0]).attr("src")));
+        })
+    </script>
+    
+}

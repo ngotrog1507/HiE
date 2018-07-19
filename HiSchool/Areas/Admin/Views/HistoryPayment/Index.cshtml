@@ -1,0 +1,276 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var isHost = ViewBag.Host != null && (bool)ViewBag.Host;
+}
+<section class="content-header">
+
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i>Lịch sử giao dịch</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Tìm kiếm </h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <div class="form-horizontal">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="form-group col-sm-4">
+                                <label class="col-sm-4 control-label">Từ ngày</label>
+
+                                <div class="col-sm-8">
+                                    <div class="input-group date">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </div>
+                                        <input type="text" value="@ViewBag.StartDate" class="form-control pull-right datepicker" id="fromDate">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label class="col-sm-4 control-label">Đến ngày</label>
+
+                                <div class="col-sm-8">
+                                    <div class="input-group date">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </div>
+                                        <input type="text" value="@ViewBag.EndDate" class="form-control pull-right datepicker" id="toDate">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-sm-4">
+                                <label class="col-sm-3 control-label">UserName</label>
+                                <div class="col-sm-9">
+                                    @if (ViewBag.ListUser != null)
+                                    {
+                                        <select class="js-select2 col-sm-12" id="userId">
+                                            <option value="0">--Tất cả--</option>
+                                            @foreach (var item in (List<Core.Model.SysUser>)ViewBag.ListUser)
+                                            {
+                                                <option value="@item.UserId">@item.UserName</option>
+                                            }
+                                        </select>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-1"></div>
+                        </div>
+                        <div class="form-group col-sm-12" style="text-align: center;">
+                            <div class="checkbox checkbox-success checkbox-inline">
+                                <input type="checkbox" id="notAccept" value="1">
+                                <label for="notAccept"> Cần phê duyệt </label>
+                            </div>
+                            &nbsp;&nbsp;&nbsp;
+                            <button type="button" title="Tìm kiếm" id="btnSearch" class="btn color-trong btn-trong" onclick=" refresh(currentPage) ">
+                                <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Tìm kiếm
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box box-success">
+                <div class="box-header with-border" style="padding-bottom: 0px;">
+                    <div class="col-sm-6">
+                        <h3 class="box-title" style="margin-left: -18px;"> Danh sách</h3>
+                    </div>
+                    <!--trongnv-->
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form class="form-horizontal">
+                    <div class="box-body">
+                        <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="dataTables_length">
+                                        <label>
+                                            Số lượng hiển thị
+                                            <select name="example1_length" id="sizePage" onchange=" refresh(currentPage) " aria-controls="example1" class="selectOption-trong form-control input-sm">
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                            </select>
+                                            bản ghi
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table id="example1" class="table table-bordered table-striped">
+                                        <thead class="color-trong">
+                                            <tr>
+                                                <th style="width: 5%; text-align: center">STT</th>
+                                                <th style="width: 11%; text-align: center">Thời gian</th>
+                                                <th style="width: 20%; text-align: center">Mã giao dịch</th>
+                                                <th style="width: 15%; text-align: center">Từ</th>
+                                                <th style="width: 15%; text-align: center">Đến</th>
+                                                <th style="width: 10%;text-align: center">Số tiền</th>
+                                                <th style=" text-align: center">Nội dung</th>
+                                                @if (isHost)
+                                                {
+                                                    <th style=" width: 10%;text-align: center"></th>
+                                                }
+                                            </tr>
+                                        </thead>
+                                        <tbody id="data"></tbody>
+                                    </table>
+                                    <div class="bs-example">
+                                        <div class="btn-toolbar text-center">
+                                            <div class="dataTables_paginate" id="pageSearch">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="paging"></div>
+                            @*  @Html.Raw(MvcPagingByFrameWork.Paging(Model.PageCount, Model.PageIndex, "System/Cms_Class/Index", ViewBag.Search))*@
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+        <!-- /.box -->
+        <!-- general form elements disabled -->
+        <!-- /.box -->
+    </div>
+</section>
+
+
+@section JsFooter{
+    <script src="~/Content/jquery.twbsPagination.js"></script>
+
+    <script>
+        $('#fromDate').datepicker({
+            format: 'dd/mm/yyyy 00:00'
+        })
+        $('#toDate').datepicker({
+            format: 'dd/mm/yyyy 23:59'
+        })
+        $(function () {
+            refresh(currentPage);
+        })
+        function refresh(page) {
+            var chk = $('#notAccept:checkbox:checked').length>0;
+            var sData = "{'fromDate':'" + $("#fromDate").val() + "','toDate':'" + $("#toDate").val() + "','userId':'" + $("#userId :selected").val() + "','notAccept':'" + chk+"'}";
+            myLoop = new myLoading("btnSearch", "");
+            myLoop.start();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetData", "HistoryPayment")',
+                data: sData,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    myLoop.stop();
+                    if (res.status === "ok") {
+                        var lstItem = res.value
+                        $("#data").html("");
+                        var roleAdmin = ('@isHost' === 'True');
+                        var str = "";
+                        lstItem.forEach(function (item, index) {
+
+                            str += "<tr class='tr-content'>";
+                            str += "<td>" + (index + 1) + "</td>";
+
+                            var date = new Date(parseInt(item.CreatedDate.replace(/(^.*\()|([+-].*$)/g, '')));
+                            var dateString =  +
+                                date.getDate() +
+                                '/'+
+                                (date.getMonth() + 1) + '/' + date.getFullYear()+
+                            '/' + date.getHours() + ':'+date.getMinutes()
+
+                            str += "<td style='text-align: center'> <span class='badge bg-green'>" + dateString + "</span></td>";
+                            str += "<td>" + item.IdGuid + "</td>";
+                            str += "<td style='text-align: left; padding-left: 20px;'>" + item.FromUserStr + "</td>";
+                            str += "<td style='text-align: left; padding-left: 20px;'>" + item.ToUserStr + "</td>";
+                            str += "<td style='padding-left: 20px'> <span class='badge bg-yellow'>" + item.BCoin.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1."); + "</span></td>";
+                            str += "<td>" + item.Summary + "</td>";
+                            if (roleAdmin ) {
+                                if (!item.IsActive) {
+                                    str += " <td><a href='' onclick='PheDuyet(this)'   data-id='" + item.IdGuid + "' class='img_product noClick'> <i class='fa fa-credit-card' aria-hidden='true'></i>&nbsp;Phê duyệt</a></td>";
+                                } else {
+                                    str += "<td></td>";
+                                }
+                            }
+                            str += "</tr>";
+                        })
+                        $("#data").html(str);
+                        paging(lstItem);
+                        $('a.noClick').on('click', function (e) {
+                            e.preventDefault();
+                            //do other stuff when a click happens
+                        });
+                    } else {
+                        toastr("error","Lỗi lấy dữ liệu!")
+                    }
+                },
+                error: function () {
+                    myLoop.stop();
+                    toastr("error", "Lỗi lấy dữ liệu!")
+                }
+            });
+        }
+    </script>
+    <script>
+        function paging(lstItem) {
+            $('#pageSearch').html("");
+            $('#pageSearch').removeData("twbs-pagination");
+            var item = lstItem;
+            var pageSize = 6;
+            if (item && item.length > 0) {
+                var pageTotal = item.length / pageSize;
+                if (pageTotal < 1) pageTotal = 1;
+                if (item.length % pageSize >= 1) pageTotal += 1;
+                pageTotal = (item.length <= pageSize) ? 1 : pageTotal;
+                pagiWsTab = $('#pageSearch').twbsPagination({
+                    totalPages: pageTotal,
+                    visiblePages: 4,
+                    onPageClick: function (event, page) {
+                        $(".tr-content").hide();
+                        $(".tr-content").each(function (n) {
+                            if (n >= pageSize * (page - 1) && n < pageSize * page)
+                                $(this).show();
+                        });
+                    }
+                });
+            }
+        }
+        function PheDuyet(obj) {
+            if (confirm("Xác nhận phê duyệt")) {
+                 $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("PheDuyetRutTien", "Cms_Teacher")',
+                     data: "{'ids':'" + $(obj).data("id") + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+                        if (msg.status === "success") {
+                            ToastMessage("success", "Phê duyệt thành công !");
+                            refresh(currentPage);
+                        } else
+                            ToastMessage("error", "Xảy ra lỗi !");
+                    },
+                    err: function () {
+                        ToastMessage("error", "Xảy ra lỗi !");
+                    }
+                });
+            }
+        }
+    </script>
+}

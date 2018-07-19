@@ -1,0 +1,494 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var isHost = ViewBag.Host != null && (bool)ViewBag.Host;
+}
+<div class="_modal">
+    <div class="cssload-container">
+        <div class="cssload-speeding-wheel"></div>
+        <div id="veil"></div>
+    </div>
+</div>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i>Quản lý Menu</a></li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Tìm kiếm </h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <div class="form-horizontal">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="form-group col-sm-1"></div>
+                            <div class="form-group col-sm-5">
+                                <label class="col-sm-3 control-label">Tên menu</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" id="Key" name="key" class="form-control " placeholder="Tên menu">
+                                    @* @Html.TextBox("Key", (string)ViewBag.Search, new { @placeholder = "", @maxlength = "300", @class = "form-control" })*@
+                                </div>
+                            </div>
+
+                            <div class="form-group col-sm-5">
+                                <label class="col-sm-3 control-label">Trạng thái</label>
+                                <div class="col-sm-9">
+                                    @if (ViewBag.UsedState != null)
+                                    {
+                                        @Html.DropDownList("UsedState", ViewBag.UsedState as SelectList, null, new { @class = "js-select2-clear col-sm-12" })
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-1"></div>
+                        </div>
+                        <div class="form-group col-sm-12" style="text-align: center;">
+                            <button type="button" title="Tìm kiếm" class="btn color-trong btn-trong" onclick=" refresh(currentPage) ">
+                                <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Tìm kiếm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box box-success">
+                <div class="box-header with-border" style="padding-bottom: 0px;">
+                    <div class="col-sm-6">
+                        <h3 class="box-title" style="margin-left: -18px;"> Danh sách</h3>
+                    </div>
+                    <!--trongnv-->
+                    <div class="col-sm-6">
+                        @if ((ViewBag.Delete != null && (bool)ViewBag.Delete) || isHost)
+                        {
+                            <button type="submit" style="margin: -8px -14px 4px 19px;" title="Xóa' | translate" class="btn btn-danger pull-right" onclick=" DeleteAll(null, '@Url.Action("Delete", "SysMenu")' ) ">
+                                <i class="fa fa-times-circle" aria-hidden="true"></i>&emsp; Xóa &emsp;
+                            </button>
+                        }
+                        @if ((ViewBag.Add != null && (bool)ViewBag.Add) || isHost)
+                        {
+                            <button type="submit" style="margin: -8px -14px 4px 19px;" title="Thêm mới" class="btn btn-success pull-right" onclick=" AddRecord() ">
+                                <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;&nbsp;Thêm mới
+                            </button>
+                        }
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form class="form-horizontal">
+                    <div class="box-body">
+                        <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="dataTables_length">
+                                        <label>
+                                            Số lượng hiển thị
+                                            <select name="example1_length" id="sizePage" onchange=" refresh(currentPage) " aria-controls="example1" class="selectOption-trong form-control input-sm">
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                            </select>
+                                            bản ghi
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table id="example1" class="table table-bordered table-striped">
+                                        <thead class="color-trong">
+                                            <tr>
+                                                <th style="width: 2%; text-align: center">
+                                                    <span><input type="checkbox" onclick=" CheckAll() " class="ace check-all" data-id="0" /></span>
+                                                </th>
+                                                <th style="width: 5%; text-align: center">STT</th>
+                                                <th style="width: 5%; text-align: center">CN</th>
+                                                <th style="width: 30%; text-align: center">Tên Menu</th>
+                                                <th style="width: 15%; text-align: center">Link</th>
+                                                <th style="text-align: center">Ngày tạo</th>
+                                                <th style="text-align: center">Người tạo</th>
+                                                <th style="text-align: center">Trạng thái</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="data"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div id="paging"></div>
+                            @*  @Html.Raw(MvcPagingByFrameWork.Paging(Model.PageCount, Model.PageIndex, "System/SysMenu/Index", ViewBag.Search))*@
+                        </div>
+                    </div>
+                </form>
+                <div class="modal fade" id="modal-default">
+                    <div class="modal-dialog" style="width: 63%">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <h4 class="modal-title">Thông tin Menu</h4>
+                                <input type="hidden" id="txtId" />
+                            </div>
+                            <div class="modal-body">
+                                <form class="form-horizontal2">
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label class="col-sm-4 control-label">Tên Menu <span style="color: red">(*)</span></label>
+
+                                            <div class="col-sm-8">
+                                                <div class="clearfix">
+                                                    <input type="text" id="Name" name="Name" class="form-control " placeholder="Tên Menu">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-5">
+                                            <label class="col-sm-4 control-label">Trạng thái</label>
+                                            <div class="col-sm-8">
+                                                @if (ViewBag.UsedState != null)
+                                                {
+                                                    @Html.DropDownList("UsedStateAdd", ViewBag.UsedStateAdd as SelectList, null, new { @class = "js-select2 col-sm-12" })
+                                                }
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group col-sm-1"></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label class="col-sm-4 control-label">Link <span style="color: red">(*)</span></label>
+                                            <div class="col-sm-8">
+                                                <div class="clearfix">
+                                                    <input type="text" id="Link" name="Link" class="form-control " placeholder="Link">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-5">
+                                            <label class="col-sm-4 control-label">Orders</label>
+                                            <div class="col-sm-8">
+                                                <div class="clearfix">
+                                                    <input type="number" id="Orders" name="Orders" class="form-control " value="1" onkeypress=" return isNumberKey(event) " placeholder="Orders">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-11">
+                                            <label class="col-sm-2 control-label">Menu cha</label>
+
+                                            <div class="col-sm-10">
+                                                @if (ViewBag.ListMenu != null)
+                                                {
+                                                    <select class="js-select2 col-sm-12" name="state" placeholder="Chọn " id="ParentId">
+                                                        <option value="0">Chọn danh mục cha</option>
+                                                        @for (int k = 0; k < ViewBag.ListMenu.Count; k++)
+                                                        {
+                                                            <option value="@ViewBag.ListMenu[k].Id">@ViewBag.ListMenu[k].Name</option>
+                                                        }
+                                                    </select>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label class="col-sm-4 control-label">Ico</label>
+                                            <div class="col-sm-8">
+                                                <div class="clearfix">
+                                                    <input type="text" id="Icon" name="Icon" class="form-control " placeholder="Icon" value="fa fa-minus-square-o ">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-11">
+                                            <label class="col-sm-2 control-label">Mô tả</label>
+                                            <div class="col-sm-10" id="summary">
+                                                @*<input type="text" class="summary-wysi" placeholder="Nội dung mô tả/>*@
+                                                <textarea class="textarea summary-wysi" placeholder="Nội dung mô tả"
+                                                          style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Đóng</button>
+                                <button type="button" class="btn btn-success" id="btnAdd" onclick=" Save('add') "><i class="fa fa-save" aria-hidden="true"></i>&nbsp;Lưu&nbsp;</button>
+                                <button type="button" class="btn btn-primary" id="btnEdit" onclick=" Save('edit') "><i class="fa fa-save" aria-hidden="true"></i>&nbsp;Lưu&nbsp; </button>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+
+            </div>
+        </div>
+        <!-- /.box -->
+        <!-- general form elements disabled -->
+        <!-- /.box -->
+    </div>
+</section>
+    <!--/.col (right) -->
+    <!-- /.content -->
+    @section jsFooter{
+        <script>
+            $('.form-horizontal2').validate({
+                errorElement: 'div',
+                errorClass: 'help-block',
+                focusInvalid: false,
+                ignore: "",
+                rules: {
+                    Name: {
+                        required: true
+                    },
+                    Link: {
+                        required: true
+                    }
+                },
+
+                messages: {
+                    Name: {
+                        required: "Trường này không được bỏ trống ."
+                    },
+                    Link: {
+                required: "Trường này không được bỏ trống ."
+            }
+                },
+
+                highlight: function(e) {
+                    $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+                },
+
+                success: function(e) {
+                    $(e).closest('.form-group').removeClass('has-error'); //.addClass('has-info');
+                    $(e).remove();
+                },
+
+                errorPlacement: function(error, element) {
+                    if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                        var controls = element.closest('div[class*="col-"]');
+                        if (controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                        else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                    } else if (element.is('.select2')) {
+                        error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+                    } else if (element.is('.chosen-select')) {
+                        error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                    } else error.insertAfter(element.parent());
+                }
+
+                //submitHandler: function (form) {
+
+                //},
+                //invalidHandler: function (form) {
+                //}
+            });
+        </script>
+        <script>
+            refresh(currentPage);
+
+            function refresh(page) {
+                $("._modal").show();
+                var sData = "{'page':'" + page + "','key':'" + $("#Key").val() + "','sort':'','usedState':'" + $('#UsedState').find(":selected").val() + "','pageSize':'" + $("#sizePage").find(":selected").val() + "'}";
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetData", "SysMenu")',
+                    data: sData,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        $("._modal").hide();
+                        if (response.status == "success") {
+                            console.log(response);
+                            var listData = response.Data;
+                            var totalRecord = response.TotalPage;
+                            var pageSize = response.PageSize;
+                            debugger 
+                            var totalPage = (totalRecord % pageSize != 0) ? Math.floor(totalRecord / pageSize) + 1 : Math.floor(totalRecord/ pageSize);
+                            var currentPage = response.CurrentPage;
+                            var str = "";
+                            var roleDelete = ('@ViewBag.Delete' === 'True');
+                            var roleEdit = ('@ViewBag.Edit' === 'True');
+                            listData.forEach(function(item, index) {
+                                str += "<tr style='text-align: center'>";
+                                str += "                        <td style='text-align: center'>";
+                                str += "<input type='checkbox' name='check-row' class='ace check-row' data-id='"+item.Id+"'>";
+                                str += "</td>";
+                                str += "         <td>" + (pageSize * currentPage + index + 1) + "</td>";
+                                str += "<td>";
+                                str += "              <div class='btn-group'>";
+                                if (('@ViewBag.Host' === 'True')) {
+                                    str += "<button type='button' class='btn color-trong dropdown-toggle' style='color: white;' data-toggle='dropdown' aria-expanded='false'>";
+                                    str += "<i class='fa fa-cog' aria-hidden='true'></i>";
+                                    str += "</button>";
+
+                                    str += " <ul class='dropdown-menu setting-menu' role='menu'>";
+                                    str += "<li onclick='EditRecord(" + item.Id + ")'><a class='noClick' href=''><i class='fa fa-pencil-square-o' aria-hidden='true' ></i>Chỉnh sửa</a></li>";
+                                    str += "<li class='divider'></li>";
+                                    str += "<li onclick='DeleteItem(" + item.Id + ")'><a class='noClick' href=''><i class='fa fa-times-circle' aria-hidden='true'></i>Xóa</a></li>";
+                                } else {
+                                    if (item.CreatedBy == @WebSecurity.CurrentUserId) {
+                                        str += "<button type='button' class='btn color-trong dropdown-toggle' style='color: white;' data-toggle='dropdown' aria-expanded='false'>";
+                                        str += "<i class='fa fa-cog' aria-hidden='true'></i>";
+                                        str += "</button>";
+                                        str += "             <ul class='dropdown-menu setting-menu' role='menu'>";
+                                        if (roleEdit != null && roleEdit && roleDelete != null && roleDelete) {
+                                            str += "<li onclick='EditRecord(" + item.Id + ")'><a class='noClick' href=''><i class='fa fa-pencil-square-o' aria-hidden='true' ></i>Chỉnh sửa</a></li>";
+                                            str += "<li class='divider'></li>";
+                                            str += "<li onclick='DeleteItem(" + item.Id + ")'><a class='noClick' href=''><i class='fa fa-times-circle' aria-hidden='true'></i>Xóa</a></li>";
+                                        } else if (roleEdit != null && roleEdit) {
+                                            str += "<li onclick='EditRecord(" + item.Id + ")'><a class='noClick' href=''><i class='fa fa-pencil-square-o' aria-hidden='true' ></i>Chỉnh sửa</a></li>";
+                                        } else if (roleDelete != null && roleDelete) {
+                                            str += "<li onclick='DeleteItem(" + item.Id + ")'><a class='noClick' href=''><i class='fa fa-times-circle' aria-hidden='true'></i>Xóa</a></li>";
+                                        }
+                                        str += "</ul>";
+                                    }
+                                }
+                                str += "             </div>";
+                                str += "</td>";
+                                str += "         <td style='text-align: left; padding-left: 40px;'>";
+                                str += item.Name;
+                                str += "    </td>";
+                                str += "         <td style='text-align: left; padding-left: 40px;'>";
+                                str += item.Link;
+                                str += "    </td>";
+                                var date = new Date(parseInt(item.CreatedDate.replace(/(^.*\()|([+-].*$)/g, '')));
+                                var dateString = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+                                str += "     <td>" + dateString + "</td>";
+                                str += "<td>" + item.CreatedByName + "</td>";
+                                if (item.UsedState == 1) {
+                                    str += "<td  title='Đang hoạt động'><span class='badge label-success'><i class='fa fa-fw fa-check-circle'></i></span></td>";
+                                } else if (item.UsedState == 0) {
+                                    str += "<td  title='Đang bị khóa'><span class='badge label-warning'><i class='fa fa-fw fa-check-circle'></i></span></td>";
+                                } else {
+                                    str += "<td  title='Yêu cầu xóa'><span class='badge label-danger'><i class='fa fa-fw fa-check-circle'></i></span></td>";
+                                }
+                                str += "     </tr>";
+                            });
+                            $("#data").html(str);
+                        console.log(paging(totalPage, page, $("#Key").val()))
+                        $("#paging").html(paging(totalPage, page, $("#Key").val()));
+                        $('a.noClick').on('click', function (e) {
+                            e.preventDefault();
+                            //do other stuff when a click happens
+                        });
+                    }
+
+                    //window.location.href = url;
+                },
+                    error: function () {
+                        ToastMessage("error", "Xảy ra lỗi !");
+                    }
+            });
+            }
+        </script>
+        <script>
+            function Reset() {
+                $("#summary").html("<textarea class=\"textarea summary-wysi\" placeholder=\"Nội dung mô tả\""+
+                               "style=\"width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;\"></textarea>");
+                $(".summary-wysi").wysihtml5();
+                $("#Name").val("");
+                $("#Link").val("");
+                $("#Orders").val("1");
+                $("#txtId").val("");
+                $("#Icon").val("fa fa-minus-square-o ");
+                $("#UsedStateAdd").val(1).change();
+                $("#ParentId").val(0).change();
+            }
+            function DeleteItem(id) {
+                if (confirmDelete()) {
+                    ajax_delete(id, '@Url.Action("Delete", "SysMenu")');
+                }
+            }
+            function Save(type) {
+                if ($('.form-horizontal2').valid()) {
+                    var data = new Object();
+                    data.Id = $("#txtId").val();
+                    data.Summary = $(".summary-wysi").val();
+                    data.Name = $("#Name").val();
+                    data.Link = $("#Link").val();
+                    data.Orders = $("#Orders").val();
+                    data.Icon=$("#Icon").val();
+                    data.UsedState = $("#UsedStateAdd").find(":selected").val();
+                    data.ParentId = $("#ParentId").find(":selected").val();
+                    data.ParentId = (data.ParentId == "0") ? "" : data.ParentId;
+
+                    myLoop = new myLoading(type == 'add'?"btnAdd" : "btnEdit", "");
+                    myLoop.start();
+
+                    var json = JSON.stringify(data);
+                    console.log(data)
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("Edit", "SysMenu")',
+                        data: json,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (msg) {
+                            myLoop.stop();
+                            if (msg.status == "success") {
+                                if (type == 'add')
+                                    ToastMessage("success", "Thêm mới thành công !");
+                                else ToastMessage("success", "Sửa thành công !");
+                                $("#modal-default").modal('hide');
+                                location.reload();
+                            }
+                            else
+                                ToastMessage("error", "Xảy ra lỗi !");
+                        }
+                    });
+                }
+            }
+
+            function EditRecord(id) {
+                $("#modal-default").modal();
+                $("#btnAdd").hide();
+                $("#btnEdit").show();
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetById", "SysMenu")',
+                    data: "{'id':'"+id+"'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+                        if (msg.status == "success") {
+                            $("#summary").html("<textarea class=\"textarea summary-wysi\" placeholder=\"Nội dung mô tả\""+
+                                "style=\"width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;\"></textarea>");
+                            $(".summary-wysi").wysihtml5();
+                            $("#Name").val(msg.Data.Name);
+                            $("#Link").val(msg.Data.Link);
+                            $("#Orders").val(msg.Data.Orders);
+                            $("#txtId").val(msg.Data.Id);
+                            $("#Icon").val(msg.Data.Icon);
+                            $("#UsedStateAdd").val(msg.Data.UsedState).change();
+                            if (msg.Data.ParentId != null) 
+                                $("#ParentId").val(msg.Data.ParentId).change();    
+                            else $("#ParentId").val(0).change();
+                            
+                        }
+                        else
+                            ToastMessage("error", "Xảy ra lỗi !");
+                    }
+                });
+            }
+
+
+        </script>
+    }
+
+
+
+
+

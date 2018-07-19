@@ -1,0 +1,294 @@
+﻿
+@{
+    ViewBag.Title = "Video";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    a {
+        color: #ebf3fb;
+    }
+
+    .item-product .video a:hover:after {
+        font-size: 85px;
+    }
+
+    .item-product .video a:after {
+        font-size: 61px;
+    }
+
+    .event .event-img img {
+        border-radius: 0;
+    }
+
+    .event .event-img {
+        border-radius: 0;
+    }
+</style>
+@section Slide{
+    <div class="banner">
+        <p><img alt="" src="/Uploads/core/logo-02.png" style="height:119px; width:100px" /></p>
+    </div>
+}
+@if (Model != null)
+{
+    <section>
+        <div class="module-home">
+            <article>
+                <h2>VIDEO</h2>
+                <div class="container">
+                    <div class="category">
+                        <ul>
+                            @if (ViewBag.ListType != null)
+                            {
+                                if (ViewBag.Type == null)
+                                {
+                                    <li class="active"><a href="@Url.Action("Video","Home",new{page=1})">Tất cả</a></li>
+                                }
+                                else
+                                {
+                                    <li class=""><a href="/video">Tất cả</a></li>}
+
+                                foreach (var item in ViewBag.ListType)
+                                {
+                                    <li class="@((ViewBag.Type == item.ShortUrl)?"active":"")"><a href="@Url.Action("Video","Home",new{page=1,type=item.ShortUrl})">@item.Name</a></li>
+                                }
+                            }
+
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        @if (Model != null)
+                        {
+                            for (int i = 1; i <= Model.Count; i++)
+                            {
+                                if (i % 3 == 1)
+                                {
+                                    <div class="row"></div>
+                                    for (int k = i - 1; k < i + 2; k++)
+                                    {
+                                        if (k < Model.Count)
+                                        {
+                                            <div class="col-sm-4 col-md-4 item-product">
+                                                <div class="product blogimg video">
+                                                    <a title="@Model[k].Name" href="@Url.Action("Video", "Home", new {id = Model[k].Id, title = Core.Ultity.Common.ConvertNameUrl.CovnertName(Model[k].Name), type = Model[k].ShortUrl})">
+                                                        <img alt="@Model[k].Name" src="@Model[k].Image">
+                                                    </a>
+                                                </div>
+                                                <div class="info-product">
+                                                    <h3 class="name"><a title="@Model[k].Name" href="@Url.Action("Video", "Home", new {id = Model[k].Id, title = Core.Ultity.Common.ConvertNameUrl.CovnertName(Model[k].Name), type = Model[k].ShortUrl})">@Model[k].Name </a></h3>
+                                                    <div class="description">@Core.Ultity.SplitStringtoWord.SplittoWord(Model[k].Title, 140)</div>
+
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    <div class="row"></div>
+                                }
+                            }
+                        }
+                    </div>
+                    <nav>
+                        <ul class="pagination">
+                            @if (ViewBag.PageCount >= 1)
+                            {
+                                try
+                                {
+                                    var start = (ViewBag.PageCurrent - 3 < 0) ? 1 : ViewBag.PageCurrent - 3;
+                                    var end = start + 5;
+                                    end = (end > ViewBag.PageCount) ? ViewBag.PageCount : end;
+                                    if (ViewBag.PageCurrent != 1)
+                                    {
+                                        <li><a href="@Url.Action("Video", "Home", new {page = 1})">«</a></li>
+                                        <li><a href="@Url.Action("Video", "Home", new {page = (ViewBag.PageCurrent - 1)})">‹</a></li>
+                                    }
+                                    for (int k = start; k <= end; k++)
+                                    {
+                                        if (k == ViewBag.PageCurrent)
+                                        {
+                                            <li class="active"><a href="@Url.Action("Video", "Home", new {page=k})">@k</a> </li>
+                                        }
+                                        else
+                                        {
+                                            <li><a href="@Url.Action("Video", "Home", new {page=k})">@k</a> </li>
+                                        }
+                                    }
+
+
+                                    if (ViewBag.PageCurrent != ViewBag.PageCount)
+                                    {
+                                        <li><a href="@Url.Action("Video", "Home", new {page=(ViewBag.PageCurrent+1)})">›</a></li>
+                                        <li><a href="@Url.Action("Video", "Home", new {page=ViewBag.PageCount})">»</a></li>
+                                    }
+                                }
+                                catch (Exception e) { }
+                            }
+                        </ul><div class="total-pagination">Có <b>@ViewBag.Total</b> mẫu tin được tìm thấy</div>
+                    </nav>
+                </div>
+            </article>
+        </div>
+    </section>
+}
+else
+{
+    @section Header
+    {
+        @if (ViewBag.Product != null)
+        {
+            <title>@ViewBag.Product.Name</title>
+            <meta name="description" content="@ViewBag.Product.Title" />
+            <meta name="keyword" content="" />
+            <meta name="title" content="@ViewBag.Product.Name" />
+            <meta property="og:title" content="@ViewBag.Product.Name" />
+            <meta property="og:type" content="article" />
+            <meta property="og:image" content="@ViewBag.Product.Image" />
+            <meta property="og:description" content="@ViewBag.Product.Title" />
+
+        }
+        else
+        {
+            <title>Video</title>
+        }
+        <link type="text/css" rel="stylesheet" href="/Content/public/templates/site/css/blog.css" />
+        <link type="text/css" rel="stylesheet" href="/Content/public/templates/site/css/about.css" />
+        <link type="text/css" rel="stylesheet" href="/Content/public/templates/site/css/owl.carousel.css" />
+        <link type="text/css" rel="stylesheet" href="/Content/public/templates/site/css/owl.theme.css" />
+        <script type="text/javascript" src="/Content/public/js/jwplayer2/jwplayer.js"></script>
+        <script type="text/javascript" src="/Content/public/templates/site/js/owl.carousel.js"></script>
+    }
+    <section>
+        <div class="module-home">
+            <article>
+                <h2>VIDEO</h2>
+                <div class="container">
+                    <div class="row pages-detail">
+                        <div class="blog">
+                            @if (ViewBag.Product != null)
+                            {
+                                <div class="col-md-12 info-blog">
+
+                                    <div class="embed-responsive embed-responsive-16by9">
+                                        <div class="video-holder">
+                                            <script>jwplayer.key = "6NnlWW+Po1mWNsp3EJcrQnMC4meoR1a8Gb78UTiN/e7SH0RqCmmSEw==";</script>
+                                            <div id="myElement">Loading the player...</div>
+                                            <script type="text/javascript">
+                                                jwplayer("myElement").setup({
+                                                    file: "@ViewBag.Product.Link",
+                                                    image:
+                                                    "@ViewBag.Product.Image",
+                                                    width: '100%',
+                                                    aspectratio: '16:9',
+                                                    skin: 'five',
+                                                    //primary: "flash",
+                                                    stretching: 'fill',
+                                                    //stretching: 'exactfit',
+                                                    //autostart: true,
+                                                    //mute: true,
+                                                    //controls: false,
+                                                    /*logo: {
+                                                     file: "images/phone-logo.gif",
+                                                     link: 'http://eyetv.vn/',
+                                                     linktarget: '_blank',
+                                                     margin: 10,
+                                                     position: 'bottom-right',
+                                                     hide: false
+                                                     }*/
+                                                });
+
+
+                                            </script>
+                                        </div>
+                                    </div>
+
+                                    <p class="name"><a title="@ViewBag.Product.Name" href="co-tich-va-be-tap-1-jack-va-cay-dau-than-541.html">@ViewBag.Product.Name</a></p>
+                                    <div class="info-auth">
+                                        <!-- <span class="auth"><i class="fa fa-user"></i> Mr. Sơn</span> -->
+                                        <span class="date-time"> <i class="fa fa-clock-o"></i> @(String.Format("{0:dd/MM/yyyy}", ViewBag.Product.CreatedDate))</span>
+                                        <span class="hits"><i class="fa fa-eye"></i> @ViewBag.Product.NumberView lượt xem</span>
+                                    </div>
+                                    <p><strong style="font-size: 16px;">@ViewBag.Product.Title</strong></p>
+                                    <div class="clearfix"></div>
+                                    <br>
+                                    <div class="desc">
+                                        @Html.Raw(ViewBag.Product.Summary)
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="info-blog-social">
+                                        <ul>
+                                            <li>
+                                                <a href="javascript:;"
+                                                   onclick="window.open('https://www.facebook.com/sharer/sharer.php?app_id=477389032314546&amp;sdk=joey&amp;u=http://bookid.vn/video/@ViewBag.Type/@Core.Ultity.Common.ConvertNameUrl.CovnertName(ViewBag.Product.Name)-@ViewBag.Product.Id', '_blank', 'scrollbars=yes, width=500, height=300');">
+                                                    <i class="fa fa-facebook-square"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" onclick="window.open('https://plus.google.com/share?url=http://bookid.vn/video/@ViewBag.Type/@Core.Ultity.Common.ConvertNameUrl.CovnertName(ViewBag.Product.Name)-@ViewBag.Product.Id', '_blank', 'scrollbars=yes, width=500, height=300');">
+                                                    <i class="fa fa-google-plus-square"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" onclick="window.open('https://twitter.com/intent/tweet?text=[C%e1%bb%95%20t%c3%adch%20v%c3%a0%20b%c3%a9]%20-%20T%e1%ba%adp%201:%20Jack%20v%c3%a0%20c%c3%a2y%20%c4%91%e1%ba%adu%20th%e1%ba%a7n%20&amp;url=http://bookid.vn/video/@ViewBag.Type/@Core.Ultity.Common.ConvertNameUrl.CovnertName(ViewBag.Product.Name)-@ViewBag.Product.Id', '_blank', 'scrollbars=yes, width=500, height=300');">
+                                                    <i class="fa fa-twitter-square"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div class="module-home">
+            <article>
+                <h2>CÙNG LOẠI</h2>
+                <div class="container">
+                    <div class="row">
+                        <div id="owl-carousel">
+                            @if (ViewBag.LienQuan != null)
+                            {
+                                try
+                                {
+                                    foreach (var item in ViewBag.LienQuan)
+                                    {
+                                        <div class="item">
+                                            <div class="event">
+                                                <div class="event-img">
+                                                    <a href="@item.Name"><img title="@item.Name" alt="@item.Name" src="@item.Image"></a>
+                                                </div>
+                                                <p class="name"><a title="@item.Name" href="@Url.Action("Video", "Home", new {id = item.Id, title = Core.Ultity.Common.ConvertNameUrl.CovnertName(item.Name), type = item.ShortUrl})">@item.Name</a></p>
+                                                <div class="des">@Core.Ultity.SplitStringtoWord.SplittoWord(item.Title, 140)</div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                catch (Exception e) { }
+                            }
+
+                        </div>
+                        <script>
+                            $(document).ready(function () {
+                                $("#owl-carousel").owlCarousel({
+                                    autoPlay: false, //Set AutoPlay to 3 seconds
+                                    items: 4,
+                                    itemsDesktop: [1199, 3],
+                                    itemsDesktopSmall: [979, 3]
+                                });
+                            });
+                        </script>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+    </section>
+
+}
+
+
+

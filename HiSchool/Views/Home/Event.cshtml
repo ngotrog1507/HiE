@@ -1,0 +1,119 @@
+﻿
+@{
+    ViewBag.Title = "Event";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Header
+{
+    <link type="text/css" rel="stylesheet" href="/Content/public/templates/site/css/about.css" />
+    <link type="text/css" rel="stylesheet" href="/Content/public/templates/site/css/jcarousel.responsive.css" />
+    <link type="text/css" rel="stylesheet" href="/Content/public/templates/site/css/blog.css" />
+
+    <script type="text/javascript" src="/Content/public/templates/site/js/jquery.jcarousel.js"></script>
+    <script type="text/javascript" src="/Content/public/templates/site/js/jcarousel.responsive.js"></script>
+
+}
+@section Slide{
+    <div class="banner">
+        <p><img alt="" src="/Uploads/core/logo-02.png" style="height:119px; width:100px" /></p>
+    </div>
+}
+<section>
+    <div class="module-home">
+        <article>
+            <h2>Sự kiện</h2>
+            <div class="container">
+                <div class="row pages-detail">
+                    <div class="blog">
+                        <div class="col-md-12 info-blog info-blog-details">
+                            @if (ViewBag.Event != null)
+                            {
+                                try
+                                {
+                                    <div class="pull-left">
+                                        <img src="@ViewBag.Event.Image" class="img-circle">
+                                    </div>
+                                    <p class="name"><a title="@ViewBag.Event.Title" href="@Url.Action("Event", "Home", new {id = ViewBag.Event.Id, title = Core.Ultity.Common.ConvertNameUrl.CovnertName(ViewBag.Event.Name)})">@ViewBag.Event.Name</a></p>
+                                    <div class="info-auth">
+                                        <span class="date-time"> <i class="fa fa-clock-o"></i> @(String.Format("{0:dd/MM/yyyy}", ViewBag.Event.CreatedDate))</span>
+                                        <span class="hits"><i class="fa fa-eye"></i> @ViewBag.Event.NumberView lượt xem</span>
+                                    </div>
+                                    <div class="desc">
+                                        <p><strong>@ViewBag.Event.Title</strong></p>
+                                    </div>
+                                    <br />
+                                    <div class="des">@Html.Raw(ViewBag.Event.Summary)</div>
+                                }
+                                catch (Exception e) { }
+                            }
+
+                        </div>
+                        <div class="col-md-12">
+                            <div class="info-blog-social">
+                                <ul>
+                                    <li>
+                                        <a href="javascript:;"
+                                           onclick="window.open('https://www.facebook.com/sharer/sharer.php?app_id=477389032314546&amp;sdk=joey&amp;u=http://hipencil.com/event/012015-12.html', '_blank', 'scrollbars=yes, width=500, height=300');">
+                                            <i class="fa fa-facebook-square"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;" onclick="window.open('https://plus.google.com/share?url=http://hipencil.com/event/012015-12.html', '_blank', 'scrollbars=yes, width=500, height=300');">
+                                            <i class="fa fa-google-plus-square"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;" onclick="window.open('https://twitter.com/intent/tweet?text=01.2015&amp;url=http://hipencil.com/event/012015-12.html', '_blank', 'scrollbars=yes, width=500, height=300');">
+                                            <i class="fa fa-twitter-square"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+    <div class="module-home">
+        <article>
+            <h2>CÙNG LOẠI</h2>
+            <div class="container">
+                <div class="row">
+                    <div class="jcarousel-wrapper">
+                        <div class="jcarousel">
+                            <ul>
+                                @if (ViewBag.EventList != null)
+                                {
+                                    try
+                                    {
+                                        foreach (var item in ViewBag.EventList)
+                                        {
+                                            <li class="event">
+                                                <div class="event-img">
+                                                    <a href="@Url.Action("Event","Home",new {id=item.Id,title=Core.Ultity.Common.ConvertNameUrl.CovnertName(item.Name)})"><img title="@item.Title" alt="@item.Title" src="@item.Image"></a>
+                                                </div>
+                                                <p class="name"><a title="@item.Name" href="@Url.Action("Event","Home",new {id=item.Id,title=Core.Ultity.Common.ConvertNameUrl.CovnertName(item.Name)})">@item.Name</a></p>
+                                                <div class="des">@Core.Ultity.SplitStringtoWord.SplittoWord(item.Title, 140)</div>
+                                            </li>
+                                        }
+                                    }
+                                    catch (Exception e) { }
+                                }
+
+
+                            </ul>
+                        </div>
+                        <p class="jcarousel-pagination"></p>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+
+</section>
+
+
+
+

@@ -1,0 +1,236 @@
+﻿
+@{
+    ViewBag.Title = "About";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Header{
+    @if (ViewBag.Service != null)
+    {
+        <title>@ViewBag.Service.Name</title>
+    }
+    else
+    {
+        <title>Dịch vụ</title>
+    }
+    <link type="text/css" rel="stylesheet" href="/Content/public/templates/site/css/about.css" />
+    <link type="text/css" rel="stylesheet" href="/Content/public/templates/site/css/owl.carousel.css" />
+    <link type="text/css" rel="stylesheet" href="/Content/public/templates/site/css/owl.theme.css" />
+    <script type="text/javascript" src="/Content/public/templates/site/js/owl.carousel.js"></script>
+}
+@section Slide{
+    <div class="banner">
+        <p><img alt="" src="/Uploads/core/logo-02.png" style="height:119px; width:100px" /></p>
+    </div>
+}
+@if (ViewBag.ServiceList != null)
+{
+    <section>
+        <div class="module-home ">
+            <article>
+                <h2>GIỚI THIỆU</h2>
+                <div class="container">
+                    <div class="row pages-detail">
+                        <div class="about">
+                            <div class="col-md-4">
+                                <img width="100%" src="/Uploads/core/logo-03.png" alt=VỀ CHÚNG TÔI />
+                            </div>
+                            <div class="col-md-8">
+                                @Html.Raw(ViewBag.Introduce.PageIntroduce)
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div class="module-home">
+            <article>
+                <h2>ĐỘI NGŨ</h2>
+                <div class="container">
+                    <div class="row">
+                        <div id="owl-carousel2">
+                            <div class="item">
+                                <div class="event">
+                                    <div class="event-img" style="width:75%">
+                                        <a href="#"><img title="abc" alt="Abc" src="http://hipencil.com/uploads/team/2015/04/thanh-thanh-1428382698_300x300.jpg"></a>
+                                    </div>
+                                    <div class="des" style="width:75%">Hoang A Phu</div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="event">
+                                    <div class="event-img" style="width:75%">
+                                        <a href="#"><img title="abc" alt="Abc" src="http://hipencil.com/uploads/team/2015/04/thanh-thanh-1428382698_300x300.jpg"></a>
+                                    </div>
+                                    <div class="des" style="width:75%">Hoang A Phu</div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="event">
+                                    <div class="event-img" style="width:75%">
+                                        <a href="#"><img title="abc" alt="Abc" src="http://hipencil.com/uploads/team/2015/04/thanh-thanh-1428382698_300x300.jpg"></a>
+                                    </div>
+                                    <div class="des" style="width:75%">Hoang A Phu</div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="event">
+                                    <div class="event-img" style="width:75%">
+                                        <a href="#"><img title="abc" alt="Abc" src="http://hipencil.com/uploads/team/2015/04/thanh-thanh-1428382698_300x300.jpg"></a>
+                                    </div>
+                                    <div class="des" style="width:75%">Hoang A Phu</div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="event">
+                                    <div class="event-img" style="width:75%">
+                                        <a href="#"><img title="abc" alt="Abc" src="http://hipencil.com/uploads/team/2015/04/thanh-thanh-1428382698_300x300.jpg"></a>
+                                    </div>
+                                    <div class="des" style="width:75%">Hoang A Phu</div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <script>
+                            $(document).ready(function () {
+                                $("#owl-carousel2").owlCarousel({
+                                    autoPlay: false, //Set AutoPlay to 3 seconds
+                                    items: 4,
+                                    itemsDesktop: [1199, 3],
+                                    itemsDesktopSmall: [979, 3]
+                                });
+                            });
+                        </script>
+                        <div class="jcarousel-wrapper">
+                            <div class="jcarousel">
+                                <ul></ul>
+                            </div>
+                            <p class="jcarousel-pagination"></p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+
+        <div class="clearfix"></div>
+        <div class="module-fixed-bg module-background module-background-about">
+            <div class="container">
+                <div class="col-md-8 col-xs-offset-2 reset-off slogans">
+                    <h5>
+                        <p>PHÁT TRIỂN NỀN HOẠT HÌNH VIỆT NAM VÀ TIẾN GẦN ĐẾN THẾ GIỚI LÀ ƯỚC MƠ LỚN NHẤT CỦA CHÚNG TÔI. CHÚNG TÔI ĐANG NỖ LỰC TỪNG NGÀY, LÀM TẤT CẢ ĐỂ BIẾN ƯỚC MƠ ĐÓ THÀNH HIỆN THỰC.</p>
+                    </h5>
+                </div>
+            </div>
+        </div>
+        <div class="module-home">
+            <article>
+                <h2>CÁC DỊCH VỤ</h2>
+                <div class="container">
+                    <div class="col-md-12 reset-off">
+                        <div class="row">
+                            @if (ViewBag.ServiceList != null)
+                            {
+                                try
+                                {
+                                    for (int i = 1; i <= ViewBag.ServiceList.Count; i++)
+                                    {
+                                        if (i % 3 == 1)
+                                        {
+                                            <div class="row">
+                                                @for (int k = i - 1; k < i + 2; k++)
+                                                {
+                                                    if (k < ViewBag.ServiceList.Count)
+                                                    {
+                                                        <div class="col-sm-4 col-md-4 item-serive">
+                                                            <div class="service-img">
+                                                                <a title="@ViewBag.ServiceList[k].Name" href="@Url.Action("DichVU", "Home", new { id = ViewBag.ServiceList[k].Id, title = Core.Ultity.Common.ConvertNameUrl.CovnertName(ViewBag.ServiceList[k].Name) })">
+                                                                    <img alt="Phim hoạt hình" src="@ViewBag.ServiceList[k].Image">
+                                                                </a>
+                                                            </div>
+                                                            <div class="info-service">
+                                                                <p class="name"><a title="Phim hoạt hình" href="@Url.Action("DichVU", "Home", new { id = ViewBag.ServiceList[k].Id, title = Core.Ultity.Common.ConvertNameUrl.CovnertName(ViewBag.ServiceList[k].Name) })">@ViewBag.ServiceList[k].Name</a></p>
+                                                                <div class="description">
+                                                                    @Core.Ultity.SplitStringtoWord.SplittoWord(ViewBag.ServiceList[k].Summary, 140)
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        }
+                                    }
+                                }
+                                catch (Exception e) { }
+                            }
+
+                        </div>
+
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+}
+else
+{
+    <section>
+        <div class="module-home">
+            <article>
+                <h2>DỊCH VỤ</h2>
+                <div class="container">
+                    <div class="row pages-detail">
+                        @if (ViewBag.Service != null)
+                        {
+                            try
+                            {
+                                <div class="blog">
+                                    <div class="col-md-12 info-blog info-blog-details">
+                                        <div class="pull-left">
+                                            <img src="@ViewBag.Service.Image" class="img-circle">
+                                        </div>
+                                        <p class="name"><a style="color: #999; font-size: 20px; font-weight: 800; background: none;" title="@ViewBag.Service.Name" href="#">Phim hoạt hình</a></p>
+                                        <div class="desc">
+                                            <p>
+                                                <strong>
+                                                    @Html.Raw(ViewBag.Service.Summary)
+                                                </strong>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="info-blog-social">
+                                            <ul>
+                                                <li>
+                                                    <a href="javascript:;"
+                                                       onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=http://bookid.vn/dich-vu/@Core.Ultity.Common.ConvertNameUrl.CovnertName(ViewBag.Service.Name)-@ViewBag.Service.Id', '_blank', 'scrollbars=yes, width=500, height=300');">
+                                                        <i class="fa fa-facebook-square"></i>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;" onclick="window.open('https://plus.google.com/share?url=http://bookid.vn/dich-vu/@Core.Ultity.Common.ConvertNameUrl.CovnertName(ViewBag.Service.Name)-@ViewBag.Service.Id', '_blank', 'scrollbars=yes, width=500, height=300');">
+                                                        <i class="fa fa-google-plus-square"></i>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;" onclick="window.open('https://twitter.com/intent/tweet?text=Phim%20ho%e1%ba%a1t%20h%c3%acnh&amp;url=http://bookid.vn/dich-vu/@Core.Ultity.Common.ConvertNameUrl.CovnertName(ViewBag.Service.Name)-@ViewBag.Service.Id', '_blank', 'scrollbars=yes, width=500, height=300');">
+                                                        <i class="fa fa-twitter-square"></i>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            catch (Exception e) { }
+                        }
+
+                    </div>
+                </div>
+
+            </article>
+        </div>
+    </section>
+}
+
+

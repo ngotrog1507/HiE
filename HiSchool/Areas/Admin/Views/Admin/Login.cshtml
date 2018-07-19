@@ -1,0 +1,52 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutLogin.cshtml";
+}
+@model HiSchool.Models.Login
+<style>
+    .validation-summary-valid {
+        display: none;
+    }
+</style>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(false, "", new { @class = "alert alert-danger" })
+    <fieldset>
+        @Html.Hidden("UrlRedirect", ViewBag.UrlRedirect as string)
+        <label class="block clearfix">
+            <span class="block input-icon input-icon-right">
+
+                @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", @placeholder = "Username" })
+                <i class="ace-icon fa fa-user"></i>
+            </span>
+        </label>
+
+        <label class="block clearfix">
+            <span class="block input-icon input-icon-right">
+                @Html.PasswordFor(model => model.Password, new { @class = "form-control", @placeholder = "Password" })
+
+                <i class="ace-icon fa fa-lock"></i>
+            </span>
+        </label>
+
+        <div class="space"></div>
+
+        <div class="clearfix">
+            <label class="inline">
+                @*@Html.CheckBoxFor(model => model.Remember)*@
+                <input id="Remember" type="checkbox" name="remember" checked="@ViewBag.isRemember">
+                <span class="lbl"> Ghi nhớ</span>
+            </label>
+
+            <button type="submit" class="pull-right btn btn-sm btn-primary">
+                <i class="ace-icon fa fa-key"></i>
+                <span class="bigger-110">Đăng nhập &nbsp;&nbsp;</span>
+            </button>
+        </div>
+
+        <div class="space-4"></div>
+    </fieldset>
+}
+

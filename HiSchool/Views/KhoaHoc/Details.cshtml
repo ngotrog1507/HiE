@@ -1,0 +1,245 @@
+﻿@using Core.Model;
+@model Core.Model.Cms_Class
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var ids = Request.QueryString["ids"];
+    var userTeacher = (ViewBag.UserTeacher != null) ? ViewBag.UserTeacher : new SysUser();
+}
+<link rel="stylesheet" href="~/Content/min/s/1522468462/b%3dclass/css%26f%3dclass.css%2cva.css%2choc.css" type="text/css">
+<link rel="stylesheet" href="~/Content/min/s/1522468462/b%3dheader/css%26f%3dmain.css" type="text/css">
+<link rel="stylesheet" href="~/Content/vendors/owl-carousel/3.3/owl.carouself700.css?v=1.0.1" type="text/css">
+<link rel="stylesheet" href="~/Content/min/s/1522468462/b%3dfooter/css%26f%3dmain.css" type="text/css">
+<link rel="stylesheet" href="~/Content/min/s/1522468462/b%3dcss%26f%3ddefault.css" type="text/css">
+<script src="/Content/MyHubJs.js"></script>
+}
+<div class="site-body bs-study-lecture-intro" style="    margin-top: -19px;">
+    <!--breadcrumb:-->
+    <div class="breadcrumb-outer">
+        <div class="container">
+            <ol class="breadcrumb breadcrumb-primary">
+                <li><a href="index.html">Học</a></li>
+                <li><a href="lesson.html">Bài giảng</a></li>
+            </ol>
+        </div>
+    </div>
+    <!--main content:-->
+    <div class="container">
+        <div class="p-y-lg row">
+            <!--left col:-->
+            <div class="col-md-8">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="relative">
+                                    <img src="@Model.Image"
+                                         class="bs-lecture--detail-thumbnail img-responsive">
+                                </div>
+                            </div>
+                            <div class="col-sm-8">
+                                <h1 class="bs-page-title text-break">@Model.Name</h1>
+                                <div class="bs-lecture--detail-statistic">
+                                    <p>
+                                        <em class="font-times">Nhà giáo</em> &nbsp;<a href="#"
+                                                                                      data-color="blue">@userTeacher.FullName</a>
+                                                                                </p>
+
+                                                                                <div class="div-table">
+                                                                                    <div class="div-table-row">
+                                                                                        <div class="div-table-cell">
+                                                                                            Giá:
+                                                                                            @if (Model.Price > 0)
+                                                                        {
+                                                                            <span class="text-red ng-binding" id="Price" data-value="@Model.Price" style="color: #FF7A00;font-weight: bold;">
+                                                                                @String.Format("{0:0,0}", Model.Price) VNĐ
+                                                                            </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-red ng-binding" id="Price" data-value="0" style="color: #10b92d;font-weight: bold;">
+                                                            Miễn phí
+                                                        </span>
+                                }
+                                                                                        </div>
+                                                                                        <div class="div-table-cell">@Model.TongHS lượt</div>
+                                                                                    </div>
+                                                                                    <div class="div-table-row">
+                                                                                        <div class="div-table-cell">Đánh giá bài giảng:</div>
+                                                                                        <div class="div-table-cell">
+                                                                                            <div class="bs-rating-result inline-block">
+                                                                                                <i class="fa fa-star-o "></i>
+                                                                                                <i class="fa fa-star-o "></i>
+                                                                                                <i class="fa fa-star-o "></i>
+                                                                                                <i class="fa fa-star-o "></i>
+                                                                                                <i class="fa fa-star-o "></i>
+                                                                                            </div>
+                                                                                            <em class="text-muted inline-block">
+                                                                                                -&nbsp;
+                                                                                                từ 0 đánh giá
+                                                                                            </em>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="m-t-md m-b">
+                                                                                    <a class="btn btn-info btn-lg btn-join uppercase r-a"
+                                                                                       onclick="showLoginModal()">
+                                                                                        <b>Vào học</b> &nbsp;<i class="fa fa-caret-right"></i>
+                                                                                    </a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                        <div class="bs-lecture--detail-content m-y-lg">
+                            <h4>
+                                <i class="fa fa-youtube-play"></i>&nbsp;&nbsp;
+                                <a href="@Model.VideoDemo.Trim()" target="_blank">Click xem video demo</a>
+                            </h4>
+                        </div>
+                                                                        <div class="bs-lecture--detail-content m-y-lg">
+                                                                            <div class="bs-lecture--detail-title">@Html.Raw(Model.Content)</div>
+                                                                            <div class="bs-lecture--detail-section">
+                                                                                <div class="row">
+                                                                                    <div class="col-sm-10 col-sm-offset-2">
+
+                                                                                        <ol class="bs-lecture--table-of-content"></ol>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="bs-lecture--detail-content m-y-lg">
+                                                                            <div class="bs-lecture--detail-title">Thông tin thầy cô</div>
+                                                                            <div class="bs-lecture--detail-section">
+                                                                                <div class="row">
+                                                                                    <div class="col-sm-3">
+                                                                                        <div class="bs-lecture--author-box">
+                                                                                            <a href="#">
+                                                                                                <img style="width: 52%;" data-user-id="0"
+                                                                                                     data-user-group=""
+                                                                                                     data-popup-user-id="36574"
+                                                                                                     data-popup-user-name="nguyenbacu"
+                                                                                                     data-color="blue"
+                                                                                                     src="@userTeacher.ImageUrl"
+                                                                                                     class="img-circle img-responsive author-avatar center-block m-b">
+                                                                                            </a>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-sm-9">
+                                                                                        <ul class="list-unstyled m-b-0 bs-lecture--author-box">
+                                                                                            <p>
+                                                                                                <em class="font-times">Nhà giáo</em> &nbsp;<a href="#"
+                                                                                                                                              data-color="blue">@userTeacher.FullName</a>
+                                                                                                                                        </p>
+
+                                                                                                                                        @Html.Raw(userTeacher.Summary)
+                                                                                                                                    </ul>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                    </div>
+                                                                                                    <!-- /left col-->
+                                                                                                    <!--right col:-->
+                                                                                                    <div class="col-md-4">
+                                                                                                        <div class="panel">
+                                                                                                            <div class="panel-body p-a-md">
+                                                                                                                <h4 class="m-t-0">Bài giảng cùng thầy cô</h4>
+                                                                                                                <div class="heading-line"></div>
+                                                                                                                <ul class="media-list">
+                                                                                                                    @if (ViewBag.LstClass != null)
+                                                                                                                    {
+                                                                                                                        foreach (var item in (List<Core.Model.Cms_Class>)ViewBag.LstClass)
+                                                                                                                        {
+                                                                                                                            <li class="media bs-lecture-recommend-item">
+                                                                                                                                <div class="media-left">
+                                                                                                                                    <a href="@Url.Action("Details","KhoaHoc",new { ids=item.IdGuid})">
+                                                                                                                                        <img class="media-object"
+                                                                                                                                             src="@item.Image">
+                                                                                                                                    </a>
+                                                                                                                                </div>
+                                                                                                                                <div class="media-body">
+                                                                                                                                    <p class="media-heading">
+                                                                                                                                        <a class="lecture-title" href="@Url.Action("Details","KhoaHoc",new { ids=item.IdGuid})">
+                                                                                                                                            <strong>@item.Name</strong>
+                                                                                                                                        </a>
+                                                                                                                                    </p>
+                                                                                                                                    <div>
+
+                                                                                                                                    </div>
+                                                                                                                                    <div class="div-table-row">
+                                                                                                                                        <div class="div-table-cell">
+                                                                                                                                            Giá:
+                                                                                                                                            <span class="text-red ng-binding" id="Price" data-value="200000" style="color: #FF7A00;font-weight: bold;">
+                                                                                                                                                @if (item.Price != 0)
+                                                                                                                                                {
+                                                                                                                                                    @String.Format("{0:0,0}", item.Price)  <span>VNĐ</span>
+                                                                                                                                                }
+                                                                                                                                                else
+                                                                                                                                                {
+                                                                                                                                                                                           <span> 0 VNĐ</span>
+                                                                                                                                                }
+                                                                                                                                            </span>
+                                                                                                                                        </div>
+                                                                                                                                    </div>
+                                                                                                                                </div>
+                                                                                                                            </li>
+
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                </ul>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        @section JsFooter{
+                                                                                            <script>
+
+            $(document).ready(function () {
+                $(".menu").removeClass("active");
+                $(".li-hoc").addClass("active");
+            $("#btnZoThi").hide();
+            if ($('.media').length > 0) {
+            }
+
+
+            $('[data-toggle="tooltip"]').tooltip({ trigger: 'hover' });
+
+        });
+        function showLoginModal() {
+            var ids='@ids';
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("CheckThanhToan", "KhoaHoc")',
+                data: "{'ids':'" + ids + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.status === "ok") {
+                        window.location.href = "@Url.Action("VaoHoc","KhoaHoc")" + "?ids=" + ids;
+                    } else {
+                        var userId = ('@WebSecurity.CurrentUserId');
+                        if (userId <= 0) {
+                            $('#needLogin').modal('toggle');
+                            return;
+                        }
+                        var price = $("#Price").attr("data-value").trim();
+                        var coinCurrent = $(".bcoin").text();
+                        $("#coinCurrent").text(coinCurrent);
+                        $("#coinClass").text(price);
+                        if (parseInt(price) > parseInt(coinCurrent)) {
+                            //Return về trang Nạp tiền
+                        }
+                        $('#myModal').modal('toggle');
+                    }
+                },
+                error: function () {
+
+                }
+            });
+        }
+                                                                                            </script>
+                                                                                        }

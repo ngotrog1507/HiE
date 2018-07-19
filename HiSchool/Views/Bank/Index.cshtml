@@ -1,0 +1,265 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section JsHeader{
+    <link href="https://cdn-s07.bigschool.vn/bank/css/main.css" rel="stylesheet">
+    <link href="~/Assets/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" rel="stylesheet" />
+}
+
+<div class="site-body bank-page">
+
+    <div class="container">
+        <div class="p-y-lg">
+            <div class="row">
+                <div class="col-sm-9 col-sm-push-3" id="accordionX">
+                    <!--Nạp tiền-->
+                    <div class="bank-panel bank-panel-detail " id="naptien" >
+                        <div class="bank-panel-heading">
+                            <h1 class="text-center">Nạp tiền vào tài khoản</h1>
+                        </div>
+                        <div class="bank-panel-body" style="min-height: 300px;">
+                            <div class="bank-add-method">
+                                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                    <p>Chọn phương thức thanh toán:</p>
+                                    <div class="panel panel-default atm">
+                                        <div class="panel-heading" role="tab" id="atm-heading">
+                                            <h4 class="panel-title">
+                                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#direct-bank" aria-expanded="false" aria-controls="direct-bank">
+                                                    Nạp bằng thẻ ATM nội địa hoặc thẻ tín dụng quốc tế
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="direct-bank" class="panel-collapse collapse" role="tabpanel" aria-labelledby="direct-heading">
+                                            <div class="panel-body bg-white">
+                                                <p>
+                                                    Để nạp tiền qua hình thức này, bạn có thể chuyển khoản trực tiếp cho <br>
+
+                                                </p>
+                                                <div class="media" style="margin-bottom: 5px;">
+                                                    <div class="media-left text-muted" style="font-size: 35px;padding: 20px;">
+                                                        <span class="fa fa-fw fa-bank"></span>
+                                                    </div>
+                                                    <div class="media-body" style="vertical-align: middle;">
+                                                        <i>STK:</i> <b>1222222312312312</b><br>
+                                                        <i>Họ Tên:</i> <b>Ngô Văn Trọng</b><br>
+                                                        <i>Ngân hàng:</i> <b>Techcombank</b><br>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default direct">
+                                        <div class="panel-heading" role="tab" id="direct-heading">
+                                            <h4 class="panel-title">
+                                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#direct-body" aria-expanded="false" aria-controls="direct-body">
+                                                    Nạp trực tiếp tại trụ sở HiSchool
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="direct-body" class="panel-collapse collapse" role="tabpanel" aria-labelledby="direct-heading">
+                                            <div class="panel-body bg-white">
+                                                <p>
+                                                    Để nạp tiền qua hình thức này, bạn có thể đến trụ sở HiSchool trong giờ hành chính<br>
+                                                    <i>(Thứ 2-6: Sáng 08h30-12h00, Chiều 13h30-17h00. Thứ 7: 08h30-12h00)</i> qua địa chỉ sau:
+                                                </p>
+                                                <div class="media" style="margin-bottom: 5px;">
+                                                    <div class="media-left text-muted" style="font-size: 35px;padding: 20px;">
+                                                        <span class="glyphicon glyphicon-map-marker"></span>
+                                                    </div>
+                                                    <div class="media-body" style="vertical-align: middle;">
+                                                        Học Viện Kỹ Thuật Quân Sự, số 236 Hoàng Quốc Việt, Q. Bắc Từ Liêm, TP. Hà Nội.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end nạp tiền-->
+                    <!--lịch sử giao dịch-->
+                    <div class="bank-panel bank-panel-detail" id="lichsu" >
+                        <div class="bank-panel-heading">
+                            <h1 class="text-center">Xem giao dịch</h1>
+                        </div>
+                        <div class="bank-panel-body">
+                            <div class="bank-history-filter-form">
+                                <form method="POST" name="filter_trans">
+                                    <div class="row" style="margin-top:10px">
+                                        <div class="col-md-5">
+                                            <label><input type="text" value="@ViewBag.StartDate" class="form-control pull-right datepicker" id="fromDate" placeholder="Từ ngày"><i class="fa fa-calendar"></i></label>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <label><input type="text" value="@ViewBag.EndDate" class="form-control pull-right datepicker" id="toDate" placeholder="Đến ngày"><i class="fa fa-calendar"></i></label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button class="btn btn-primary" id="btnSearch" onClick="refresh(1)">XEM</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="bank-history-list" style="margin-top: 10px">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th width="300" align="center">Mã GD</th>
+                                            <th width="200" align="center">Thời gian</th>
+                                            <th align="left">Ghi chú</th>
+                                        </tr>
+                                    </thead>
+                                    <thead id="data">
+                                    </thead>
+                                </table>
+
+
+                                <div class="bs-example">
+                                    <div class="btn-toolbar text-center">
+                                        <div class="dataTables_paginate" id="pageSearch">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!--end-->
+                </div>
+                <div class="col-sm-3 col-sm-pull-9">
+                    <div class="bank-panel bank-panel-statistic">
+                        <div class="bank-panel-heading">
+                            <h3>Thống kê</h3>
+                            <div class="heading-line"></div>
+                        </div>
+                        <div class="bank-panel-body">
+                            @if (ViewBag.UserLogin != null)
+                            {
+                                <div class="bank-balance">
+                                    <div class="text">Số dư tài khoản:</div>
+                                    <div class="value">
+                                        <strong>@String.Format("{0:0,0}", ViewBag.UserLogin.BCoin)</strong> VNĐ
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                    <div class="bank-panel bank-panel-menu">
+                        <div class="bank-panel-heading">
+                            <h3>Quản trị giao dịch</h3>
+                            <div class="heading-line"></div>
+                        </div>
+                        <div class="bank-panel-body">
+                            <ul>
+                                <li class="naptien"><a  href="javascript:" >Nạp tiền</a></li>
+                                <li class="lichsu"><a  href="javascript:" >Lịch sử giao dịch</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- start: footer -->
+<script type="text/javascript" src="https://cdn-s07.bigschool.vn/footer/js/scripts.js"></script><link rel="stylesheet" href="https://cdn-s07.bigschool.vn/footer/css/main.css">	<!--begin: footer-->
+<script src="~/Assets/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+
+<script src="~/Content/jquery.twbsPagination.js"></script>
+<script>
+    $(function () {
+        $("#lichsu").hide();
+        $("#formSearch").hide();
+        $('#fromDate').datepicker({
+            format: 'dd/mm/yyyy 00:00'
+        });
+        $('#toDate').datepicker({
+            format: 'dd/mm/yyyy 23:59'
+        });
+        $(".lichsu").click(function () {
+            $("#lichsu").show(500);
+            $("#naptien").hide();
+        });
+        $(".naptien").click(function () {
+            $("#naptien").show(500);
+            $("#lichsu").hide();
+        });
+    })
+    
+    function paging(lstItem) {
+        $('#pageSearch').html("");
+        $('#pageSearch').removeData("twbs-pagination");
+        var item = lstItem;
+        var pageSize = 5;
+        if (item && item.length > 0) {
+            var pageTotal = item.length / pageSize;
+            if (pageTotal < 1) pageTotal = 1;
+            if (item.length % pageSize >= 1) pageTotal += 1;
+            pageTotal = (item.length <= pageSize) ? 1 : pageTotal;
+            pagiWsTab = $('#pageSearch').twbsPagination({
+                totalPages: pageTotal,
+                visiblePages: 4,
+                onPageClick: function (event, page) {
+                    $(".tr-content").hide();
+                    $(".tr-content").each(function (n) {
+                        if (n >= pageSize * (page - 1) && n < pageSize * page)
+                            $(this).show();
+                    });
+                }
+            });
+        }
+    }
+    function refresh(page) {
+        var sData = "{'fromDate':'" + $("#fromDate").val() + "','toDate':'" + $("#toDate").val() + "'}";
+        myLoop = new myLoading("btnSearch", "");
+        myLoop.start();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetData","Bank")',
+            data: sData,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (res) {
+                myLoop.stop();
+                if (res.status === "ok") {
+                    var lstItem = res.value
+                    $("#data").html("");
+                    var str = "";
+                    lstItem.forEach(function (item, index) {
+
+                        str += "<tr class='tr-content'>";
+
+                        var date = new Date(parseInt(item.CreatedDate.replace(/(^.*\()|([+-].*$)/g, '')));
+                        var dateString = +
+                            date.getDate() +
+                            '/' +
+                            (date.getMonth() + 1) + '/' + date.getFullYear() +
+                            '/' + date.getHours() + ':' + date.getMinutes()
+                        str += "<td>" + item.IdGuid + "</td>";
+                        str += "<td> <span class='badge bg-green'>" + dateString + "</span></td>";
+                        str += "<td>" + item.Summary + "</td>";
+                        str += "</tr>";
+                    })
+                    $("#data").html(str);
+                    paging(lstItem);
+                } else {
+                    toastr("error", "Lỗi lấy dữ liệu!")
+                }
+            },
+            error: function () {
+                myLoop.stop();
+                toastr("error", "Lỗi lấy dữ liệu!")
+            }
+        });
+    }
+</script>
+

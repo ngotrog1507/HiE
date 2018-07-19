@@ -1,0 +1,100 @@
+﻿
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .md-nav {
+        display: none;
+    }
+    .validation-summary-valid {
+        display: none;
+    }
+
+</style>
+@section JsHeader{
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+}
+<section class="clearfix section-signin">
+    <div class="signin-pattern-overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1">
+                <div class="login-all mt-50">
+                    <div class="login-register-form mb-100">
+
+                        <div class="row">
+                            <div class="col-sm-5 col-bdright">
+                                <div class="text-center mt-20">
+                                    <h3 class="h-bold text-uppercase">Tạo tài khoản</h3>
+                                    <p class="welcome mt-10">Chào mừng bạn đến với HiSchool!</p>
+                                    <p>Bạn sẽ tham gia với tư cách là:<br> <b>Học sinh</b> </p>
+                                    <img class="visible-lg signin-boy-img" src="https://cdn-s07.bigschool.vn/ids/img/sigin-boy.png" alt="">
+                                </div>
+                                <div class="line-col-bdright visible-lg"></div>
+                            </div>
+                            <div class="col-sm-7">
+
+                                <div class="wow jello" data-wow-delay="0.5s">
+                                    <p class="mt-10 mt-xs-40 text-uppercase">Vui lòng điền đầy đủ thông tin:</p>
+                                </div>
+                                @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { enctype = "multipart/form-data", id = "validation-form" }))
+                                {
+                                    @Html.ValidationSummary(false, "", new { @class = "alert alert-danger" })
+                                    <div class="form-group">
+                                        <div class="clearfix">
+                                            <input type="text" class="login-register-form-input" id="UserName" name="UserName" value="" placeholder="Tên đăng nhập" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group has-feedback">
+                                        <div class="clearfix">
+                                            <input type="email" class="login-register-form-input" id="Email" name="Email" value="" placeholder="Địa chỉ Email" required>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group">
+                                        <div class="form-group has-feedback">
+                                            <div class="clearfix">
+                                                <input type="password" data-minlength="6" pattern="^(?=.*\d)(?=.*[a-z])(?!.*\s).*$"
+                                                       class="login-register-form-input" id="Password" name="Password"
+                                                       placeholder="Mật khẩu" required>
+                                                <div class="help-block" style="color:blue">
+                                                    <i class="fa fa-exclamation-circle"></i> Mật khẩu từ 6 kí tự trở lên, bao gồm chữ
+                                                    và số.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group has-feedback">
+                                            <div class="clearfix">
+                                                <input type="password" class="login-register-form-input" placeholder="Xác nhận mật khẩu" id="ConfirmPassword" name="ConfirmPassword" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-3 left_re_captcha"></div>
+                                        <div class="col-xs-9">
+                                            <div class="g-recaptcha" data-sitekey="6LddkFYUAAAAACmGVajFlcbwUB-clb1iSUl5IVrC"></div>
+                                        </div>
+                                    </div>
+                                    <p class="accepdk mt-20 text-left">Bằng việc bấm nút đăng ký, bạn xác nhận đồng ý với các <a href="https://bigschool.vn/thoa-thuan-cung-cap-va-su-dung-dich-vu-bigschool" target="_blank">Điều khoản sử dụng</a> của HiSchool.</p>
+                                    <div class="form-group mt-20">
+                                        <button type="submit" name="submit" class="btn btn-primary">Tạo tài khoản</button>
+                                    </div>
+                                }
+                                <p class="ques-dk-acc">Bạn đã có tài khoản <a href="https://ids.bigschool.vn/signin.html">Đăng nhập</a></p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+@section JsFooter{
+    <script>
+    </script>
+}

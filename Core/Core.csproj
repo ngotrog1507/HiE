@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8D792B9E-8FAD-4ECF-95B6-B1D87C758FC7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Core</RootNamespace>
+    <AssemblyName>Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ConstantGlobalization">
+      <HintPath>..\Source\IDGROUP\bin\ConstantGlobalization.dll</HintPath>
+    </Reference>
+    <Reference Include="Framework">
+      <HintPath>..\Source\IDGROUP\bin\Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc.Extensions, Version=1.1.0.6, Culture=neutral, PublicKeyToken=d631f4e4b226a032, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Web.Mvc.Extensions.1.1.1.2\lib\net45\System.Web.Mvc.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WebMatrix.Data">
+      <HintPath>..\Source\IDGROUP\bin\WebMatrix.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="WebMatrix.WebData">
+      <HintPath>..\Source\IDGROUP\bin\WebMatrix.WebData.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Model\CmsBlog.cs" />
+    <Compile Include="Model\CmsCategory.cs" />
+    <Compile Include="Model\CmsEmail.cs" />
+    <Compile Include="Model\CmsEvent.cs" />
+    <Compile Include="Model\CmsIntroduce.cs" />
+    <Compile Include="Model\CmsProducts.cs" />
+    <Compile Include="Model\CmsService.cs" />
+    <Compile Include="Model\CmsSlide.cs" />
+    <Compile Include="Model\CmsSociety.cs" />
+    <Compile Include="Model\Cms_Class.cs" />
+    <Compile Include="Model\Cms_ClassStudent.cs" />
+    <Compile Include="Model\Cms_Comments.cs" />
+    <Compile Include="Model\Cms_GradeSubject.cs" />
+    <Compile Include="Model\Cms_HistoryPayment.cs" />
+    <Compile Include="Model\Cms_Question.cs" />
+    <Compile Include="Model\Ex_Answer.cs" />
+    <Compile Include="Model\Ex_Category.cs" />
+    <Compile Include="Model\Ex_CategoryValue.cs" />
+    <Compile Include="Model\Ex_Exam.cs" />
+    <Compile Include="Model\Ex_ExamConfig.cs" />
+    <Compile Include="Model\Ex_ExamRegister.cs" />
+    <Compile Include="Model\Ex_ExamStudent.cs" />
+    <Compile Include="Model\Ex_Question.cs" />
+    <Compile Include="Model\Ex_Subject.cs" />
+    <Compile Include="Model\CmsSupport.cs" />
+    <Compile Include="Model\Cms_ClassVideo.cs" />
+    <Compile Include="Model\Ex_SubQuestion.cs" />
+    <Compile Include="Model\GroupMenuObj.cs" />
+    <Compile Include="Model\SysGroup.cs" />
+    <Compile Include="Model\SysGroupMenu.cs" />
+    <Compile Include="Model\SysGroupMenuSort.cs" />
+    <Compile Include="Model\SysGroupUser.cs" />
+    <Compile Include="Model\SysMenu.cs" />
+    <Compile Include="Model\SysUser.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\CmsBlogAction.cs" />
+    <Compile Include="Service\CmsEventAction.cs" />
+    <Compile Include="Service\CmsIntroduceAction.cs" />
+    <Compile Include="Service\CmsProductsAction.cs" />
+    <Compile Include="Service\CmsServiceAction.cs" />
+    <Compile Include="Service\CmsSlideAction.cs" />
+    <Compile Include="Service\CmsSupportAction.cs" />
+    <Compile Include="Service\Cms_ClassStudentAction.cs" />
+    <Compile Include="Service\Cms_ClassVideoAction.cs" />
+    <Compile Include="Service\Cms_ClassAction.cs" />
+    <Compile Include="Service\Cms_CommentsActions.cs" />
+    <Compile Include="Service\Cms_QuestionAction.cs" />
+    <Compile Include="Service\Ex_AnswerAction.cs" />
+    <Compile Include="Service\Ex_CategoryAction.cs" />
+    <Compile Include="Service\Ex_CategoryValueAction.cs" />
+    <Compile Include="Service\Ex_ExamAction.cs" />
+    <Compile Include="Service\Ex_ExamConfigAction.cs" />
+    <Compile Include="Service\Ex_ExamStudentAction.cs" />
+    <Compile Include="Service\Ex_QuestionAction.cs" />
+    <Compile Include="Service\Ex_SubjectAction.cs" />
+    <Compile Include="Service\Ex_SubQuestionAction.cs" />
+    <Compile Include="Service\SysAdminAction.cs" />
+    <Compile Include="Service\CmsCategoryAction.cs" />
+    <Compile Include="Service\CmsEmailAction.cs" />
+    <Compile Include="Service\CmsSocietyAction.cs" />
+    <Compile Include="Service\SysGroupAction.cs" />
+    <Compile Include="Service\SysGroupMenuAction.cs" />
+    <Compile Include="Service\SysGroupUserAction.cs" />
+    <Compile Include="Service\SysMenuAction.cs" />
+    <Compile Include="Service\SysUserAction.cs" />
+    <Compile Include="Ultity\CertifiedUser.cs" />
+    <Compile Include="Ultity\Common.cs" />
+    <Compile Include="Ultity\Entity.cs" />
+    <Compile Include="Ultity\MvcPaging_Framework.cs" />
+    <Compile Include="Ultity\SplitStringtoWord.cs" />
+    <Compile Include="Ultity\Ultity.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="sql.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

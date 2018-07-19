@@ -1,0 +1,269 @@
+﻿@using Core.Model;
+@model Cms_Question
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var ids = Request.QueryString["ids"];
+}
+@section JsHeader{
+   
+    <link rel="stylesheet" href="https://cdn-s07.bigschool.vn/min/s/1522468462/b=css&f=base_cover.css,form.css,cover.css,exam.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn-s07.bigschool.vn/min/s/1522468462/b=ask/css&f=hoidap.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn-s07.bigschool.vn/min/s/1522468462/b=css&f=default.css,thichonloc.css" type="text/css">
+    <script src="/Content/MyHubJs.js"></script>
+    <script>
+        function bindingPreCommentDienDan(ids, value) {
+            bindingComments('pre', ids, value)
+            ToastMessage("success", value[0].Comments);
+        }
+    </script>
+    <style>
+        .tp-title h4 {
+            background: #3070dc;
+        }
+
+        .brown-btn {
+            background: #3070dc;
+            color: #ffffff;
+        }
+
+        .search-Thi.brown {
+            border: 1px solid #3070dc;
+        }
+
+        .ask-title span.rep-btn {
+            background: #3070dc;
+        }
+
+            .ask-title span.rep-btn a {
+                color: #ffffff;
+            }
+
+        body {
+            background-image: none;
+        }
+
+        .ask-title .subject-icon.subject-1 {
+            background-image: url(/Content/img/subjects/Subject-detail-12.png);
+        }
+
+        .p-y-lg {
+            padding-bottom: 0 !important;
+        }
+
+        .avata {
+            display: block;
+            width: 54px;
+            height: 30px;
+        }
+
+        img.media-object.img-circle.img-responsive {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+}
+<div class="content-wrapper">
+    <div class="container">
+        <div class="examControl">
+            <div class="col-md-11">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="content-ask" style="margin-bottom:5px;font-size:20px">
+                            @Html.Raw(Model.Summary)
+                        </h1>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-1">
+                <div class="ask-info center-block"><strong>@Model.TotalView</strong></div>
+                <p class="text-center">Lượt xem</p>
+            </div>
+
+
+            <div class="clearfix"></div>
+            <div class="ask-title">
+                <div class="subject-icon subject-1"></div>
+
+                <span>Môn @Model.SubjectName</span>
+                <a href="#" title="Báo xấu" data-toggle="tooltip" class="ask-report info-tooltip">
+                    <div>
+                        <div class="tp-hex"></div>
+                    </div>
+                    <i class="fa fa-warning"></i>
+                </a>
+            </div>
+        </div>
+        <div class="examControl">
+            <div class="panel">
+                <div class="panel-body p-a-md">
+                    <h4 class="m-t-0 ">
+                        <i class="fa fa-fw fa-commenting"></i>
+                        Bình luận
+                    </h4>
+                    <div class="heading-line"></div>
+                    <div class="row">
+                        <ul>
+                            <li class="media">
+                                <div class="media-left discussion_u_info">
+                                    <a class="avata" href="https://hocexcel.online/u/705-chuc-nq" title="Chuc NQ">
+                                        <img src="https://hocexcel.online/default/hocexcel/user.png" alt="Chuc NQ" class=" img-chat media-object img-circle img-responsive">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <form class="discussions has-primary-unibee" id="lecture_discussions" method="POST" action="https://hocexcel.online/discussion/create">
+                                        <textarea data-id="1" name="content" rows="3" class="form-control content" placeholder="Nhập nội dung" id="txtComment" style="margin-bottom: 5px"></textarea>
+
+                                        <button style="float: right;margin-left: 5px;font-size: 16px;" type="button" id="send_discussion" onclick="sentMessage()" class="btn btn-primary btn-sm ishide ">Gửi bình luận</button>
+                                        <input type="hidden" name="_token" value="2SwonHQDTaEOWY1c6k73PtbLZMLcL4pp53uLU6bM">
+                                    </form>
+
+                                </div>
+
+
+                            </li>
+                        </ul>
+                        <ul id="@ids-comments"></ul>
+                        <ul>
+                            <div style="width: 100%;position: relative;height: auto;display: flex; margin: 20px 0 40px 0;border-top: 1px solid #d5d5d5;padding-top: 20px" class="click_load_discussion ">
+                                <button onclick="loadPlusMessage()" style="margin: auto" class="btn btn-success" id="click_load_discussion">
+                                    Tải thêm
+                                    <i class="fa fa-angle-double-down fa-lg"></i>
+                                </button>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section JsFooter{
+    <script>
+        $(function () {
+            loadMessage(0, 10);
+            $(".menu").removeClass("active");
+            $(".li-diendan").addClass("active");
+            $(".img-chat").attr("src", ($($(".img-rounded")[0]).attr("src")));
+            function getCaret(el) {
+                if (el.selectionStart) {
+                    return el.selectionStart;
+                } else if (document.selection) {
+                    el.focus();
+                    var r = document.selection.createRange();
+                    if (r == null) {
+                        return 0;
+                    }
+                    var re = el.createTextRange(), rc = re.duplicate();
+                    re.moveToBookmark(r.getBookmark());
+                    rc.setEndPoint('EndToStart', re);
+                    return rc.text.length;
+                }
+                return 0;
+            }
+            $("#txtComment").on('keyup', function (e) {
+                if (e.keyCode == 13) {
+                    var content = this.value;
+                    var caret = getCaret(this);
+                    if (event.shiftKey) {
+                        event.stopPropagation();
+                    } else {
+                        sentMessage();
+                    }
+                }
+            });
+        });
+        function getParameterByName(url, name) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+        function loadMessage(from, to) {
+            var ids = '@ids';
+            myLoop = new myLoading("click_load_discussion", "");
+            myLoop.start();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetAllComment", "Question")',
+                contentType: "application/json; charset=utf-8",
+                data: "{'ids':'" + ids + "','from':'" + from + "','to':'" + to + "'}",
+                dataType: "json",
+                success: function (res) {
+                    myLoop.stop();
+                    var item = res.value;
+                    if (item.length == 10) {
+                        $("#click_load_discussion").show();
+                    } else {
+                        $("#click_load_discussion").hide();
+                    }
+                    bindingComments('append',ids, item);
+                }, error: function (msg) {
+                    myLoop.stop();
+                    console.log("Lỗi tải Các Comment");
+                }
+            })
+        };
+        function bindingComments(type,ids, item) {
+            for (var i = 0; i < item.length; i++) {
+                var html = "";
+                var date = new Date(parseInt(item[i].CreatedDate.replace(/(^.*\()|([+-].*$)/g, '')));
+
+                html += "<li class='media'>";
+                html += "   <div class='media-left'>";
+                html += "       <a class='avata' href='#' title='" + item[i].FullName + "'>";
+                html += "           <img src='" + item[i].ImageUrl + "' alt='" + item[i].FullName + "' class='media-object img-circle img-responsive'>";
+                html += "       </a>";
+                html += "   </div>";
+                html += "   <div class='media-body'>";
+                html += "       <h4 class='media-heading' style='font-size:17px' title='Edus365 admin'>";
+                html += "       <a href='#'>" + item[i].FullName + "</a>";
+                html += "           <span class='time'>" + item[i].CreatedDateStr + "</span>";
+                html += "       </h4>";
+                html += "       <p  style='font-size:17px' class='content'>" + item[i].Comments;
+                html += "       </p>";
+                html += "   </div>";
+                html += " </li>";
+                if (type == 'pre') {
+                    $('#' + ids + '-comments').prepend(html);
+                } else {
+                    $('#' + ids + '-comments').append(html);
+                }
+
+            }
+        }
+         function sentMessage() {
+            var ids = '@ids';
+            var obj = new Object();
+            obj.Comments = $("#txtComment").val();
+             obj.QuestionId = ids;
+            var json = JSON.stringify(obj);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("AddComment", "Question")',
+                data: json,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    $("#txtComment").val("")
+                    var item = [];
+                    item.push(res.value);
+                    bindingComments('pre',ids,item);
+                }, error: function (msg) {
+                    alert("Lỗi gửi tin nhắn.");
+                }
+            });
+        }
+        function loadPlusMessage() {
+            var ids = '@ids';
+            var from = $("#@ids-comments li").length;
+            loadMessage(from + 1, from + 10);
+        }
+    </script>
+}

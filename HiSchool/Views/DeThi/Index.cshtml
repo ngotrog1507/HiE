@@ -1,0 +1,268 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section JsHeader{
+    <link rel="stylesheet" href="~/Content/min/s/1522468462/b%3dexam/css%26f%3dbigschool.css%2cbigschool.responsive.css%2cexam.bigschool.css%2cfuc.bigschool.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/min/s/1522468462/b%3dcss%26f%3dbase_cover.css%2cform.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/min/s/1522468462/b%3dexam/css%26f%3dcover.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/min/s/1522468462/b%3dcss%26f%3dexam.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/min/s/1522468462/b%3dheader/css%26f%3dmain.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/vendors/owl-carousel/3.3/owl.carouself700.css?v=1.0.1" type="text/css">
+    <link rel="stylesheet" href="~/Content/min/s/1522468462/b%3dfooter/css%26f%3dmain.css" type="text/css">
+    <script type="text/javascript" src="~/Content/vendors/jquery-ui/1.12.1/jquery-ui.minf700.js?v=1.0.1"></script>
+    <script type="text/javascript" src="~/Content/vendors/jquery.sticky-kit.minf700.js?v=1.0.1"></script>
+    <script type="text/javascript" src="~/Content/min/s/1522468462/b%3dexam/js%26f%3dexam.bigschool.js"></script>
+    <script src="~/app/de-thi.js"></script>
+    <style>
+        .md-nav {
+            background: #349c3d;
+        }
+
+            .md-nav .pull-left ul li a, .md-nav .pull-right ul li a {
+                background-color: #349c3d;
+            }
+
+        .sign li a.dang-ky {
+            background-color: #349c3d;
+            border: 1px solid #349c3d;
+        }
+
+        .sign li a.dang-nhap {
+            background-color: #fff;
+            color: #349c3d;
+            border: 1px solid #349c3d;
+        }
+
+        .sign li a.dang-ky:hover {
+            background-color: #287f31;
+        }
+    </style>
+}
+
+<div ng-controller="ExamController">
+    <!--begin: section-->
+    <section class="clearfix section mt-10">
+        <div class="container">
+            <div>
+                <ol class="breadcrumb fuc-breadcumb">
+                    <li class="breadcrumb-item"><a href="../bigschool.vn/index.html">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a href="index.html">Thi</a></li>
+                    <li class="breadcrumb-item">Danh sách đề thi</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+    <!--end: section-->
+    <!--begin: section-->
+    <section class="clearfix section" style="margin-bottom:50px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 box-sticky hidden-xs hidden-sm">
+                    <form id="searchForm" method="get">
+                        <input type="hidden" name="cmd" value="">
+                        <div class="box-exam-search">
+                            <div class="form-group">
+                                <label>Tìm đề thi</label>
+                                <div class="mt-10">
+                                    <select id="seach_lesson_grade_level" ng-model="param.gradeId" class="form-control" name="grade_level" ng-change="onChangeGrade()">
+                                        <option value="" selected>Chọn khối</option>
+                                        <option ng-repeat="record in lstGrade" value="{{record.TypeCode}}">{{record.Name}}</option>
+                                    </select>
+                                </div>
+                                <div class="mt-10">
+                                    <select id="seach_lesson_subject_id" ng-model="param.subjectId" class="form-control" name="subject_id">
+                                        <option value="0" selected>Chọn môn</option>
+                                        <option ng-repeat="record in lstSubject" value="{{record.Id}}">{{record.Name}}</option>
+                                    </select>
+                                </div>
+                                <div class="mt-10">
+                                    <select id="seach_lesson_subject_id" ng-model="param.sort" class="form-control" name="subject_id">
+                                        <option value="" selected>Lọc theo</option>
+                                        <option ng-repeat="record in lstType" value="{{record.Id}}">{{record.Name}}</option>
+                                    </select>
+                                </div>
+                                <div class="mt-10">
+                                    <div class="checkbox checkbox-success checkbox-inline">
+                                        <input type="checkbox" id="inlineCheckbox" ng-model="param.notfee" name="optionRadio" value="option1" checked="">
+                                        <label for="inlineCheckbox"> Miễn phí </label>
+                                    </div>
+                                    <div class="checkbox checkbox-success checkbox-inline">
+                                        <input type="checkbox" id="inlineCheckbox2" ng-model="param.fee" name="optionRadio" value="option1" checked="">
+                                        <label for="inlineCheckbox2"> Có phí </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="line-bt-e5"></div>
+                            <div class="form-group">
+                                <div class="mt-10">
+                                    <input class="exam-search-form-1" ng-model="param.nameTeacher" name="txtSearch" value="" placeholder="Nhập tên giáo viên...">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="mt-10">
+                                    <input class="exam-search-form-1" ng-model="param.nameExam" name="txtSearch" value="" placeholder="Nhập tên đề thi...">
+                                </div>
+                                <p class="text-center mt-10">
+                                    <button type="button" class="btn btn-success " id="btnSearch" ng-click="search()"><i class="fa fa-search" aria-hidden="true"></i>&nbsp; Tìm kiếm &nbsp;</button>
+                                </p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-9">
+                    <div class="row mt-20">
+                        <div class="col-sm-12 col-xs-12">
+                            <div class="pull-left">
+                                <p class="exam-result-tit">Danh sách đề thi</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-xs-12">
+                            <div class="line-bt-e5"></div>
+                        </div>
+                    </div>
+                    <div class="row ngSlide" ng-show="totalRow!=0">
+                        <div class="col-sm-6" ng-repeat="item in records">
+                            <div class="box-exam-list">
+                                <a href="@Url.Action("Detail","Dethi")?ids={{item.IdGuid}}" class="exam-name">{{item.Name}}</a>
+                                <div class="line-bt-exam"></div>
+                                <p class="exam-des">{{item.GradeName}} - {{item.SubjectName}}</p>
+                                <div class="media">
+                                    <div class="media-left">
+                                        <a href="#"><img src="Content/img/ava-default.jpg" class="exam-avatar"></a>
+                                    </div>
+                                    <div class="media-body">
+                                        <a href="#" data-user-id="0" data-color="green" class="media-heading"><em>Nhà giáo</em> <strong>{{item.CreatedByName}}</strong> </a>
+                                    </div>
+                                </div>
+                                <ul class="exam-info-count">
+                                    <li><i class="fa fa-pencil-square-o"></i> {{item.TotalStudent}} lượt</li>
+                                    <li><i class="fa fa-clock-o"></i> {{item.Time}} phút</li>
+                                    <li><i class="fa fa-question-circle-o"></i> {{item.TotalNumber}} câu</li>
+                                    <li class="h-light-2" ng-if="item.Price== 0"><i class="fa fa-money"></i> Miễn phí</li>
+                                    <li class="h-light-1" ng-if="item.Price != 0"><i class="fa fa-money h-light-1"></i>    {{item.Price| currency: "" : 0}} VNĐ</li>
+                                </ul>
+
+                                <p class="exam-hengio-vaothi">
+                                </p>
+                            </div>
+                        </div>
+
+
+                        <section class="clearfix section"></section>
+                        <div class="bs-pagination" style="margin-top:10px">
+                            <ul class="pagination">
+                                <li class="disabled"><a href="#">Trang trước</a></li>
+                                <li class="">
+                                    <span class="badge label-success" style="background-color: #cdeadd !important;">1</span>
+                                </li>
+                                <li class=""><a href="examfe68.html?cmd=&amp;txtSearch=&amp;o=0&amp;c=-1&amp;s=-1&amp;p=2">Trang sau</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 ngSlide" ng-show="totalRow==0">
+                        <div class="bs-box-nodata">
+                            <img src="https://cdn-s07.bigschool.vn/exam/img/no-data.png" alt="">
+                            <p>Chưa có đề thi nào!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<!--end: section-->
+<style>
+
+    img {
+        max-width: none;
+    }
+
+    /*phan trang*/
+    .bs-pagination {
+        text-align: right;
+        margin-top: 30px;
+    }
+
+        .bs-pagination ul > .active > a, .bs-pagination ul > .active > a:focus, .bs-pagination ul > .active > a:hover, .bs-pagination ul > .active > span, .bs-pagination ul > .active > span:focus, .bs-pagination ul > .active > span:hover {
+            background-color: #2f70dc;
+            border-color: transparent;
+            color: #fff;
+        }
+
+        .bs-pagination ul > li > a, .bs-pagination ul > li > span {
+            color: #2f70dc;
+            font-size: 12px;
+            background-color: #fff;
+            border: none;
+            margin-left: 3px;
+            margin-right: 3px;
+        }
+
+    /*Ko co du lieu*/
+    .bs-box-nodata {
+        padding: 30px;
+        margin-top: 30px;
+        text-align: center;
+    }
+
+        .bs-box-nodata img {
+            width: 50%;
+        }
+
+        .bs-box-nodata p {
+            color: #7397d1;
+            font-size: 16px;
+            font-weight: 500;
+        }
+    /*nut vao thi*/
+    p.exam-hengio-vaothi {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+        p.exam-hengio-vaothi a {
+            padding: 7px 15px;
+            text-align: center;
+            background: #2b8f33;
+            color: #fff;
+            border-radius: 3px !important;
+        }
+
+            p.exam-hengio-vaothi a:hover {
+                box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, .2);
+            }
+</style>
+@section JsFooter{
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            $(".menu").removeClass("active");
+            $(".li-thi").addClass("active");
+            $('[data-toggle=tooltip]').tooltip();
+            //smooth scrolling
+            $(function () {
+                //$('a[href*=#]:not([href=#])').click(function() {
+                $('.smooth-scroll').click(function () {
+                    if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                        var target = $(this.hash);
+                        target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+                        if (target.length) {
+                            $('html,body').animate({
+                                scrollTop: (target.offset().top - 50)
+                            }, 1000);
+                            return false;
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+    <script type="text/javascript" src="~/Content/min/s/1522468462/b%3dheader/js%26f%3dscripts.js" async></script>
+    <script type="text/javascript" src="~/Content/min/s/1522468462/b%3djs%26f%3dgo_top.js" async></script>
+    <script type="text/javascript" src="~/Content/min/s/1522468462/b%3dids/js%26f%3dpopup.js" async></script>
+    <script type="text/javascript" src="~/Content/min/s/1522468462/b%3dexam/js%26f%3dlibrary.js%2cmatch-height.min.js" async></script>
+    <script type="text/javascript" src="~/Content/vendors/jquery-touchswipe/1.6.17/jquery.touchSwipe.minf700.js?v=1.0.1" async></script>
+    <script type="text/javascript" src="~/Content/vendors/owl-carousel/3.3/owl.carousel.minf700.js?v=1.0.1" async></script>
+    <script type="text/javascript" src="~/Content/min/s/1522468462/b%3dfooter/js%26f%3dfooter.js" async></script>}

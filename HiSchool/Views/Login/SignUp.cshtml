@@ -1,0 +1,189 @@
+﻿
+@{
+    ViewBag.Title = "SignUp";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src='https://www.google.com/recaptcha/api.js'></script>
+<div class="container" id="main-container">
+    <ol class="breadcrumb main-breadcrumb">
+        <li><a title="Trang Chủ" href="index.html">Zuni</a></li>
+        <li class="active">Đăng ký</li>
+    </ol>
+    <div id="zn-register" class="row zn-v3 zn-register zn-box">
+        <div class="col-md-12">
+            <div class="bordered-box">
+                <!-- <div class="row header">
+                    <h3 class="title pull-left">
+                        Đăng ký thành viên
+                    </h3>
+                </div> -->
+                <div class="row content">
+                    <form action="@Url.Action("SignUp","Login")" method="post" class="zn-form form-horizontal" role="form"
+                          id="frm_create" enctype="multipart/form-data" autocomplete="off">
+                        <input type="hidden" name="ref" value="">
+                        <div class="col-md-6 col-sm-12 zn-register-form">
+
+
+                            <div class="row">
+                                <div class="col-sm-4"></div>
+                                <div class="col-sm-8">
+                                    <p class="zn-desc">đăng ký bằng email</p>
+                                </div>
+                            </div>
+
+                            <div class="form-group ">
+                                <label for="user_name" class="col-sm-4 control-label">Tên đăng nhập <span class="required-text">*</span></label>
+                                <div class="col-sm-8">
+                                    <input name="UserName" maxlength="255" placeholder=""
+                                           type="text" class="required form-control" id="UserName" value="" />
+                                </div>
+                            </div>
+                            <div class="form-group ">
+                                <label for="email" class="col-sm-4 control-label">E-mail <span class="required-text">*</span></label>
+                                <div class="col-sm-8">
+                                    <input id="email" type="text" class="required form-control" name="email" maxlength="255"
+                                           value="" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="password" class="col-sm-4 control-label">Mật khẩu <span class="required-text">*</span></label>
+                                <div class="col-sm-8">
+                                    <input id="password" maxlength="255" type="password" class="required form-control"
+                                           name="password" />
+                                </div>
+                            </div>
+                            <div class="form-group ">
+                                <label for="phone" class="col-sm-4 control-label">Số điện thoại <span class="required-text"></span></label>
+                                <div class="col-sm-8">
+                                    <input id="PhoneNumber" maxlength="11" type="text" class=" form-control"
+                                           name="PhoneNumber" />
+                                </div>
+                            </div>
+
+
+
+                            <div class="form-group">
+                                <label for="" class="col-sm-4 control-label">Mã xác nhận</label>
+                                <div class="col-sm-8">
+                                    <div class="g-recaptcha" data-sitekey="6LeWdVIUAAAAABj_F5VEuNelSQc66lnFdxbJwgn2"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-4"></div>
+                                <div class="col-sm-8">
+                                    <input class="zn-btn btn-success" type="submit" value="Đăng ký">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-4"></div>
+                                <div class="col-sm-8">
+                                    <div class="policy-agreement">
+                                        Khi click nút đăng ký, bạn đã đồng ý với <a class="zn-v3" target="_blank" href="thoa-thuan-su-dung.html">thỏa thuận sử dụng</a> của Zuni.
+                                        </input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1 col-sm-8 col-sm-offset-4">
+                            <div class="socialAnchors">
+                                <p class="zn-desc">hoặc đăng ký bằng tài khoản mạng xã hội </p>
+                                <a href="https://www.facebook.com/v2.9/dialog/oauth?client_id=129852403851031&amp;state=7c54cf7fd66c9b8e2004d567a87a09bc&amp;response_type=code&amp;sdk=php-sdk-5.5.0&amp;redirect_uri=http%3A%2F%2Fzuni.vn%2Fprofile%2Fauth%2Ffacebook-callback%3Fref%3D%252Fdashboard&amp;scope=publish_actions%2Cuser_birthday%2Cemail%2Cuser_friends%2Cuser_posts%2Cuser_likes" class="facebook" title="Đăng nhập bằng tài khoản Facebook">Facebook</a>
+                                <a href="https://accounts.google.com/o/oauth2/auth?response_type=code&amp;redirect_uri=http%3A%2F%2Fzuni.vn%2Fprofile%2Fauth%2Fgoogle-callback&amp;client_id=231077884880-k42cvfeg16quu87e2trtnndngrvpgo7p.apps.googleusercontent.com&amp;scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&amp;access_type=online&amp;approval_prompt=auto&amp;state=eyJzdGF0ZSI6IjJkMTdhMTAxZTBlZWQyZDVlODFlZDA0OGI2ODQ5NzQxIiwicmVmIjoiXC9kYXNoYm9hcmQifQ%2C%2C" class="google" title="Đăng nhập bằng tài khoản Google">Google</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="../stc.zuni.vn/resource/third-party/bootstrap/css/datepicker.css">
+
+    <script src="../stc.zuni.vn/resource/third-party/jquery/js/jquery.validate.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            // $(".datepicker").datepicker();
+
+            jQuery.validator.addMethod('regExp', function (value, element) {
+                var reg = /^[\w\.]+$/;
+                return reg.test(value);
+            });
+
+            jQuery.validator.addMethod('checkgender', function (value, element) {
+                if (value == 0)
+                    return false;
+
+                return true;
+            });
+
+            jQuery.validator.addMethod('checkNumberPhone', function (value, element) {
+                var rs = false;
+                $.ajax({
+                    type: 'POST',
+                    url: "/api/profile/check-number-phone",
+                    data: { 'phone': value },
+                    async: false,
+                    success: function (response) {
+                        rs = response.data;
+                    }
+                });
+
+                return rs;
+            });
+        });
+
+        (function ($, W, D) {
+            var FORMVAL = {};
+            FORMVAL.UTIL =
+                {
+                    setupValidation: function () {
+                        //form validation rules
+                        $("#frm_create").validate({
+                            rules: {
+                                user_name: {
+                                    required: true, rangelength: [3, 100], regExp: true
+                                },
+                                password: {
+                                    required: true,
+                                    rangelength: [3, 100]
+                                },
+                                email: {
+                                    required: true, email: true, rangelength: [3, 100]
+                                }
+                            },
+                            messages: {
+                                user_name: {
+                                    required: "Tên đăng nhập không được để trống",
+                                    rangelength: "Tên đăng nhập phải từ 3-100 ký tự",
+                                    regExp: "Tên đăng nhập chỉ sử dụng chữ cái (a-z), số và dấu chấm"
+                                },
+                                password: {
+                                    required: "Mật khẩu không được để trống",
+                                    rangelength: "Mật khẩu phải từ 3-100 ký tự"
+                                },
+                                email: {
+                                    required: "E-mail không được để trống",
+                                    email: "E-mail không đúng",
+                                    rangelength: "E-mail phải từ 3-100 ký tự"
+                                }
+                                
+                            },
+                            submitHandler: function (form) {
+                                form.submit();
+                            }
+                        });
+                    }
+                }
+
+            //setup the validation on when the webpage is loaded
+            $(D).ready(function ($) {
+                FORMVAL.UTIL.setupValidation();
+            });
+
+        })(jQuery, window, document);
+    </script>
+</div>
+

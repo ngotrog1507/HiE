@@ -1,0 +1,2 @@
+E:\OutSource\IDGROUP\idgroup\Source\Core\obj\Release\Core.csproj.CoreCompileInputs.cache
+E:\OutSource\IDGROUP\idgroup\Source\Core\obj\Release\Core.csprojResolveAssemblyReference.cache

@@ -1,0 +1,695 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var isHost = ViewBag.Host != null && (bool)ViewBag.Host;
+}
+<div class="_modal">
+    <div class="cssload-container">
+        <div class="cssload-speeding-wheel"></div>
+        <div id="veil"></div>
+    </div>
+</div>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i>Danh sách giáo viên</a></li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Tìm kiếm </h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <div class="form-horizontal">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label class="col-sm-4 control-label">Tên người dùng</label>
+
+                                <div class="col-sm-8">
+                                    <input type="text" id="Key" name="key" class="form-control " placeholder="Tên người dùng">
+                                </div>
+                            </div>
+
+                            <div class="form-group col-sm-5">
+                                <label class="col-sm-3 control-label">Trạng thái</label>
+                                <div class="col-sm-9">
+                                    @if (ViewBag.UsedState != null)
+                                    {
+                                        @Html.DropDownList("UsedState", ViewBag.UsedState as SelectList, null, new { @class = "js-select2-clear col-sm-12" })
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-1"></div>
+                        </div>
+                        <div class="form-group col-sm-12" style="text-align: center;">
+                            <button type="button" title="Tìm kiếm" class="btn color-trong btn-trong" onclick="refresh(currentPage)">
+                                <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Tìm kiếm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box box-success">
+                <div class="box-header with-border" style="padding-bottom: 0px;">
+                    <div class="col-sm-6">
+                        <h3 class="box-title" style="margin-left: -18px;"> Danh sách</h3>
+                    </div>
+                    <!--trongnv-->
+                    <div class="col-sm-6">
+                        @if ((ViewBag.Delete != null && (bool)ViewBag.Delete) || isHost)
+                        {
+                            <button type="submit" style="margin: -8px -14px 4px 19px;" title="Xóa' | translate" class="btn btn-danger pull-right" onclick=" DeleteAll(null, '@Url.Action("Delete", "SysUser")' ) ">
+                                <i class="fa fa-times-circle" aria-hidden="true"></i>&emsp; Xóa &emsp;
+                            </button>
+                        }
+                        @if ((ViewBag.Add != null && (bool)ViewBag.Add) || isHost)
+                        {
+                            <button type="submit" style="margin: -8px -14px 4px 19px;" title="Thêm mới" class="btn btn-success pull-right" onclick=" AddRecord() ">
+                                <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;&nbsp;Thêm mới
+                            </button>
+                        }
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form class="form-horizontal">
+                    <div class="box-body">
+                        <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="dataTables_length">
+                                        <label>
+                                            Số lượng hiển thị
+                                            <select name="example1_length" id="sizePage" onchange="refresh(currentPage)" aria-controls="example1" class="selectOption-trong form-control input-sm">
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                            </select>
+                                            bản ghi
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table id="example1" class="table table-bordered table-striped">
+                                        <thead class="color-trong">
+                                            <tr>
+                                                <th style="width: 2%; text-align: center">
+                                                    <span><input type="checkbox" onclick=" CheckAll() " class="ace check-all" data-id="0" /></span>
+                                                </th>
+                                                <th style="width: 5%; text-align: center">STT</th>
+                                                <th style="width: 5%; text-align: center">CN</th>
+                                                <th style="width: 5%; text-align: center">Ảnh</th>
+                                                <th style="width: 20%; text-align: center">Tên người dùng</th>
+                                                <th style="text-align: center">Tài khoản</th>
+                                                <th style="text-align: center">Email</th>
+                                                <th style="text-align: center">Số tiền</th>
+                                                <th style="text-align: center">Ngày tạo</th>
+                                                <th style="text-align: center">Trạng thái</th>
+                                                <th style="text-align: center">Giao dịch</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="data"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div id="paging"></div>
+                            @*  @Html.Raw(MvcPagingByFrameWork.Paging(Model.PageCount, Model.PageIndex, "System/Cms_Teacher/Index", ViewBag.Search))*@
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal fade" id="modal-default">
+                <div class="modal-dialog" style="width: 45%">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title">Thông tin giao dịch</h4>
+                            <input type="hidden" id="txtUserId" />
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal2">
+                                <div class="row">
+                                    <div class="form-group col-sm-12">
+                                        <label class="col-sm-4 control-label"> Họ tên </label>
+
+                                        <div class="col-sm-8">
+                                            <label id="currentFullName">Ngô văn Trọng</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="col-sm-4 control-label"> Tài khoản </label>
+
+                                        <div class="col-sm-8">
+                                            <label id="currentUserName">Ngô văn Trọng</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="col-sm-4 control-label"> Email </label>
+
+                                        <div class="col-sm-8">
+                                            <label id="currentEmail">Ngô văn Trọng</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="col-sm-4 control-label"> Số tiền hiện tại </label>
+
+                                        <div class="col-sm-8">
+                                            <span class="badge bg-green" id="currentMoney">250.000</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="col-sm-4 control-label"> Phương thức thanh toán </label>
+                                        <div class="col-sm-8">
+                                            <div class="radio radio-success radio-inline">
+                                                <input type="radio" id="inlineRadio1" value="1" name="radioInline" checked="">
+                                                <label for="inlineRadio1"> Nạp tiền </label>
+                                            </div>
+                                            <div class="radio radio-success radio-inline">
+                                                <input type="radio" id="inlineRadio2" value="-1" name="radioInline">
+                                                <label for="inlineRadio2"> Rút tiền </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12">
+                                        <label class="col-sm-4 control-label"> Số tiền </label>
+                                        <div class="col-sm-8">
+                                            <input type="number" id="txtMoney" onkeypress=" return isNumberKey(event) " placeholder="Nhập số tiền giao dịch" class="form-control" name="name" value="" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Đóng</button>
+                            <button type="button" class="btn btn-primary" onclick="Print()"><i class="fa fa-print" aria-hidden="true"></i>&nbsp;In hóa đơn &nbsp;</button>
+                            <button type="button" class="btn btn-success" id="btnSave" onclick="Save()"><i class="fa fa-save" aria-hidden="true"></i>&nbsp;Lưu &nbsp;</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="modal-user">
+                <div class="modal-dialog" style="width: 80%">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title">Thông tin giáo viên</h4>
+                            <input type="hidden" id="txtId" />
+                            <input type="hidden" id="imageUrl" value="/Uploads/img_default.png" />
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal3">
+                                <div class="box-body scoll-box-body">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="text-center">
+                                                <img style="    padding-bottom: 1%;border-radius: 50%;width: 100%;" id="txtImage" src="/Uploads/img_default.png" alt="Alternate Text" />
+                                                <div class="clearfix text-center">
+                                                    <button type="button" class="btn btn-success" id="btnUpload"><i class="fa fa-upload" aria-hidden="true"></i>&nbsp; Upload ảnh</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="row">
+                                                <div class="form-group col-sm-6">
+                                                    <label class="col-sm-4 control-label textleft">Tên người dùng <span class="label-red">(*)</span></label>
+
+                                                    <div class="col-sm-8">
+                                                        <div class="clearfix">
+                                                            <input type="text" class="form-control " placeholder="Tên người dùng" name="fullname" id="fullname">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-sm-6">
+                                                    <label class="col-sm-4 control-label textleft">Tài khoản <span class="label-red">(*)</span></label>
+
+                                                    <div class="col-sm-8">
+                                                        <div class="clearfix">
+                                                            <input type="text" class="form-control " placeholder="Tài khoản" name="username" id="username">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-sm-6">
+
+                                                    <label class="col-sm-4 control-label textleft">Email <span class="label-red">(*)</span></label>
+
+                                                    <div class="col-sm-8">
+                                                        <div class="clearfix">
+                                                            <input type="email" class="form-control " placeholder="Email" name="email" id="email">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-sm-6">
+                                                    <label class="col-sm-4 control-label textleft">Phone</label>
+
+                                                    <div class="col-sm-8">
+                                                        <div class="clearfix">
+                                                            <input type="text" class="form-control " placeholder="Phone" name="phone" id="phone">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-sm-6">
+                                                    <label class="col-sm-4 control-label textleft">Mật khẩu <span class="label-red">(*)</span></label>
+
+                                                    <div class="col-sm-8">
+                                                        <div class="clearfix">
+                                                            <input type="text" class="form-control " placeholder="Mật khẩu" name="password" id="password">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-sm-6">
+                                                    <label class="col-sm-4 control-label textleft">Nhập lại mật khẩu<span class="label-red">(*)</span></label>
+
+                                                    <div class="col-sm-8">
+                                                        <div class="clearfix">
+                                                            <input type="password" class="form-control " placeholder="Nhập lại mật khẩu" id="confirmPassword" name="confirmPassword">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-sm-6">
+                                                    <label class="col-sm-4 control-label textleft">Giới tính</label>
+
+                                                    <div class="col-sm-4">
+                                                        <select class="js-select2" id="gender">
+                                                            <option value="1">Nam</option>
+                                                            <option value="0">Nữ</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-sm-6">
+                                                    <label class="col-sm-4 control-label textleft">Trạng thái</label>
+
+                                                    <div class="col-sm-8">
+                                                        @if (ViewBag.UsedStateAdd != null)
+                                                        {
+                                                            @Html.DropDownList("UsedStateAdd", ViewBag.UsedStateAdd as SelectList, null, new { @class = "js-select2 col-sm-12" })
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-sm-12">
+                                                    <div class="col-sm-12" id="editorSummary">
+                                                        <textarea class="textarea" id="Summary"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Đóng</button>
+                            <button type="button" class="btn btn-success" id="btnAddUser" onclick="SaveUser('add')"><i class="fa fa-save" aria-hidden="true"></i> &nbsp;Thêm mới&nbsp;</button>
+                            <button type="button" class="btn btn-primary" id="btnEditUser" onclick="SaveUser('edit')"><i class="fa fa-save" aria-hidden="true"></i> &nbsp;Lưu&nbsp;</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+        </div>
+        <!-- /.box -->
+        <!-- general form elements disabled -->
+        <!-- /.box -->
+    </div>
+    <!--/.col (right) -->
+    <!-- /.content -->
+    @section jsFooter{
+        <script>
+            $(function () {
+                CKEDITOR.replace('Summary');
+                UploadImage();
+            })
+            function UploadImage() {
+                $("#btnUpload").click(function (e) {
+                    e.preventDefault();
+                    var finder = new CKFinder();
+                    finder.selectActionFunction = function (url) {
+                        $("#imageUrl").val(url);
+                        $("#txtImage").attr("src", url);
+                        ToastMessage("success", "Upload thành công !");
+                    };
+                    finder.popup();
+                });
+            }
+            $('.form-horizontal3').validate({
+                errorElement: 'div',
+                errorClass: 'help-block',
+                focusInvalid: false,
+                ignore: "",
+                rules: {
+                    fullname: {
+                        required: true
+                    },
+                    username: {
+                        required: true
+                    },
+                    email: {
+                        required: true,
+                        email: true
+                    },
+                    password: {
+                        minlength: 5
+                    },
+                    confirmPassword: {
+                        minlength: 5,
+                        equalTo: "#password"
+                    }
+                },
+
+                messages: {
+                    fullname: {
+                        required: "Trường này không được bỏ trống ."
+                    },
+                    username: {
+                        required: "Trường này không được bỏ trống ."
+                    },
+                    email: {
+                        required: "Trường này không được bỏ trống.",
+                        email: "Email không hợp lệ."
+                    },
+                    password: {
+                        minlength: "Độ dài lớn hơn 5 ký tự."
+                    },
+                    confirmPassword: {
+                        required: "Trường này không được bỏ trống.",
+                        minlength: "Độ dài lớn hơn 5 ký tự.",
+                        equalTo: "Mật khẩu không khớp nhau."
+                    }
+                },
+
+                highlight: function (e) {
+                    $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+                },
+
+                success: function (e) {
+                    $(e).closest('.form-group').removeClass('has-error'); //.addClass('has-info');
+                    $(e).remove();
+                },
+
+                errorPlacement: function (error, element) {
+                    if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                        var controls = element.closest('div[class*="col-"]');
+                        if (controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                        else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                    } else if (element.is('.select2')) {
+                        error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+                    } else if (element.is('.chosen-select')) {
+                        error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                    } else error.insertAfter(element.parent());
+                }
+
+                //submitHandler: function (form) {
+
+                //},
+                //invalidHandler: function (form) {
+                //}
+            });
+        </script>
+        <script>
+            refresh(currentPage);
+
+            function refresh(page) {
+                $("._modal").show();
+                var sData = "{'page':'" + page + "','key':'" + $("#Key").val() + "','sort':'','usedState':'" + $('#UsedState').find(":selected").val() + "','pageSize':'" + $("#sizePage").find(":selected").val() + "'}";
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetData", "Cms_Teacher")',
+                    data: sData,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        $("._modal").hide();
+                        if (response.status == "success") {
+                            console.log(response);
+                            var listData = response.Data;
+                            var totalRecord = response.TotalPage;
+                            var pageSize = response.PageSize;
+                            var totalPage = (totalRecord % pageSize != 0) ? Math.floor(totalRecord / pageSize) + 1 : Math.floor(totalRecord/ pageSize);
+                            var currentPage = response.CurrentPage;
+                            var str = "";
+                            var roleDelete = ('@ViewBag.Delete' === 'True');
+                            var roleEdit = ('@ViewBag.Edit' === 'True');
+                            listData.forEach(function (item, index) {
+                                str += "<tr style='text-align: center'>";
+                                str += "                        <td style='text-align: center'>";
+                                str += "<input type='checkbox' name='check-row' class='ace check-row' data-id='"+item.UserId+"'>";
+                                str += "</td>";
+                                str += "         <td>" + (pageSize * currentPage + index + 1) + "</td>";
+                                 str += "<td>";
+                                str += "              <div class='btn-group'>";
+                                if (('@ViewBag.Host' === 'True')) {
+                                    str += "<button type='button' class='btn color-trong dropdown-toggle' style='color: white;' data-toggle='dropdown' aria-expanded='false'>";
+                                    str += "<i class='fa fa-cog' aria-hidden='true'></i>";
+                                    str += "</button>";
+
+                                    str += " <ul class='dropdown-menu setting-menu' role='menu'>";
+                                    str += "<li onclick='EditRecord(" + item.UserId + ")'><a class='noClick' href=''><i class='fa fa-pencil-square-o' aria-hidden='true' ></i>Chỉnh sửa</a></li>";
+                                    str += "<li class='divider'></li>";
+                                    str += "<li onclick='DeleteItem(" + item.UserId + ")'><a class='noClick' href=''><i class='fa fa-times-circle' aria-hidden='true'></i>Xóa</a></li>";
+                                } else {
+                                    if (item.CreatedBy == @WebSecurity.CurrentUserId) {
+                                        str += "<button type='button' class='btn color-trong dropdown-toggle' style='color: white;' data-toggle='dropdown' aria-expanded='false'>";
+                                    str += "<i class='fa fa-cog' aria-hidden='true'></i>";
+                                    str += "</button>";
+                                    str += "             <ul class='dropdown-menu setting-menu' role='menu'>";
+                                    if (roleEdit != null && roleEdit && roleDelete != null && roleDelete) {
+                                        str += "<li onclick='EditRecord(" + item.UserId + ")'><a class='noClick' href=''><i class='fa fa-pencil-square-o' aria-hidden='true' ></i>Chỉnh sửa</a></li>";
+                                        str += "<li class='divider'></li>";
+                                        str += "<li onclick='DeleteItem(" + item.UserId + ")'><a class='noClick' href=''><i class='fa fa-times-circle' aria-hidden='true'></i>Xóa</a></li>";
+                                    } else if (roleEdit != null && roleEdit) {
+                                        str += "<li onclick='EditRecord(" + item.Id + ")'><a class='noClick' href=''><i class='fa fa-pencil-square-o' aria-hidden='true' ></i>Chỉnh sửa</a></li>";
+                                    } else if (roleDelete != null && roleDelete) {
+                                        str += "<li onclick='DeleteItem(" + item.UserId + ")'><a class='noClick' href=''><i class='fa fa-times-circle' aria-hidden='true'></i>Xóa</a></li>";
+                                    }
+                                    str += "</ul>";
+                                }
+                            }
+                                str += "             </div>";
+                            str += "</td>";
+                                str += "  <td style='text-align: center;'>";
+                                str += "  <div style='width:100%'>";
+                                str += "<img src=" + item.ImageUrl + " alt='' style='width: 100%;'>";
+                                str += "    </div>";
+                                str += "    </td>";
+
+                            str += "         <td class='item_"+index+"' style='text-align: left; padding-left: 40px;'>";
+                            str += item.FullName;
+                            str += "    </td>";
+                                str += "         <td class='item_" + index +"' style='text-align: left;'>";
+                            str += item.UserName;
+                            str += "    </td>";
+                                str += "         <td class='item_" + index +"' style='text-align: left;'>";
+                            str += item.Email;
+                                str += "    </td>";
+                                str += "         <td style='text-align: left;'><span class='badge label-success item_" + index +"'>";
+                                str += item.BCoin.toLocaleString('it-IT', { style: 'currency', currency: 'VND' });
+                                str += "</span>    </td>";
+                            var date = new Date(parseInt(item.CreatedDate.replace(/(^.*\()|([+-].*$)/g, '')));
+                            var dateString = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+                            str += "     <td>" + dateString + "</td>";
+                            if (item.UsedState == 1) {
+                                str += "<td  title='Đang hoạt động'><span class='badge label-success'><i class='fa fa-fw fa-check-circle'></i></span></td>";
+                            } else if (item.UsedState == 0) {
+                                str += "<td  title='Đang bị khóa'><span class='badge label-warning'><i class='fa fa-fw fa-check-circle'></i></span></td>";
+                            } else {
+                                str += "<td  title='Yêu cầu xóa'><span class='badge label-danger'><i class='fa fa-fw fa-check-circle'></i></span></td>";
+                                }
+                                str += " <td><a href='' onclick='PayMent(" + index + "," + item.UserId + ")'  data-id='" + item.UserId + "' class='img_product noClick'> <i class='fa fa-credit-card' aria-hidden='true'></i>&nbsp;Giao dịch</a></td>";
+                        })
+                            $("#data").html(str);
+                        $("#paging").html(paging(totalPage, page, $("#Key").val()));
+                        $('a.noClick').on('click', function (e) {
+                            e.preventDefault();
+                            //do other stuff when a click happens
+                        });
+                    }
+
+                    //window.location.href = url;
+                },
+                    error: function () {
+                        ToastMessage("error", "Xảy ra lỗi !");
+                    }
+            });
+            }
+        </script>
+        <script>
+            function Reset() {
+                $("#fullname").val("");
+                $("#username").val("");
+                $("#email").val("");
+                $("#phone").val("");
+                $("#password").val("");
+                $("#confirmPassword").val("");
+                $("#UsedStateAdd").val(1).change();
+                $("#gender").val(1).change();
+                $("#host").prop('checked', false);
+                CKEDITOR.instances.Summary.setData("");
+            }
+            function EditRecord(id) {
+                Reset();
+                $("#btnAddUser").hide();
+                $("#btnEditUser").show();
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetById", "SysUser")',
+                    data: "{'id':'"+id+"'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+                        if (msg.status == "success") {
+                            $("#modal-user").modal();
+                            $("#fullname").val(msg.Data.FullName);
+                            $("#username").val(msg.Data.UserName);
+                            $("#email").val(msg.Data.Email);
+                            $("#imageUrl").val(msg.Data.ImageUrl);
+                            $("#txtImage").attr("src",msg.Data.ImageUrl);
+                            $("#phone").val(msg.Data.Phone);
+                            $("#txtId").val(msg.Data.Id);
+                            $("#password").val("");
+                            $("#imageUrl").val(msg.Data.ImageUrl);
+                            $("#confirmPassword").val("");
+                            $("#UsedStateAdd").val(msg.Data.UsedState).change();
+                            $("#gender").val(msg.Data.Gender).change();
+                            CKEDITOR.instances.Summary.setData(msg.Data.Summary);
+                        }
+                        else
+                            ToastMessage("error", "Xảy ra lỗi !");
+                    }
+                });
+            }
+            function AddRecord() {
+                Reset();
+                $("#modal-user").modal();
+            }
+            function SaveUser(type) {
+                if ($('.form-horizontal3').valid()) {
+                    myLoop = new myLoading((type === 'add') ? "btnAddUser" : "btnEditUser", "");
+                    myLoop.start();
+                    var data = new Object();
+                    data.Id = $("#txtId").val();
+                    data.FullName = $("#fullname").val();
+                    data.Username = $("#username").val();
+                    data.Email = $("#email").val();
+                    data.Phone = $("#phone").val();
+                    data.ImageUrl = $("#imageUrl").val();
+                    data.UsedState = $("#UsedStateAdd").find(":selected").val();
+                    data.Password = $("#password").val();
+                    data.ConfirmPassword = $("#confirmPassword").val();
+                    data.UsedState = 1;
+                    data.Gender = $("#gender").find(":selected").val();
+                    data.Host = $("#host").is(":checked");
+                    data.Summary = CKEDITOR.instances.Summary.getData();
+
+                    var json = JSON.stringify(data);
+                   console.log(data)
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("AddTeacher", "SysUser")',
+                        data: json,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (msg) {
+                            if (msg.status == "success") {
+                                ToastMessage("success", "Lưu thành công !");
+                                refresh(currentPage);
+                                $("#modal-user").modal('hide');
+                            }
+                            else if (msg.status == "exits")
+                                ToastMessage("error", msg.Messages);
+                            else
+                                ToastMessage("error", "Xảy ra lỗi !");
+                        },
+                        error: function () {
+                            ToastMessage("error", "Xảy ra lỗi !");
+                        },
+                        complete: function () {
+                            myLoop.stop();
+                        }
+                    });
+            }
+            }
+        </script>
+        <script>
+            function PayMent(index,id) {
+                var lst = $(".item_" + index);
+                $("#currentFullName").text($(lst[0]).text());
+                $("#currentUserName").text($(lst[1]).text());
+                $("#currentEmail").text($(lst[2]).text());
+                $("#currentMoney").text($(lst[3]).text());
+                $("#txtUserId").val(id);
+                $("#modal-default").modal();
+
+            }
+            function Save() {
+                myLoop = new myLoading("btnSave", "");
+                myLoop.start();
+                var data = new Object();
+                data.Id = $("#txtUserId").val();
+                data.Type = $("input[name='radioInline']:checked").val();
+                data.Money = $("#txtMoney").val();
+                console.log(data);
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Payment", "Cms_Teacher")',
+                    data: "{'userId':'" + data.Id + "','type':'" + data.Type + "','money':'" + data.Money + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+                        myLoop.stop();
+                        if (msg.status === "success") {
+                            ToastMessage("success", "Giao dịch thành công !");
+                            $("#modal-default").modal('hide');
+                            refresh(currentPage);
+                        } else
+                            ToastMessage("error", "Xảy ra lỗi !");
+                    },
+                    err: function () {
+                        myLoop.stop();
+                        ToastMessage("error", "Xảy ra lỗi !");
+                    }
+                });
+            }
+            function Print() {
+                var divContents = $("#modal-default").html();
+                    var printWindow = window.open('', '', 'height=400,width=800');
+                    printWindow.document.write('<html><head><title>DIV Contents</title>');
+                    printWindow.document.write('</head><body >');
+                    printWindow.document.write(divContents);
+                    printWindow.document.write('</body></html>');
+                    printWindow.document.close();
+                    printWindow.print();
+            }
+        </script>
+    }
+</section>

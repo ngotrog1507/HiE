@@ -1,0 +1,589 @@
+﻿@using Core.Model;
+<script src="~/app/khoa-hoc.js"></script>
+<!--slider-->
+<div id="carousel-banner" class="carousel slide bs-top-banner-carousel" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators hidden-xs">
+        <li data-target="#carousel-banner" data-slide-to="0" class="active"></li>
+        <li data-target="#carousel-banner" data-slide-to="1" class=""></li>
+        <li data-target="#carousel-banner" data-slide-to="2" class=""></li>
+    </ol>
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner" role="listbox">
+        <div class="item active">
+            <a href="#" style="width: 100%;display: table;"><img src="/Content/images/upstream/News/images/2017/06/banner-1.png" alt="" style="width: 100%"></a>
+        </div>
+        <div class="item ">
+            <a href="#" style="width: 100%;display: table;"><img src="/Content/images/upstream/News/images/2017/06/banner-6.png" alt="" style="width: 100%"></a>
+        </div>
+    </div>
+    <!-- Controls -->
+    <a class="left carousel-control" href="#carousel-banner" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    </a>
+    <a class="right carousel-control" href="#carousel-banner" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    </a>
+</div>
+<section class="section clearfix mt-20 section-1 xs-section-1 hidden-xs">
+    <div class="container">
+        <div class="pull-left hidden-xs hidden-sm">
+        </div>
+    </div>
+</section>
+<!--end: section-1-->
+<!--Send post-->
+<!--/Send post-->
+
+<section class="section-tin clearfix section-2 mt-20 txt-mt-10">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+
+                <div style="margin-top:20px" class="visible-xs"></div>
+                <div class="row">
+                    @if (ViewBag.Blog != null)
+                    {
+                        var lstBlog = (List<CmsBlog>)ViewBag.Blog;
+                        if (lstBlog.Count > 0)
+                        {
+                            <div class="col-md-9">
+
+                                <div class="img-noi-bat">
+                                    <span>BÀI MỚI</span>
+                                    <a href="#"><img src="@lstBlog[0].Image" class="img-responsive" alt="@lstBlog[0].Name"></a>
+                                </div>
+                                <h1 class="tit-tin-noi-bat"><a href="#" data-toggle=tooltip title='@lstBlog[0].Name'>@lstBlog[0].Name </a></h1>
+                                <p class="news_hot_des">@lstBlog[0].Title</p>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box-tin-noi-bat box-tin-noi-bat-1 ">
+                                    <a href="#">
+                                        <img src="@lstBlog[1].Image" class="img-responsive" alt="@lstBlog[1].Name">
+                                    </a>
+                                    <a class="a-noi-bat" href="#" data-toggle=tooltip title='@lstBlog[1].Name'>@lstBlog[1].Name</a>
+                                </div>
+                                @for (int i = 2; i < lstBlog.Count; i++)
+                                {
+                                    <div class="box-tin-noi-bat">
+                                        <a class="news_hot_name" href="#" data-toggle=tooltip title='@lstBlog[i].Name'>@lstBlog[i].Name</a>
+                                    </div>
+                                }
+
+                            </div>
+                        }
+                    }
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="tin-menu-head">
+                                <h2>Bài giảng mới nhất</h2>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row tin-bg-noi-bat">
+                                    @if (ViewBag.ListClass != null)
+                                    {
+                                        foreach (var item in (List<Cms_Class>)ViewBag.ListClass)
+                                        {
+                                            <div class="col-xs-4 col-md-4">
+                                                <div class="box-bai-giang">
+                                                    <a href="@Url.Action("Details","KhoaHoc",new { ids=item.IdGuid})" class="bg-cover"><img class="img-responsive" src="@item.Image" alt="@item.Name"></a>
+                                                    <h4><a href="@Url.Action("Details","KhoaHoc",new { ids=item.IdGuid})" title="@item.Name" data-toggle=tooltip>@item.Name</a></h4>
+                                                    <div class="lecture-author" style=" margin-left: 5px;">
+                                                        <em>Nhà giáo</em>
+                                                        &nbsp;
+                                                        <a href="#" data-user-id="0" data-user-group="" data-popup-user-id="52146" data-popup-user-name="GV01" data-color="blue" class="ng-binding">@item.FullName</a>
+                                                    </div>
+                                                    <div class="lecture-author" style=" margin-left: 5px;">
+                                                        <em>Giá:</em><span class="text-red ng-binding" style="    color: #FF7A00;font-weight: bold;">
+                                                            @String.Format("{0:0,0}", item.Price) VNĐ
+                                                        </span>
+                                                    </div>
+                                                    <p class="ten-giao-vien"><a class="giao-vien" href="../class.bigschool.vn/profile7d78.html?cmd=teacher&amp;id=36574">@item.FullName</a></p>
+                                                    <p class="mon-hoc">@item.SubjectName - @item.GradeName</p>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    <p class="xem-them m-pd-r pull-right" style="margin-top:10px"><a href="@Url.Action("BaiGiang","KhoaHoc")">Xem thêm <i class="fa fa-angle-right"></i></a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 banner_exam_home hidden-xs">
+                        <a href="../exam.bigschool.vn/index.html">
+                            <img src="~/Content/news/img/160x600.jpg" id="banner_exam" class="banner_exam img-responsive" alt="Khảo thí độc lập">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 box-all-right">
+
+                <div class="row">
+                    <div class="home-bai-giang home-bai-giang-top">
+                        <h2 class=""><i class="fa fa-pencil"></i> Đề thi mới nhất</h2>
+                    </div>
+                    @if (ViewBag.Exam != null)
+                    {
+                        foreach (var item in (List<Ex_Exam>)ViewBag.Exam)
+                        {
+                            <div class="box-de-thi">
+                                <div class="media">
+                                    <div class="media-left">
+                                        <a href="@Url.Action("Detail","DeThi",new { ids=item.IdGuid})"><img src="~/Content/img/subjects/Subject-detail-5.png" class="media-object" style="width:100px"></a>
+                                    </div>
+                                    <div class="media-body">
+                                        <a href="@Url.Action("Detail","DeThi",new { ids=item.IdGuid})" class="media-heading" data-toggle=tooltip title="@item.Name">@item.Name</a>
+                                        <i class="line_bottom"></i>
+                                        <p class="mon-lop">@item.GradeName</p>
+                                        <p class="ten-giao-vien"><a class="giao-vien" href="#">@item.FullName</a></p>
+                                        <p class="luot-thi"><i class="fa fa-pencil-square-o"></i> @item.TotalStudent lượt thi</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    <p class="xem-them m-pd-r pull-right" style="margin-top:10px"><a href="@Url.Action("Index","DeThi")">Xem thêm <i class="fa fa-angle-right"></i></a></p>
+                </div>
+
+                <div class="row">
+                    <div class="home-bai-giang">
+                        <h2><i class="fa fa-user-circle-o"></i> Thầy cô nổi bật</h2>
+                        <form>
+                            <div class="form-group">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="nha-giao">
+                        <div class="ng-select">
+                        </div>
+                        <ul class="nav nav-tabs tabs-thay-co">
+                            <li class="active"><a data-toggle="tab" href="#lesson">Số bài giảng</a></li>
+                            <li><a data-toggle="tab" href="#exam">Số đề thi</a></li>
+                        </ul>
+                        <div class="tab-content" id="thay_co_noi_bat">
+                            <div id="lesson" class="tab-pane fade in active">
+                                <table class="table table-thay-co">
+                                    <tbody>
+                                        @if (ViewBag.TopBaiGiang != null)
+                                        {
+                                            foreach (var item in (List<SysUser>)ViewBag.TopBaiGiang)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <div class="media">
+                                                            <div class="media-left">
+                                                                <a href="#"><img src="@item.ImageUrl" class="media-object img-circle" alt="@item.FullName"></a>
+                                                            </div>
+                                                            <div class="media-body">
+                                                                <a href="#" class="table-ten-thay-co">@item.FullName</a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="table-thay-co-total">
+                                                            @item.TongBG
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+
+                                    </tbody>
+                                </table>
+                                <p class="xem-them pull-right"><a href="../class.bigschool.vn/teacher2b88.html?cmd=search">Xem thêm <i class="fa fa-angle-right"></i></a></p>
+                            </div>
+                            <div id="exam" class="tab-pane fade">
+                                <table class="table table-thay-co">
+                                    <tbody>
+                                        @if (ViewBag.TopDeThi != null)
+                                        {
+                                            foreach (var item in (List<SysUser>)ViewBag.TopDeThi)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <div class="media">
+                                                            <div class="media-left">
+                                                                <a href="#"><img src="@item.ImageUrl" class="media-object img-circle" alt="@item.FullName"></a>
+                                                            </div>
+                                                            <div class="media-body">
+                                                                <a href="#" class="table-ten-thay-co">@item.FullName</a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="table-thay-co-total">
+                                                            @item.TongDT
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                                <p class="xem-them pull-right"><a href="../exam.bigschool.vn/ranking1b73.html?cmd=teacher">Xem thêm <i class="fa fa-angle-right"></i></a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    function thayCoNoiBat(obj) {
+                        var ajax_url = 'ajax1ef2.html?act=default&amp;code=timThayConNoiBat&amp;subject_id=' + obj.value;
+                        $.ajax({
+                            type: 'POST',
+                            url: ajax_url,
+                            dataType: "json",
+                            success: function (response) {
+                                student = '';
+                                lesson = '';
+                                exam = '';
+                                if ($("#student").hasClass('active')) {
+                                    student = 'in active'
+                                }
+                                if ($("#lesson").hasClass('active')) {
+                                    lesson = 'in active'
+                                }
+                                if ($("#exam").hasClass('active')) {
+                                    exam = 'in active'
+                                }
+                                profile_url_prefix = "../class.bigschool.vn/profile5379.html?cmd=teacher&amp;id=";
+                                html = '';
+                                html += '<div class="tab-content">';
+                                html += '<div role="tabpanel" class="tab-pane fade ' + student + ' " id="student">';
+                                html += '<table class="table table-thay-co">';
+                                html += '<tbody>';
+                                count = 0;
+                                read_more_url = '../class.bigschool.vn/teacheradda.html?cmd=search&amp;sort=1';
+                                if (obj.value > 0) {
+                                    read_more_url = read_more_url + "&subject_id=" + obj.value;
+                                }
+                                $.each(response.by_afl, function (key, value) {
+                                    count++;
+                                    profile_url = profile_url_prefix + value.id;
+                                    avatar_url = value.avatar_url;
+                                    html += '<tr>';
+                                    html += '<td>';
+                                    html += '<div class="media">';
+                                    html += '<div class="media-left">';
+                                    html += '<a href="' + profile_url + '"><img class="media-object img-circle" src="' + avatar_url + '" alt="' + value.full_name + '" /></a>';
+                                    html += '</div>';
+                                    html += '<div class="media-body">';
+                                    html += '<a class="table-ten-thay-co" href="' + profile_url + '" title="' + value.full_name + '">' + value.full_name + '</a>';
+                                    if (value.class > 0) {
+                                        subject_class_str = 'Môn ' + value.subject_name + ' - Lớp ' + value.class;
+                                    }
+                                    else {
+                                        subject_class_str = 'Môn ' + value.subject_name;
+                                    }
+                                    html += '<p class="table-mon-hoc">' + subject_class_str + '</p>';
+                                    if (typeof (value.college_name) != 'undefined') {
+                                        html += '<p class="table-truong" title="' + value.college_name + '">' + value.college_name + '</p>';
+                                    }
+                                    html += '</div>';
+                                    html += '</div><!--/media-->';
+                                    html += '</td>';
+                                    html += '<td>';
+                                    html += '<div class="table-thay-co-total">' + value.afl + '</div>';
+                                    html += '</td>';
+                                    html += '</tr>';
+                                });
+                                html += '</tbody>';
+                                html += '</table>';
+                                html += '<p class="xem-them pull-right">';
+                                html += '<a href="' + read_more_url + '">Xem thêm <i class="fa fa-angle-right"></i></a>';
+                                html += '</p>';
+                                html += '</div><!--/tab panel-->';
+
+                                html += '<div role="tabpanel" class="tab-pane fade ' + lesson + ' " id="lesson">';
+                                html += '<table class="table table-thay-co">';
+                                html += '<tbody>';
+                                count = 0;
+                                read_more_url = '../class.bigschool.vn/teacheradda.html?cmd=search&amp;sort=1';
+                                if (obj.value > 0) {
+                                    read_more_url = read_more_url + "&subject_id=" + obj.value;
+                                }
+                                $.each(response.by_teacher_lesson_count, function (key, value) {
+                                    count++;
+                                    profile_url = profile_url_prefix + value.id;
+                                    avatar_url = value.avatar_url;
+                                    html += '<tr>';
+                                    html += '<td>';
+                                    html += '<div class="media">';
+                                    html += '<div class="media-left">';
+                                    html += '<a href="' + profile_url + '"><img class="media-object img-circle" src="' + avatar_url + '" alt="' + value.full_name + '" /></a>';
+                                    html += '</div>';
+                                    html += '<div class="media-body">';
+                                    html += '<a class="table-ten-thay-co" href="' + profile_url + '" title="' + value.full_name + '">' + value.full_name + '</a>';
+                                    if (value.class > 0) {
+                                        subject_class_str = 'Môn ' + value.subject_name + ' - Lớp ' + value.class;
+                                    }
+                                    else {
+                                        subject_class_str = 'Môn ' + value.subject_name;
+                                    }
+                                    html += '<p class="table-mon-hoc">' + subject_class_str + '</p>';
+                                    if (typeof (value.college_name) != 'undefined') {
+                                        html += '<p class="table-truong" title="' + value.college_name + '">' + value.college_name + '</p>';
+                                    }
+                                    html += '</div>';
+                                    html += '</div><!--/media-->';
+                                    html += '</td>';
+                                    html += '<td>';
+                                    html += '<div class="table-thay-co-total">' + value.total_lesson_created + '</div>';
+                                    html += '</td>';
+                                    html += '</tr>';
+                                });
+                                html += '</tbody>';
+                                html += '</table>';
+                                html += '<p class="xem-them pull-right">';
+                                html += '<a href="' + read_more_url + '" >Xem thêm <i class="fa fa-angle-right"></i></a>';
+                                html += '</p>';
+                                html += '</div><!--/tab panel-->';
+
+                                html += '<div role="tabpanel" class="tab-pane fade ' + exam + ' " id="exam">';
+                                html += '<table class="table table-thay-co">';
+                                html += '<tbody>';
+                                count = 0;
+                                exam_teacher_url = '../exam.bigschool.vn/ranking1b73.html?cmd=teacher';
+                                $.each(response.by_created_exam_count, function (key, value) {
+                                    count++;
+                                    profile_url = profile_url_prefix + value.id;
+                                    avatar_url = value.avatar_url;
+                                    html += '<tr>';
+                                    html += '<td>';
+                                    html += '<div class="media">';
+                                    html += '<div class="media-left">';
+                                    html += '<a href="' + profile_url + '"><img class="media-object img-circle" src="' + avatar_url + '" alt="' + value.full_name + '" /></a>';
+                                    html += '</div>';
+                                    html += '<div class="media-body">';
+                                    html += '<a class="table-ten-thay-co" href="' + profile_url + '" title="' + value.full_name + '">' + value.full_name + '</a>';
+                                    if (value.class > 0) {
+                                        subject_class_str = 'Môn ' + value.subject_name + ' - Lớp ' + value.class;
+                                    }
+                                    else {
+                                        subject_class_str = 'Môn ' + value.subject_name;
+                                    }
+                                    html += '<p class="table-mon-hoc">' + subject_class_str + '</p>';
+                                    if (typeof (value.college_name) != 'undefined') {
+                                        html += '<p class="table-truong" title="' + value.college_name + '">' + value.college_name + '</p>';
+                                    }
+                                    html += '</div>';
+                                    html += '</div><!--/media-->';
+                                    html += '</td>';
+                                    html += '<td>';
+                                    html += '<div class="table-thay-co-total">' + value.exams_created + '</div>';
+                                    html += '</td>';
+                                    html += '</tr>';
+                                });
+
+                                html += '</tbody>';
+                                html += '</table>';
+                                html += '<p class="xem-them pull-right">';
+                                html += '<a href="' + exam_teacher_url + '" >Xem thêm <i class="fa fa-angle-right"></i></a>';
+                                html += '</p>';
+                                html += '</div><!--/tab panel-->';
+                                html += '</div>';
+                                $("#thay_co_noi_bat").html(html);
+                            }
+                        });
+                    }
+                </script><div class="row">
+                    <div class="home-bai-giang">
+                        <h2><i class="fa fa-graduation-cap"></i> Học sinh chuyên cần</h2>
+                        <form>
+                            <div class="form-group">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="hoc-sinh">
+                        <ul class="nav nav-tabs tabs-thay-co">
+                            <li class="active"><a data-toggle="tab" href="#learn_total">Số lượt học</a></li>
+                            <li><a data-toggle="tab" href="#exam_total">Số lượt thi</a></li>
+                        </ul>
+                        <div class="tab-content" id="hoc_sinh_chuyen_can">
+                            <div id="learn_total" class="tab-pane fade in active">
+                                <table class="table table-hs">
+                                    <tr>
+                                        <td>
+                                            <div class="media">
+                                                <div class="media-left">
+                                                    <a href="../class.bigschool.vn/profile062a.html?cmd=student&amp;id=3956">
+                                                        <img src="~/Content/img/ava-default.jpg"
+                                                             class="media-object img-rounded"
+                                                             alt="Bùi Lan Anh">
+                                                    </a>
+                                                </div>
+                                                <div class="media-body">
+                                                    <a href="../class.bigschool.vn/profile062a.html?cmd=student&amp;id=3956"
+                                                       class="table-ten-hs">Bùi Lan Anh</a>
+                                                    <p class="table-hs-lop">Lớp 1</p>
+                                                    <p class="table-truong-hs">Trường Tiểu học Kim Đồng</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="table-hs-total">
+                                                8
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="media">
+                                                <div class="media-left">
+                                                    <a href="../class.bigschool.vn/profile4f10.html?cmd=student&amp;id=89829">
+                                                        <img src="~/Content/img/ava-default.jpg"
+                                                             class="media-object img-rounded"
+                                                             alt="huong phu sa">
+                                                    </a>
+                                                </div>
+                                                <div class="media-body">
+                                                    <a href="../class.bigschool.vn/profile4f10.html?cmd=student&amp;id=89829"
+                                                       class="table-ten-hs">huong phu sa</a>
+                                                    <p class="table-hs-lop">Lớp 5</p>
+                                                    <p class="table-truong-hs">Trường Tiểu học A Vĩnh Hậu</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="table-hs-total">
+                                                6
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="media">
+                                                <div class="media-left">
+                                                    <a href="../class.bigschool.vn/profile1719.html?cmd=student&amp;id=102469">
+                                                        <img src="~/Content/img/ava-default.jpg"
+                                                             class="media-object img-rounded"
+                                                             alt="NGUYEN NHAT NAM">
+                                                    </a>
+                                                </div>
+                                                <div class="media-body">
+                                                    <a href="../class.bigschool.vn/profile1719.html?cmd=student&amp;id=102469"
+                                                       class="table-ten-hs">NGUYEN NHAT NAM</a>
+                                                    <p class="table-hs-lop">Lớp 12</p>
+                                                    <p class="table-truong-hs"></p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="table-hs-total">
+                                                4
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <p class="xem-them pull-right"><a href="../class.bigschool.vn/rank.html">Xem thêm <i class="fa fa-angle-right"></i></a></p>
+                            </div>
+                            <div id="exam_total" class="tab-pane fade">
+                                <table class="table table-hs">
+                                    <tr>
+                                        <td>
+                                            <div class="media">
+                                                <div class="media-left">
+                                                    <a href="../class.bigschool.vn/profile16f8.html?cmd=student&amp;id=50630">
+                                                        <img src="~/Content/img/ava-default.jpg"
+                                                             class="media-object img-rounded"
+                                                             alt="nguyendangtrinh">
+                                                    </a>
+                                                </div>
+                                                <div class="media-body">
+                                                    <a href="../class.bigschool.vn/profile16f8.html?cmd=student&amp;id=50630"
+                                                       class="table-ten-hs">nguyendangtrinh</a>
+                                                    <p class="table-hs-lop">Lớp 9</p>
+                                                    <p class="table-truong-hs">Trường THCS An Bình</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="table-hs-total">
+                                                80
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="media">
+                                                <div class="media-left">
+                                                    <a href="../class.bigschool.vn/profile278f.html?cmd=student&amp;id=57288">
+                                                        <img src="~/Content/img/ava-default.jpg"
+                                                             class="media-object img-rounded"
+                                                             alt="VietHungKaitoKidBigS">
+                                                    </a>
+                                                </div>
+                                                <div class="media-body">
+                                                    <a href="../class.bigschool.vn/profile278f.html?cmd=student&amp;id=57288"
+                                                       class="table-ten-hs">VietHungKaitoKidBigS</a>
+                                                    <p class="table-hs-lop">Lớp 5</p>
+                                                    <p class="table-truong-hs">Trường Tiểu học Ngọc Trạo</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="table-hs-total">
+                                                25
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="media">
+                                                <div class="media-left">
+                                                    <a href="../class.bigschool.vn/profilea1d9.html?cmd=student&amp;id=8316">
+                                                        <img src="~/Content/images/i/c3d7b1/128_128/Ids/imgs/a.8316.png"
+                                                             class="media-object img-rounded"
+                                                             alt="Vũ Đức Hoàng">
+                                                    </a>
+                                                </div>
+                                                <div class="media-body">
+                                                    <a href="../class.bigschool.vn/profilea1d9.html?cmd=student&amp;id=8316"
+                                                       class="table-ten-hs">Vũ Đức Hoàng</a>
+                                                    <p class="table-hs-lop">Lớp 9</p>
+                                                    <p class="table-truong-hs"></p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="table-hs-total">
+                                                11
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="media">
+                                                <div class="media-left">
+                                                    <a href="../class.bigschool.vn/profile05e6.html?cmd=student&amp;id=100653">
+                                                        <img src="~/Content/img/ava-default.jpg"
+                                                             class="media-object img-rounded"
+                                                             alt="linhtrangbmt">
+                                                    </a>
+                                                </div>
+                                                <div class="media-body">
+                                                    <a href="../class.bigschool.vn/profile05e6.html?cmd=student&amp;id=100653"
+                                                       class="table-ten-hs">linhtrangbmt</a>
+                                                    <p class="table-hs-lop">Lớp 5</p>
+                                                    <p class="table-truong-hs">Trường Tiểu học Nguyễn Công Trứ</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="table-hs-total">
+                                                9
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <p class="xem-them pull-right"><a href="../exam.bigschool.vn/ranking.html">Xem thêm <i class="fa fa-angle-right"></i></a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

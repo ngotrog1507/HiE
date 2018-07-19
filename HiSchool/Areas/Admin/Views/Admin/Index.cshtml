@@ -1,0 +1,135 @@
+﻿@using Core.Service
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    int userId = WebSecurity.CurrentUserId;
+    var userModel = new SysUserAction().GetById(userId);
+    var totalInfoWebsite = ViewBag.TotalInfoWebsite;
+}
+<section class="content-header">
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i>Dashboard</a></li>
+    </ol>
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-success">
+                <div class="box-header with-border">
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-xs-6">
+                        <!-- small box -->
+                        <div class="small-box bg-green">
+                            <div class="inner">
+                                <h3 class="counterOnline">0</h3>
+
+                                <p>Số người Online</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fa fa-users"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">Xem thêm <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <!-- ./col -->
+                    <div class="col-lg-4 col-xs-6">
+                        <!-- small box -->
+                        <div class="small-box bg-aqua">
+                            <div class="inner">
+                                <h3 class="counter">@totalInfoWebsite.TotalClass</h3>
+
+                                <p>Số lượng khóa học</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-stats-bars"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">Xem thêm <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <!-- ./col -->
+                    <div class="col-lg-4 col-xs-6">
+                        <!-- small box -->
+                        <div class="small-box bg-yellow">
+                            <div class="inner">
+                                <h3 class="counter">@totalInfoWebsite.TotalExam</h3>
+
+                                <p>Số lượng đề thi</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fa fa-file-text-o"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">Xem thêm <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <!-- ./col -->
+                    <div class="col-lg-4 col-xs-6">
+                        <!-- small box -->
+                        @if (ViewBag.Host)
+                        {
+                            <div class="small-box bg-gray">
+                                <div class="inner">
+                                    <h3 class="counter">@totalInfoWebsite.TotalTeacher</h3>
+
+                                    <p>Số lượng giáo viên</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-user-secret "></i>
+                                </div>
+                                <a href="#" class="small-box-footer">Xem thêm <i class="fa fa-arrow-circle-right"></i></a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="small-box bg-teal">
+                                <div class="inner">
+                                    <h3 ><span class="counter">@String.Format("{0:0,0}", userModel.BCoin) </span><span style="font-size: 16px;">VNĐ</span></h3> 
+
+                                    <p>Số tiền hiện có</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-money "></i>
+                                </div>
+                                <a href="#" class="small-box-footer">Xem thêm <i class="fa fa-arrow-circle-right"></i></a>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-lg-4 col-xs-6">
+                        <!-- small box -->
+                        <div class="small-box bg-red">
+                            <div class="inner">
+                                <h3 class="counter">@totalInfoWebsite.TotalStudent</h3>
+
+                                <p>Số lượng học viên</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fa fa-user"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">Xem thêm <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-xs-6">
+                        <!-- small box -->
+                        <div class="small-box bg-purple">
+                            <div class="inner">
+                                <h3 class="counter">@totalInfoWebsite.TotalVideo</h3>
+
+                                <p>Số bài giảng video</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fa  fa-video-camera"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">Xem thêm <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <!-- ./col -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section JsFooter{
+    <script>
+        $('.counter').countUp();
+    </script>
+}

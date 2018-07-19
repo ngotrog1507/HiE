@@ -1,0 +1,5 @@
+﻿System.ArgumentException: Parameter count does not match Parameter Value count.
+   at Framework.SqlHelper.AssignParameterValues(SqlParameter[] commandParameters, Object[] parameterValues)
+   at Framework.SqlHelper.ExecuteScalar(String connectionString, String spName, Object[] parameterValues)
+   at Core.Service.SysUserAction.Update(SysUser model) in D:\WWW\Do_an_2\Elearning\do_an_2\Core\Service\SysUserAction.cs:line 88
+   at HiSchool.Areas.Admin.Controllers.SysUserController.Edit(SysUser sysModel) in D:\WWW\Do_an_2\Elearning\do_an_2\HiSchool\Areas\Admin\Controllers\SysUserController.cs:line 214
